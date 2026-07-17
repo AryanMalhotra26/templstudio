@@ -1,6 +1,5 @@
 import { site } from "@/content/site";
-import RevealText from "@/components/motion/RevealText";
-import SectionLabel from "@/components/ui/SectionLabel";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { Stagger, StaggerItem } from "@/components/motion/FadeUp";
 
 /** Four numbered steps with giant outlined numerals in a hairline-ruled row. */
@@ -9,12 +8,12 @@ export default function Process() {
 
   return (
     <section className="bg-ivory">
-      <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-36">
-        <SectionLabel text={home.process.label} />
-        <RevealText
-          text={home.process.headline}
-          as="h2"
-          className="mt-6 max-w-4xl font-display text-[clamp(2rem,5vw,4.5rem)] leading-[1.05] tracking-[-0.02em] text-ink"
+      <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-32">
+        <SectionHeader
+          label={home.process.label}
+          headline={home.process.headline}
+          lede={home.process.lede}
+          meta={`(${String(process.length).padStart(2, "0")}) STEPS ©`}
         />
 
         <Stagger className="mt-14 grid gap-10 border-t u-hairline pt-10 md:mt-20 md:grid-cols-4 md:gap-0">

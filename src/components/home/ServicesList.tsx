@@ -11,8 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { site } from "@/content/site";
-import RevealText from "@/components/motion/RevealText";
-import SectionLabel from "@/components/ui/SectionLabel";
+import SectionHeader from "@/components/ui/SectionHeader";
 import { Stagger, StaggerItem } from "@/components/motion/FadeUp";
 import Button from "@/components/ui/Button";
 
@@ -42,7 +41,7 @@ export default function ServicesList() {
   return (
     <section id="services" className="bg-ivory">
       <div
-        className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-36"
+        className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-32"
         onMouseMove={
           hoverEnabled
             ? (e) => {
@@ -52,22 +51,12 @@ export default function ServicesList() {
             : undefined
         }
       >
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <SectionLabel text={home.services.label} />
-            <RevealText
-              text={home.services.headline}
-              as="h2"
-              className="mt-6 max-w-4xl font-display text-[clamp(2rem,5vw,4.5rem)] leading-[1.05] tracking-[-0.02em] text-ink"
-            />
-          </div>
-          <p
-            aria-hidden
-            className="u-outline-text hidden select-none font-display text-7xl italic text-stone/70 lg:block"
-          >
-            ✺
-          </p>
-        </div>
+        <SectionHeader
+          label={home.services.label}
+          headline={home.services.headline}
+          lede={home.services.lede}
+          meta={`(${String(services.length).padStart(2, "0")}) SERVICES ©`}
+        />
 
         <Stagger className="mt-14 border-t u-hairline md:mt-20" stagger={0.05}>
           {services.map((service, i) => (

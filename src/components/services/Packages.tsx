@@ -22,7 +22,7 @@ export default function Packages() {
 
   return (
     <section className="border-t u-hairline bg-ivory">
-      <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-40">
+      <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-32">
         <SectionLabel text={servicesPage.packages.label} />
         <RevealText
           text={servicesPage.packages.headline}

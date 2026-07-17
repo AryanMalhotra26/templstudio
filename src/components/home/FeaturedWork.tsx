@@ -1,9 +1,8 @@
+import Image from "next/image";
 import Link from "next/link";
 import { featuredWork, site } from "@/content/site";
-import RevealText from "@/components/motion/RevealText";
-import SectionLabel from "@/components/ui/SectionLabel";
+import SectionHeader from "@/components/ui/SectionHeader";
 import FadeUp from "@/components/motion/FadeUp";
-import ParallaxImage from "@/components/motion/Parallax";
 import Button from "@/components/ui/Button";
 
 /** Ink section: asymmetric editorial grid of featured case studies. */
@@ -12,20 +11,14 @@ export default function FeaturedWork() {
 
   return (
     <section className="bg-ink text-ivory">
-      <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-36">
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <SectionLabel text={home.work.label} tone="stone" />
-            <RevealText
-              text={home.work.headline}
-              as="h2"
-              className="mt-6 max-w-4xl font-display text-[clamp(2rem,5vw,4.5rem)] leading-[1.05] tracking-[-0.02em] text-ivory"
-            />
-          </div>
-          <p aria-hidden className="u-label hidden pb-3 text-stone lg:block">
-            ({String(featuredWork.length).padStart(2, "0")}) — PROJECTS ©
-          </p>
-        </div>
+      <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-32">
+        <SectionHeader
+          label={home.work.label}
+          headline={home.work.headline}
+          lede={home.work.lede}
+          meta={`(${String(featuredWork.length).padStart(2, "0")}) PROJECTS ©`}
+          tone="dark"
+        />
 
         <div className="mt-14 grid gap-x-10 gap-y-16 md:mt-20 md:grid-cols-2 md:gap-y-24">
           {featuredWork.map((item, i) => {
@@ -33,7 +26,7 @@ export default function FeaturedWork() {
             return (
               <FadeUp
                 key={item.slug}
-                className={i % 2 === 1 ? "md:mt-32" : undefined}
+                className={i % 2 === 1 ? "md:mt-24" : undefined}
                 delay={0.08 * (i % 2)}
               >
                 <Link
@@ -41,24 +34,27 @@ export default function FeaturedWork() {
                   data-cursor="View"
                   className="group block"
                 >
-                  <div className="overflow-hidden">
-                    <ParallaxImage
+                  <div
+                    className={`relative overflow-hidden ${
+                      tall ? "aspect-[4/5]" : "aspect-[4/3]"
+                    }`}
+                  >
+                    <Image
                       src={item.cover.src}
                       alt={item.cover.alt}
+                      fill
                       sizes="(min-width: 768px) 45vw, 100vw"
-                      className={`${
-                        tall ? "aspect-[4/5]" : "aspect-[4/3]"
-                      } transition-transform duration-700 ease-studio group-hover:scale-[1.03] motion-reduce:transition-none`}
+                      className="object-cover transition-transform duration-700 ease-studio group-hover:scale-[1.04] motion-reduce:transition-none"
                     />
                   </div>
                   <div className="mt-6 flex items-baseline justify-between gap-4 border-t u-hairline-inverse pt-4">
-                    <p className="u-label text-stone">
+                    <p className="u-label text-stone-light">
                       ({String(i + 1).padStart(2, "0")}) {item.client} ·{" "}
                       {item.category} · {item.year}
                     </p>
                     <span
                       aria-hidden
-                      className="u-label shrink-0 text-stone transition-all duration-300 ease-studio group-hover:translate-x-1 group-hover:text-terracotta"
+                      className="u-label shrink-0 text-stone-light transition-all duration-300 ease-studio group-hover:translate-x-1 group-hover:text-terracotta"
                     >
                       ↗
                     </span>

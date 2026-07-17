@@ -38,7 +38,7 @@ export default function Nav() {
       <header
         className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-studio ${
           scrolled
-            ? "border-b u-hairline bg-ivory/80 backdrop-blur-md"
+            ? "border-b u-hairline bg-ivory/90 backdrop-blur-sm"
             : "border-b border-transparent bg-transparent"
         }`}
       >

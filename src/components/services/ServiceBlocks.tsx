@@ -30,7 +30,7 @@ export default function ServiceBlocks() {
               <div className={reversed ? "md:order-2" : ""}>
                 <div className="md:sticky md:top-28">
                   <FadeUp>
-                    <div className="u-grain relative aspect-[4/5] max-h-[70vh] w-full overflow-hidden">
+                    <div className="relative aspect-[4/5] max-h-[70vh] w-full overflow-hidden">
                       <Image
                         src={service.image}
                         alt={service.imageAlt}

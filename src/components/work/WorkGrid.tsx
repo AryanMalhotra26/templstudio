@@ -3,8 +3,8 @@
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useState } from "react";
+import Image from "next/image";
 import { site, workCategories } from "@/content/site";
-import ParallaxImage from "@/components/motion/Parallax";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
@@ -65,14 +65,17 @@ export default function WorkGrid() {
                 data-cursor="View"
                 className="group block"
               >
-                <div className="overflow-hidden">
-                  <ParallaxImage
+                <div
+                  className={`relative overflow-hidden ${
+                    i % 2 === 0 ? "aspect-[4/5]" : "aspect-[4/3]"
+                  }`}
+                >
+                  <Image
                     src={item.cover.src}
                     alt={item.cover.alt}
+                    fill
                     sizes="(min-width: 768px) 45vw, 100vw"
-                    className={`${
-                      i % 2 === 0 ? "aspect-[4/5]" : "aspect-[4/3]"
-                    } transition-transform duration-700 ease-studio group-hover:scale-[1.03] motion-reduce:transition-none`}
+                    className="object-cover transition-transform duration-700 ease-studio group-hover:scale-[1.04] motion-reduce:transition-none"
                   />
                 </div>
                 <div className="mt-6 flex items-baseline justify-between gap-4 border-t u-hairline pt-4">

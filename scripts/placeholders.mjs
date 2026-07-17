@@ -46,18 +46,9 @@ const palettes = {
   },
 };
 
-const grain = (id) => `
-  <filter id="${id}" x="0" y="0" width="100%" height="100%">
-    <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" stitchTiles="stitch"/>
-    <feColorMatrix type="saturate" values="0"/>
-    <feComponentTransfer><feFuncA type="linear" slope="0.5"/></feComponentTransfer>
-    <feComposite operator="over" in2="SourceGraphic"/>
-  </filter>`;
-
 function svgShell(w, h, p, body) {
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
   <defs>
-    ${grain("g")}
     <radialGradient id="wash" cx="0.8" cy="0.15" r="1">
       <stop offset="0" stop-color="${p.wash}"/>
       <stop offset="1" stop-color="rgba(0,0,0,0)"/>
@@ -66,7 +57,6 @@ function svgShell(w, h, p, body) {
   <rect width="${w}" height="${h}" fill="${p.bg}"/>
   <rect width="${w}" height="${h}" fill="url(#wash)"/>
   ${body}
-  <rect width="${w}" height="${h}" filter="url(#g)" opacity="0.05"/>
 </svg>`;
 }
 
@@ -75,14 +65,6 @@ const label = (x, y, text, p, size = 17) =>
 
 const orbit = (cx, cy, r, p, dash = false) =>
   `<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${p.circle}" stroke-width="1.25"${dash ? ` stroke-dasharray="2 7"` : ""}/>`;
-
-const glyph = (cx, cy, r, color) => {
-  let petals = "";
-  for (let a = 0; a < 360; a += 45) {
-    petals += `<line x1="${cx}" y1="${cy}" x2="${cx + r * Math.cos((a * Math.PI) / 180)}" y2="${cy + r * Math.sin((a * Math.PI) / 180)}" stroke="${color}" stroke-width="3" stroke-linecap="round"/>`;
-  }
-  return `<g>${petals}<circle cx="${cx}" cy="${cy}" r="${r * 0.22}" fill="${color}"/></g>`;
-};
 
 /* ——— services: 640×800, big outlined numeral ——— */
 const serviceOrder = ["ink", "ivory", "terra", "ink", "ivory", "terra", "ink"];
@@ -95,7 +77,6 @@ serviceOrder.forEach((key, i) => {
   <line x1="0" y1="668" x2="640" y2="668" stroke="${p.line}" stroke-width="1.25"/>
   <line x1="46" y1="0" x2="46" y2="800" stroke="${p.line}" stroke-width="1.25"/>
   <circle cx="560" cy="130" r="34" fill="${p.disc}"/>
-  ${glyph(90, 585, 26, p.disc)}
   ${label(66, 78, `( ${n} ) — TEMPLSTUDIO ©`, p)}
   <text x="60" y="640" font-family="${SERIF}" font-style="italic" font-size="300"
     fill="none" stroke="${p.stroke}" stroke-width="2">${n}</text>`;
@@ -117,7 +98,6 @@ covers.forEach(({ file, w, h, p: key, initial, name }) => {
   ${orbit(w * 0.5, cy, Math.min(w, h) * 0.44, p, true)}
   <line x1="0" y1="${h - 130}" x2="${w}" y2="${h - 130}" stroke="${p.line}" stroke-width="1.5"/>
   <circle cx="${w * 0.5 + Math.min(w, h) * 0.34}" cy="${cy}" r="26" fill="${p.disc}"/>
-  ${glyph(w - 110, 108, 30, p.disc)}
   ${label(72, 96, `( WORK ) — TEMPLSTUDIO ©`, p, 20)}
   ${label(72, h - 78, name + " ©", p, 20)}
   <text x="${w * 0.5}" y="${cy + Math.min(w, h) * 0.13}" text-anchor="middle" font-family="${SERIF}" font-style="italic"
@@ -142,8 +122,7 @@ galleries.forEach(({ slug, p: key, count, labels }) => {
         <circle cx="1280" cy="170" r="28" fill="${p.disc}"/>
         <line x1="90" y1="330" x2="900" y2="330" stroke="${p.line}" stroke-width="1.5"/>
         <line x1="90" y1="500" x2="820" y2="500" stroke="${p.line}" stroke-width="1.5"/>
-        <line x1="90" y1="670" x2="880" y2="670" stroke="${p.line}" stroke-width="1.5"/>
-        ${glyph(150, 830, 30, p.disc)}`;
+        <line x1="90" y1="670" x2="880" y2="670" stroke="${p.line}" stroke-width="1.5"/>`;
     } else if (variant === 1) {
       comp = `${orbit(360, 500, 300, p)}${orbit(1240, 500, 300, p, true)}
         <line x1="800" y1="90" x2="800" y2="910" stroke="${p.line}" stroke-width="1.5"/>
@@ -153,9 +132,7 @@ galleries.forEach(({ slug, p: key, count, labels }) => {
       comp = `<line x1="90" y1="260" x2="1510" y2="260" stroke="${p.line}" stroke-width="1.5"/>
         <line x1="90" y1="740" x2="1510" y2="740" stroke="${p.line}" stroke-width="1.5"/>
         ${orbit(800, 500, 210, p)}
-        <circle cx="800" cy="500" r="30" fill="${p.disc}"/>
-        ${glyph(1450, 170, 30, p.disc)}
-        ${glyph(150, 830, 30, p.disc)}`;
+        <circle cx="800" cy="500" r="30" fill="${p.disc}"/>`;
     }
     const body = `${comp}
       ${label(90, 120, `( ${String(i + 1).padStart(2, "0")} ) — ${labels[i]} ©`, p, 22)}`;

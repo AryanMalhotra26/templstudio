@@ -3,7 +3,7 @@
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { site } from "@/content/site";
-import SectionLabel from "@/components/ui/SectionLabel";
+import SectionHeader from "@/components/ui/SectionHeader";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 const AUTO_ADVANCE_MS = 6000;
@@ -42,23 +42,16 @@ export default function Testimonials() {
 
   return (
     <section className="bg-ink text-ivory">
-      <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-40">
-        <div className="flex items-baseline justify-between gap-6">
-          <SectionLabel text={home.testimonials.label} tone="stone" />
-          <p className="u-label text-stone">
-            {String(index + 1).padStart(2, "0")} /{" "}
-            {String(testimonials.length).padStart(2, "0")}
-          </p>
-        </div>
+      <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-32">
+        <SectionHeader
+          label={home.testimonials.label}
+          meta={`${String(index + 1).padStart(2, "0")} / ${String(
+            testimonials.length
+          ).padStart(2, "0")}`}
+          tone="dark"
+        />
 
-        <p
-          aria-hidden
-          className="u-outline-text mt-8 select-none font-display text-8xl italic leading-none text-terracotta md:text-9xl"
-        >
-          “
-        </p>
-
-        <div className="relative mt-2 flex min-h-[320px] flex-col justify-between md:min-h-[360px]">
+        <div className="relative mt-12 flex min-h-[320px] flex-col justify-between md:min-h-[360px]">
           <AnimatePresence mode="wait">
             <motion.figure
               key={current.id}
@@ -68,7 +61,7 @@ export default function Testimonials() {
               transition={{ duration: 0.6, ease: EASE }}
             >
               <blockquote className="max-w-5xl font-display text-[clamp(1.75rem,4vw,3.5rem)] italic leading-[1.15] tracking-[-0.02em]">
-                {current.quote}
+                “{current.quote}”
               </blockquote>
               <figcaption className="u-label mt-10 text-stone">
                 {current.author} — {current.role},{" "}

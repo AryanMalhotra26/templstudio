@@ -56,7 +56,6 @@ export default function RootLayout({
     >
       <body className="font-body">
         <Providers>
-          <div aria-hidden className="app-grain" />
           <CustomCursor />
           <Nav />
           <main>{children}</main>

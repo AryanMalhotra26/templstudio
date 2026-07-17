@@ -39,8 +39,6 @@ export interface Hero {
   primaryCta: Cta;
   secondaryCta: Cta;
   scrollHint: string;
-  /** Text ring around the rotating hero badge — repeatable, © separated. */
-  badge: string;
 }
 
 export interface Intro {
@@ -195,6 +193,8 @@ export interface Seo {
 export interface SectionHeading {
   label: string;
   headline: string;
+  /** Short supporting line, set right of the headline. */
+  lede?: string;
 }
 
 export interface HomeSections {
@@ -292,7 +292,6 @@ export const site: SiteContent = {
     primaryCta: { label: "Book a call", href: "/contact" },
     secondaryCta: { label: "See what we do", href: "/services" },
     scrollHint: "(SCROLL) ↓",
-    badge: "TEMPLSTUDIO © EST. 2026 © UNIGNORABLE ",
   },
 
   marqueeItems: [
@@ -322,16 +321,19 @@ export const site: SiteContent = {
     services: {
       label: "(01) — WHAT WE DO ©",
       headline: "Everything your growth *actually* needs.",
+      lede: "Start with the one channel you need most, or run the full system under one roof.",
       cta: { label: "All services & pricing", href: "/services" },
     },
     work: {
       label: "(02) — SELECTED WORK ©",
       headline: "Results you can *point* to.",
+      lede: "Recent engagements — every number comes straight from a client dashboard.",
       cta: { label: "View all work", href: "/work" },
     },
     process: {
       label: "(03) — HOW IT WORKS ©",
       headline: "From first call to first result, *fast.*",
+      lede: "No black box. You'll know what's shipping, when, and what it returned.",
     },
     testimonials: {
       label: "(04) — KIND WORDS ©",
@@ -340,6 +342,7 @@ export const site: SiteContent = {
     faq: {
       label: "(05) — QUESTIONS ©",
       headline: "Asked *often,* answered honestly.",
+      lede: "Straight answers to the questions every owner asks before signing.",
     },
   },
 

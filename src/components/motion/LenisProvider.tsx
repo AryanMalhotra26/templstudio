@@ -11,7 +11,7 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
-    const lenis = new Lenis({ lerp: 0.1 });
+    const lenis = new Lenis({ lerp: 0.12 });
     let frame: number;
     const raf = (time: number) => {
       lenis.raf(time);

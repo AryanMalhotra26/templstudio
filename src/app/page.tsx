@@ -18,7 +18,7 @@ export default function HomePage() {
   return (
     <>
       <Hero />
-      <Marquee items={site.marqueeItems} tilt />
+      <Marquee items={site.marqueeItems} />
       <Intro />
       <ServicesList />
       <FeaturedWork />

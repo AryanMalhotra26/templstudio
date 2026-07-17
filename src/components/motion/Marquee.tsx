@@ -5,8 +5,6 @@ interface MarqueeProps {
   inverted?: boolean;
   glyph?: string;
   durationSeconds?: number;
-  /** Tilt the strip a touch for editorial energy. */
-  tilt?: boolean;
 }
 
 /**
@@ -18,7 +16,6 @@ export default function Marquee({
   inverted = false,
   glyph = "©",
   durationSeconds = 28,
-  tilt = false,
 }: MarqueeProps) {
   const strip = (ariaHidden: boolean) => (
     <div
@@ -41,13 +38,13 @@ export default function Marquee({
     </div>
   );
 
-  const band = (
+  return (
     <div
       className={`overflow-hidden border-y py-5 md:py-6 ${
         inverted
           ? "bg-ink text-ivory border-line-inverse"
           : "bg-ivory text-ink border-line"
-      } ${tilt ? "-mx-6 -rotate-1 scale-[1.02]" : ""}`}
+      }`}
     >
       <div
         className="marquee-track flex w-max"
@@ -58,6 +55,4 @@ export default function Marquee({
       </div>
     </div>
   );
-
-  return tilt ? <div className="overflow-hidden py-4">{band}</div> : band;
 }

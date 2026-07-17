@@ -30,13 +30,13 @@ export default function ParallaxImage({
     target: ref,
     offset: ["start end", "end start"],
   });
-  const y = useTransform(scrollYProgress, [0, 1], ["-8%", "8%"]);
+  const y = useTransform(scrollYProgress, [0, 1], ["-6%", "6%"]);
 
   return (
-    <div ref={ref} className={`u-grain relative overflow-hidden ${className}`}>
+    <div ref={ref} className={`relative overflow-hidden ${className}`}>
       <motion.div
         style={reduceMotion ? undefined : { y }}
-        className="absolute inset-0 scale-[1.15]"
+        className="absolute inset-0 scale-[1.08]"
       >
         <Image
           src={src}

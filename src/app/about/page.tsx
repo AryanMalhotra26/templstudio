@@ -46,7 +46,7 @@ export default function AboutPage() {
 
       {/* Values */}
       <section className="bg-ink text-ivory">
-        <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-40">
+        <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-32">
           <SectionLabel text={about.manifestoLabel} tone="stone" />
           <Stagger className="mt-12 border-t u-hairline-inverse">
             {about.values.map((value, i) => (
@@ -70,11 +70,11 @@ export default function AboutPage() {
       {/* Team — rendered only when there is a team to show */}
       {about.team.length > 0 && (
         <section className="bg-ivory">
-          <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-40">
+          <div className="mx-auto max-w-site px-6 py-24 md:px-10 md:py-32">
             <Stagger className="grid gap-10 sm:grid-cols-2 md:grid-cols-3">
               {about.team.map((member) => (
                 <StaggerItem key={member.name}>
-                  <div className="u-grain relative aspect-[4/5] overflow-hidden">
+                  <div className="relative aspect-[4/5] overflow-hidden">
                     <Image
                       src={member.image}
                       alt={member.imageAlt}

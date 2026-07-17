@@ -17,7 +17,7 @@ export default function Footer() {
   return (
     <footer className="bg-ink text-ivory">
       {/* Giant CTA */}
-      <div className="mx-auto max-w-site px-6 pb-16 pt-24 md:px-10 md:pb-24 md:pt-40">
+      <div className="mx-auto max-w-site px-6 pb-16 pt-24 md:px-10 md:pb-24 md:pt-32">
         <SectionLabel text={footer.ctaLabel} tone="stone" />
         <Link
           href={footer.ctaHref}
