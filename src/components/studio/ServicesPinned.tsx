@@ -25,10 +25,26 @@ export default function ServicesPinned() {
       const stageEl = stage.current;
       if (!pin || !stageEl) return;
 
+      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const canPin =
-        window.matchMedia("(min-width: 768px)").matches &&
-        !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (!canPin) return; // stay in the stacked-list layout
+        window.matchMedia("(min-width: 768px) and (pointer: fine)").matches && !reduce;
+
+      if (!canPin) {
+        // Mobile / touch: stacked list — fade each card up on scroll so the
+        // section still animates (skipped entirely for reduced-motion).
+        if (!reduce) {
+          gsap.utils.toArray<HTMLElement>(".services-card").forEach((card) => {
+            gsap.from(card, {
+              y: 40,
+              autoAlpha: 0,
+              duration: 0.7,
+              ease: "power3.out",
+              scrollTrigger: { trigger: card, start: "top 88%", once: true },
+            });
+          });
+        }
+        return;
+      }
 
       pin.classList.add("is-pinned");
       pin.style.height = `${n * 85}vh`;
