@@ -989,6 +989,299 @@ export const site: SiteContent = {
   },
 };
 
+/* ————————————————————————————————————————————————————————————————
+   STUDIO HOME — the "Hildén & Kaira"-structured landing experience.
+   Kept as its own export so the strict SiteContent shape above is untouched.
+   Every visible string on the new homepage lives here. Placeholder assets
+   (chrome wordmark render, reel videos) are noted inline.
+   ———————————————————————————————————————————————————————————————— */
+
+export interface StudioReel {
+  /** Short caption shown under the reel (placeholder social copy). */
+  caption: string;
+  /** Seed numbers the live counters tick UP toward. */
+  views: string;
+  likes: number;
+  /** Meta line, e.g. "18 days ago". */
+  age: string;
+  /** Fake runtime shown in the player scrubber, seconds. */
+  duration: number;
+  /** Placeholder gradient token (see .reel-media--N in globals.css). */
+  tone: 1 | 2 | 3 | 4;
+}
+
+export interface StudioShowcase {
+  client: string;
+  /** One-line framing of what we did for them. */
+  line: string;
+  reels: StudioReel[];
+  reach: { views: string; likes: string };
+}
+
+export interface StudioCard {
+  title: string;
+  body: string;
+  cta: Cta;
+}
+
+export interface StudioHome {
+  hero: {
+    /** Wordmark rendered as chrome placeholder, split L + glyph + R. */
+    wordmarkLeft: string;
+    wordmarkGlyph: string;
+    wordmarkRight: string;
+    /** Masked-reveal tagline; *asterisks* become italic serif accents. */
+    tagline: string;
+    subhead: string;
+    primaryCta: Cta;
+    secondaryCta: Cta;
+    /** Rising placeholder media — count drives the ambient hero loop. */
+    floatingMediaCount: number;
+  };
+  statement: { label: string; headline: string; proof: string; proofAuthor: string };
+  showcaseLabel: string;
+  reach: { label: string; viewsLabel: string; likesLabel: string };
+  showcases: StudioShowcase[];
+  services: { label: string; headline: string };
+  testimonials: { label: string; headline: string };
+  closing: {
+    label: string;
+    headline: string;
+    body: string;
+    primaryCta: Cta;
+    secondaryCta: Cta;
+  };
+  cta: { label: string; headline: string; subhead: string; cards: StudioCard[] };
+  footerCredit: string;
+}
+
+export const studioHome: StudioHome = {
+  hero: {
+    wordmarkLeft: "templ",
+    wordmarkGlyph: "✳",
+    wordmarkRight: "studio",
+    tagline: "If a stranger can't *place* your brand in three seconds, your marketing is invisible.",
+    subhead: "We turn attention into revenue — or we keep working until it does.",
+    primaryCta: { label: "Our approach", href: "/services" },
+    secondaryCta: { label: "Work with us", href: "/contact" },
+    floatingMediaCount: 7,
+  },
+
+  statement: {
+    label: "(00) — THE STUDIO ©",
+    headline: "Content only *your* brand can make, because it's built around your people.",
+    proof: "TemplStudio understood our audience and our voice faster than we could explain it — and the numbers followed.",
+    proofAuthor: "Placeholder Client · CMO",
+  },
+
+  showcaseLabel: "Show case",
+  reach: {
+    label: "Social reach — past 30 days",
+    viewsLabel: "Organic views",
+    likesLabel: "Likes",
+  },
+
+  // Placeholder showcases — swap captions/numbers for real client reels.
+  showcases: [
+    {
+      client: "Golden Hour Med Spa",
+      line: "We put the injectors on camera and turned a quiet feed into a two-week waitlist.",
+      reach: { views: "1 413 394", likes: "55 994" },
+      reels: [
+        { caption: "The three-second consult every new client asks about — answered on camera.", views: "372k+", likes: 12400, age: "25 days ago", duration: 130, tone: 1 },
+        { caption: "Before / after, but make it honest: what results actually look like at week two.", views: "165k+", likes: 8600, age: "20 days ago", duration: 108, tone: 2 },
+        { caption: "A day in the treatment room, narrated by the owner.", views: "88k+", likes: 5100, age: "12 days ago", duration: 96, tone: 3 },
+      ],
+    },
+    {
+      client: "Northbound Supply Co.",
+      line: "We made the field journal move — email revenue you can watch climb.",
+      reach: { views: "1 450 858", likes: "29 441" },
+      reels: [
+        { caption: "Why our most-returned product is also our most-loved. Placeholder hook copy.", views: "362k+", likes: 6164, age: "19 days ago", duration: 179, tone: 4 },
+        { caption: "The warehouse at 6am — what packing 400 orders actually looks like.", views: "179k+", likes: 5858, age: "29 days ago", duration: 120, tone: 1 },
+        { caption: "A customer question we get every week, answered by the founder.", views: "249k+", likes: 6401, age: "28 days ago", duration: 156, tone: 2 },
+      ],
+    },
+    {
+      client: "Uusi Studio Feature",
+      line: "We built the relationship between brand and audience through content that stands out.",
+      reach: { views: "1 180 674", likes: "27 091" },
+      reels: [
+        { caption: "What people actually think — a placeholder street-interview format.", views: "72k+", likes: 1511, age: "23 days ago", duration: 167, tone: 3 },
+        { caption: "The story behind the story. Long-form placeholder caption for the reel.", views: "54k+", likes: 1320, age: "16 days ago", duration: 140, tone: 4 },
+        { caption: "One question, five honest answers. Placeholder social copy here.", views: "61k+", likes: 1440, age: "9 days ago", duration: 132, tone: 1 },
+      ],
+    },
+    {
+      client: "Summit Air Heating & Cooling",
+      line: "We turned roadside call-outs into scroll-stopping POV content.",
+      reach: { views: "1 324 978", likes: "22 354" },
+      reels: [
+        { caption: "The 2am emergency call that our AI booked while everyone slept.", views: "367k+", likes: 6083, age: "8 days ago", duration: 148, tone: 2 },
+        { caption: "What a dead battery looks like from the tech's dashcam. Placeholder.", views: "122k+", likes: 1558, age: "21 days ago", duration: 151, tone: 3 },
+        { caption: "A surprise inside the engine bay — placeholder POV reel caption.", views: "219k+", likes: 4307, age: "22 days ago", duration: 150, tone: 4 },
+      ],
+    },
+  ],
+
+  services: {
+    label: "(01) — OUR SERVICES ©",
+    headline: "Everything your growth *actually* needs.",
+  },
+
+  testimonials: {
+    label: "(02) — KIND WORDS ©",
+    headline: "What our clients say",
+  },
+
+  closing: {
+    label: "(03) — OUR STORY ©",
+    headline: "Does your brand *undersell* itself?",
+    body: "Most businesses think their work, their people and their story aren't interesting enough — so they hide behind generic, expensive campaigns. We think that's lazy, and a waste of money.",
+    primaryCta: { label: "Read our story", href: "/about" },
+    secondaryCta: { label: "Get in touch", href: "/contact" },
+  },
+
+  cta: {
+    label: "(04) — NEXT STEP ©",
+    headline: "Ready to work with us?",
+    subhead: "Choose how you'd like to start.",
+    cards: [
+      {
+        title: "We'll call you",
+        body: "Leave your number and a senior strategist calls you within one business day. No junior gatekeepers.",
+        cta: { label: "Book a call", href: "/contact" },
+      },
+      {
+        title: "We audit your presence",
+        body: "Get a free, no-strings teardown of your current marketing — with the three things we'd fix first.",
+        cta: { label: "Get a free audit", href: "/contact" },
+      },
+    ],
+  },
+
+  footerCredit: "Design & build by TemplStudio",
+};
+
+/* ————————————————————————————————————————————————————————————————
+   STUDIO STORY — the "Our Story" scroll-timeline (Hildén & Kaira-style):
+   floating-photo hero → founder intro → chapters with a sticky year rail
+   and stat call-outs. All copy is placeholder — swap for the real story.
+   ———————————————————————————————————————————————————————————————— */
+
+export interface StoryFounder {
+  name: string;
+  role: string;
+  tone: 1 | 2 | 3 | 4;
+}
+
+export interface StoryChapter {
+  /** Year (or range) shown in the sticky rail, e.g. "2021" or "2021 — 2022". */
+  year: string;
+  title: string;
+  body: string[];
+  /** Optional inline stat call-out for this chapter. */
+  stat?: { value: string; label: string };
+}
+
+export interface StudioStory {
+  hero: { label: string; headline: string; body: string; cta: Cta };
+  founders: { intro: string; people: StoryFounder[] };
+  chaptersLabel: string;
+  chapters: StoryChapter[];
+}
+
+export const studioStory: StudioStory = {
+  hero: {
+    label: "(OUR STORY) ©",
+    headline: "We didn't plan *any of this.*",
+    body: "TemplStudio started as a shared doc between two freelancers who were tired of shipping work that looked busy but changed nothing. This is how it became a studio.",
+    cta: { label: "Read our story", href: "#story" },
+  },
+
+  founders: {
+    intro:
+      "Alex Templeton and Sam Rivera — co-founders, and the two people who actually do the work. (Placeholder founders.) Here's where it started.",
+    people: [
+      { name: "Alex Templeton", role: "Co-founder · Strategy", tone: 1 },
+      { name: "Sam Rivera", role: "Co-founder · Creative", tone: 2 },
+    ],
+  },
+
+  chaptersLabel: "(THE STORY SO FAR) ©",
+  chapters: [
+    {
+      year: "2019",
+      title: "A shared doc and too many ideas.",
+      body: [
+        "We met freelancing for the same client and kept quietly fixing each other's work at midnight.",
+        "Neither of us had a plan — just a Notion doc, strong opinions, and a habit of saying yes to things we didn't yet know how to do.",
+      ],
+    },
+    {
+      year: "2020",
+      title: "The year everything moved online.",
+      body: [
+        "Overnight, every business needed a digital presence — and most of what agencies shipped them was expensive and forgettable.",
+        "We started taking on the projects nobody else wanted to do properly.",
+      ],
+      stat: { value: "0€", label: "Ad spend we started with" },
+    },
+    {
+      year: "2021",
+      title: "We stopped selling hours.",
+      body: [
+        "The work paid rent but never moved a number anyone actually cared about.",
+        "So we tore up the retainer and rebuilt around one rule: every engagement has to produce something the client can see in their own dashboard.",
+      ],
+    },
+    {
+      year: "2022",
+      title: "The first system that paid for itself.",
+      body: [
+        "We shipped an automation that answered a client's phone at 2am and booked the job. It paid for the whole engagement in a single weekend.",
+        "That's when 'marketing studio' started to feel like too small a name.",
+      ],
+      stat: { value: "47×", label: "ROI on our first automation build" },
+    },
+    {
+      year: "2023",
+      title: "From projects to partners.",
+      body: [
+        "Clients stopped briefing us and started bringing us into the room.",
+        "We were no longer the vendor waiting on approvals. We were the marketing department.",
+      ],
+      stat: { value: "95%", label: "Client retention" },
+    },
+    {
+      year: "2024",
+      title: "The year the numbers got loud.",
+      body: [
+        "Our best-performing clients weren't the ones with the biggest budgets. They were the ones who let us be honest.",
+        "Revenue followed — theirs first, then ours.",
+      ],
+      stat: { value: "+240%", label: "Average client revenue lift" },
+    },
+    {
+      year: "2025",
+      title: "A studio, not an agency.",
+      body: [
+        "We drew a line: senior people only, public pricing, and you own everything we make.",
+        "Small on purpose. Fast because of it.",
+      ],
+    },
+    {
+      year: "2026",
+      title: "This is just the intro.",
+      body: [
+        "Toronto, remote, and wherever the work is. New tools, same rule — outcomes over activity.",
+        "You already know how this part goes. You'll be the next chapter.",
+      ],
+    },
+  ],
+};
+
 /* Convenience accessors */
 export const featuredWork = site.work.filter((w) => w.featured);
 

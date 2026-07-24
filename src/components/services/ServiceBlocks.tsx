@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { site } from "@/content/site";
 import FadeUp from "@/components/motion/FadeUp";
-import RevealText from "@/components/motion/RevealText";
+import SplitReveal from "@/components/studio/SplitReveal";
 import Button from "@/components/ui/Button";
 
 /**
@@ -51,7 +51,7 @@ export default function ServiceBlocks() {
                     <span className="text-ink">{service.startingPrice}</span>
                   </p>
                 </FadeUp>
-                <RevealText
+                <SplitReveal
                   text={service.name}
                   as="h2"
                   className="mt-5 font-display text-[clamp(2rem,4vw,3.5rem)] leading-[1.05] tracking-[-0.02em] text-ink"

@@ -134,3 +134,216 @@ html.has-custom-cursor [role="button"] {
     animation-duration: 0.01ms !important;
   }
 }
+
+/* ==================================================================
+   STUDIO HOME — Hildén & Kaira-structured landing experience.
+   ================================================================== */
+
+/* ---- Section theming engine ------------------------------------
+   Each themed section sets --bg / --fg / --muted / --hair; the nav
+   samples the section under it and copies these onto itself. */
+[data-studio-theme] {
+  background-color: var(--bg);
+  color: var(--fg);
+}
+[data-studio-theme="accent"] {
+  --bg: var(--terracotta);
+  --fg: var(--ivory);
+  --muted: rgba(242, 239, 233, 0.72);
+  --hair: rgba(242, 239, 233, 0.24);
+}
+[data-studio-theme="ivory"] {
+  --bg: var(--ivory);
+  --fg: var(--ink);
+  --muted: var(--stone);
+  --hair: var(--line);
+}
+[data-studio-theme="ink"] {
+  --bg: var(--ink);
+  --fg: var(--ivory);
+  --muted: var(--stone-light);
+  --hair: var(--line-inverse);
+}
+[data-studio-theme="chrome"] {
+  --bg: #23211e;
+  --fg: #f2efe9;
+  --muted: #9a938a;
+  --hair: rgba(242, 239, 233, 0.14);
+}
+
+/* ---- Nav theme sync (set by Nav on scroll) ---------------------- */
+header[data-nav-theme="ink"] .nav-word,
+header[data-nav-theme="chrome"] .nav-word,
+header[data-nav-theme="accent"] .nav-word {
+  color: var(--ivory);
+}
+header[data-nav-theme="ink"] .nav-link,
+header[data-nav-theme="chrome"] .nav-link,
+header[data-nav-theme="accent"] .nav-link {
+  color: var(--ivory);
+}
+header[data-nav-theme="ink"] .nav-cta,
+header[data-nav-theme="chrome"] .nav-cta,
+header[data-nav-theme="accent"] .nav-cta {
+  border-color: rgba(242, 239, 233, 0.5);
+  color: var(--ivory);
+}
+
+/* ---- Chrome wordmark (placeholder for a real 3D metal render) ---
+   Liquid-metal look faked with a multi-stop metallic gradient clipped
+   to the text + a soft emboss. Swap each <span> for a rendered
+   transparent AVIF/PNG glyph to match Hildén & Kaira exactly. */
+.chrome-text {
+  background-image: linear-gradient(
+    175deg,
+    #8f9299 0%,
+    #eef1f4 18%,
+    #ffffff 30%,
+    #b9bdc4 46%,
+    #6f747c 58%,
+    #d7dbe0 72%,
+    #f4f6f8 84%,
+    #9aa0a8 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
+  background-size: 100% 220%;
+  background-position: 50% 0%;
+  filter: drop-shadow(0 2px 1px rgba(17, 17, 16, 0.28))
+    drop-shadow(0 6px 18px rgba(17, 17, 16, 0.14));
+  transition: background-position 0.6s var(--ease, cubic-bezier(0.16, 1, 0.3, 1));
+}
+.chrome-shimmer {
+  animation: chrome-shimmer 6s ease-in-out infinite alternate;
+}
+@keyframes chrome-shimmer {
+  from {
+    background-position: 50% 0%;
+  }
+  to {
+    background-position: 50% 100%;
+  }
+}
+
+/* ---- Rising hero media (ambient loop) --------------------------- */
+.hero-float__item {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  will-change: transform, opacity;
+}
+.hero-float__media {
+  width: clamp(120px, 12vw, 190px);
+  aspect-ratio: 3 / 4;
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px -20px rgba(17, 17, 16, 0.4);
+}
+
+/* ---- Placeholder media tones (reels + floats) ------------------- */
+.tone-1 { background: linear-gradient(150deg, #c4502c, #7a2c17); }
+.tone-2 { background: linear-gradient(150deg, #3a3733, #14130f); }
+.tone-3 { background: linear-gradient(150deg, #b7a891, #6f6656); }
+.tone-4 { background: linear-gradient(150deg, #d98a5f, #a63e20); }
+
+/* ---- 9:16 reel card + fake player UI ---------------------------- */
+.reel {
+  position: relative;
+  aspect-ratio: 9 / 16;
+  border-radius: 18px;
+  overflow: hidden;
+  isolation: isolate;
+  user-select: none;
+}
+.reel__scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    to top,
+    rgba(17, 17, 16, 0.72) 0%,
+    rgba(17, 17, 16, 0) 42%
+  );
+  pointer-events: none;
+}
+.reel__ui {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 2;
+  padding: 14px;
+}
+.reel__scrub {
+  height: 3px;
+  border-radius: 2px;
+  background: rgba(242, 239, 233, 0.3);
+  overflow: hidden;
+}
+.reel__scrub-fill {
+  height: 100%;
+  width: 0%;
+  background: var(--ivory);
+  border-radius: 2px;
+}
+.reel__badge {
+  backdrop-filter: blur(6px);
+  background: rgba(17, 17, 16, 0.35);
+}
+
+/* ---- Flick-card deck stage -------------------------------------- */
+.flick-stage {
+  position: relative;
+  height: min(74vh, 640px);
+  perspective: 1400px;
+}
+.flick-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: clamp(220px, 24vw, 300px);
+  transform: translate(-50%, -50%);
+  will-change: transform, opacity;
+}
+
+/* ---- Pinned 3D services stage ----------------------------------- */
+.services-stage {
+  position: relative;
+  transform-style: preserve-3d;
+}
+.services-card {
+  will-change: transform;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+/* ---- Momentum-hover CTA cards ----------------------------------- */
+.momentum-target {
+  will-change: transform;
+}
+
+/* Split-line masks used by the global GSAP reveal */
+.split-line {
+  overflow: hidden;
+  display: block;
+}
+
+/* ---- Nav shell background (follows the sampled section theme) ---- */
+.nav-shell.is-scrolled {
+  backdrop-filter: blur(8px);
+  border-color: var(--line);
+  background-color: rgba(242, 239, 233, 0.85); /* default ivory */
+}
+.nav-shell.is-scrolled[data-nav-theme="ink"] {
+  background-color: rgba(17, 17, 16, 0.8);
+  border-color: var(--line-inverse);
+}
+.nav-shell.is-scrolled[data-nav-theme="chrome"] {
+  background-color: rgba(35, 33, 30, 0.85);
+  border-color: rgba(242, 239, 233, 0.14);
+}
+.nav-shell.is-scrolled[data-nav-theme="accent"] {
+  background-color: rgba(196, 80, 44, 0.9);
+  border-color: rgba(242, 239, 233, 0.24);
+}
+

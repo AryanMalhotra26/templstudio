@@ -10,15 +10,28 @@ const EASE = [0.16, 1, 0.3, 1] as const;
 
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
+  const [navTheme, setNavTheme] = useState("ivory");
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
+  // Scroll listener: track shrink state + sample the themed section under the
+  // nav and copy its theme (the Hildén & Kaira re-theming nav). Pages with no
+  // `[data-studio-theme]` sections simply stay on the default ivory theme.
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 80);
+      const y = 48;
+      let theme = "ivory";
+      document.querySelectorAll<HTMLElement>("[data-studio-theme]").forEach((z) => {
+        const r = z.getBoundingClientRect();
+        if (r.top <= y && r.bottom > y) theme = z.dataset.navTheme || "ivory";
+      });
+      setNavTheme(theme);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [pathname]);
 
   // Close the overlay whenever the route changes
   useEffect(() => {
@@ -36,10 +49,9 @@ export default function Nav() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-studio ${
-          scrolled
-            ? "border-b u-hairline bg-ivory/90 backdrop-blur-sm"
-            : "border-b border-transparent bg-transparent"
+        data-nav-theme={navTheme}
+        className={`nav-shell fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-studio ${
+          scrolled ? "is-scrolled border-b" : "border-b border-transparent"
         }`}
       >
         <nav
@@ -49,7 +61,7 @@ export default function Nav() {
         >
           <Link
             href="/"
-            className="font-display text-xl font-semibold tracking-tight text-ink"
+            className="nav-word font-display text-xl font-semibold tracking-tight text-ink"
           >
             {site.brand.name}
             <span className="text-terracotta">.</span>
@@ -61,7 +73,7 @@ export default function Nav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`u-label u-underline-sweep transition-colors duration-300 ${
+                className={`nav-link u-label u-underline-sweep transition-colors duration-300 ${
                   pathname === link.href
                     ? "text-terracotta"
                     : "text-ink hover:text-terracotta"
@@ -72,7 +84,7 @@ export default function Nav() {
             ))}
             <Link
               href={site.hero.primaryCta.href}
-              className="group relative overflow-hidden rounded-full border border-ink px-5 py-2.5 u-label text-ink transition-colors duration-300 hover:text-ivory"
+              className="nav-cta group relative overflow-hidden rounded-full border border-ink px-5 py-2.5 u-label text-ink transition-colors duration-300 hover:text-ivory"
             >
               <span
                 aria-hidden
@@ -88,7 +100,7 @@ export default function Nav() {
             onClick={() => setMenuOpen((v) => !v)}
             aria-expanded={menuOpen}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="u-label relative z-[70] text-ink md:hidden"
+            className="nav-word u-label relative z-[70] text-ink md:hidden"
           >
             {menuOpen ? "CLOSE" : "MENU"}
           </button>

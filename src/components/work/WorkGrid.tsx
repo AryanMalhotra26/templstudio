@@ -2,13 +2,18 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
 import Image from "next/image";
+import { useState } from "react";
 import { site, workCategories } from "@/content/site";
 
 const EASE = [0.16, 1, 0.3, 1] as const;
 
-/** Filterable editorial grid with animated layout reordering. */
+/**
+ * Editorial case-study index. Filterable, animated-reorder rows that
+ * alternate media side, lead with the client name, and surface each
+ * project's top result stats as call-outs — the same layered treatment as
+ * the story timeline.
+ */
 export default function WorkGrid() {
   const { work, workPage } = site;
   const categories = [workPage.allFilter, ...workCategories()];
@@ -48,54 +53,85 @@ export default function WorkGrid() {
         })}
       </div>
 
-      {/* Grid */}
-      <motion.div layout className="mt-14 grid gap-x-10 gap-y-16 md:grid-cols-2">
+      {/* Case-study index */}
+      <motion.div layout className="mt-14 border-t u-hairline">
         <AnimatePresence mode="popLayout" initial={false}>
-          {visible.map((item, i) => (
-            <motion.div
-              key={item.slug}
-              layout
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.97 }}
-              transition={{ duration: 0.5, ease: EASE }}
-            >
-              <Link
-                href={`/work/${item.slug}`}
-                data-cursor="View"
-                className="group block"
+          {visible.map((item, i) => {
+            const mediaLeft = i % 2 === 0;
+            return (
+              <motion.article
+                key={item.slug}
+                layout
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.98 }}
+                transition={{ duration: 0.5, ease: EASE }}
+                className="border-b u-hairline py-12 md:py-20"
               >
-                <div
-                  className={`relative overflow-hidden ${
-                    i % 2 === 0 ? "aspect-[4/5]" : "aspect-[4/3]"
-                  }`}
+                <Link
+                  href={`/work/${item.slug}`}
+                  data-cursor="View"
+                  className="group grid items-center gap-8 md:grid-cols-2 md:gap-16"
                 >
-                  <Image
-                    src={item.cover.src}
-                    alt={item.cover.alt}
-                    fill
-                    sizes="(min-width: 768px) 45vw, 100vw"
-                    className="object-cover transition-transform duration-700 ease-studio group-hover:scale-[1.04] motion-reduce:transition-none"
-                  />
-                </div>
-                <div className="mt-6 flex items-baseline justify-between gap-4 border-t u-hairline pt-4">
-                  <p className="u-label text-stone">
-                    ({String(i + 1).padStart(2, "0")}) {item.client} ·{" "}
-                    {item.category} · {item.year}
-                  </p>
-                  <span
-                    aria-hidden
-                    className="u-label shrink-0 text-stone transition-all duration-300 ease-studio group-hover:translate-x-1 group-hover:text-terracotta"
-                  >
-                    ↗
-                  </span>
-                </div>
-                <h2 className="mt-3 max-w-md font-display text-2xl leading-snug tracking-[-0.02em] text-ink transition-colors duration-300 group-hover:text-terracotta md:text-3xl">
-                  {item.summary}
-                </h2>
-              </Link>
-            </motion.div>
-          ))}
+                  {/* Media */}
+                  <div className={mediaLeft ? "" : "md:order-2"}>
+                    <div
+                      className={`relative aspect-[4/3] overflow-hidden rounded-2xl tone-${(i % 4) + 1}`}
+                    >
+                      <Image
+                        src={item.cover.src}
+                        alt={item.cover.alt}
+                        fill
+                        sizes="(min-width: 768px) 45vw, 100vw"
+                        className="object-cover transition-transform duration-700 ease-studio group-hover:scale-[1.05] motion-reduce:transition-none"
+                      />
+                      <span className="absolute left-5 top-4 font-mono text-[11px] uppercase tracking-widest text-ivory mix-blend-difference">
+                        {String(i + 1).padStart(2, "0")} / {String(work.length).padStart(2, "0")}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Text */}
+                  <div className={mediaLeft ? "" : "md:order-1"}>
+                    <div className="flex items-center gap-3">
+                      <span className="u-label text-terracotta">{item.category}</span>
+                      <span className="u-label text-stone">— {item.year}</span>
+                    </div>
+                    <h2 className="mt-4 font-display text-[clamp(2rem,4vw,3.5rem)] leading-[1.0] tracking-[-0.02em] text-ink transition-colors duration-300 group-hover:text-terracotta">
+                      {item.client}
+                    </h2>
+                    <p className="mt-4 max-w-md text-stone">{item.summary}</p>
+
+                    {/* Result call-outs */}
+                    <div className="mt-8 flex flex-wrap gap-x-10 gap-y-5 border-t u-hairline pt-6">
+                      {item.results.slice(0, 3).map((stat) => (
+                        <div key={stat.label}>
+                          <p className="font-display text-3xl tracking-[-0.02em] text-ink md:text-4xl">
+                            {stat.prefix ?? ""}
+                            {stat.value}
+                            {stat.suffix ?? ""}
+                          </p>
+                          <p className="mt-1 max-w-[9rem] font-mono text-[10px] uppercase leading-snug tracking-widest text-stone">
+                            {stat.label}
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+
+                    <span className="mt-8 inline-flex items-center gap-2 u-label text-ink transition-colors duration-300 group-hover:text-terracotta">
+                      View case study
+                      <span
+                        aria-hidden
+                        className="transition-transform duration-300 ease-studio group-hover:translate-x-1 motion-reduce:transition-none"
+                      >
+                        →
+                      </span>
+                    </span>
+                  </div>
+                </Link>
+              </motion.article>
+            );
+          })}
         </AnimatePresence>
       </motion.div>
     </div>

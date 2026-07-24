@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
-import RevealText from "@/components/motion/RevealText";
+import SplitReveal from "@/components/studio/SplitReveal";
 import SectionLabel from "@/components/ui/SectionLabel";
 import FadeUp from "@/components/motion/FadeUp";
 import ContactForm from "@/components/contact/ContactForm";
@@ -19,7 +19,7 @@ export default function ContactPage() {
         {/* Left: headline + direct contact */}
         <div>
           <SectionLabel text={contact.label} />
-          <RevealText
+          <SplitReveal
             text={contact.headline}
             as="h1"
             className="mt-6 font-display text-[clamp(2.5rem,6vw,5.5rem)] leading-[1.02] tracking-[-0.02em] text-ink"
