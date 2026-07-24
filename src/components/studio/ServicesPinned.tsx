@@ -30,20 +30,24 @@ export default function ServicesPinned() {
         window.matchMedia("(min-width: 768px) and (pointer: fine)").matches && !reduce;
 
       if (!canPin) {
-        // Mobile / touch: stacked list — fade each card up on scroll so the
-        // section still animates (skipped entirely for reduced-motion).
-        if (!reduce) {
-          gsap.utils.toArray<HTMLElement>(".services-card").forEach((card) => {
-            gsap.from(card, {
-              y: 40,
-              autoAlpha: 0,
-              duration: 0.7,
-              ease: "power3.out",
-              scrollTrigger: { trigger: card, start: "top 88%", once: true },
+        // Mobile / touch: stacked list — fade each card up as it enters view,
+        // via IntersectionObserver (reliable on touch). Skip for reduced-motion.
+        if (reduce) return;
+        const cards = gsap.utils.toArray<HTMLElement>(".services-card");
+        gsap.set(cards, { autoAlpha: 0, y: 40 });
+        const io = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((e) => {
+              if (e.isIntersecting) {
+                gsap.to(e.target, { autoAlpha: 1, y: 0, duration: 0.7, ease: "power3.out" });
+                io.unobserve(e.target);
+              }
             });
-          });
-        }
-        return;
+          },
+          { threshold: 0.15 },
+        );
+        cards.forEach((c) => io.observe(c));
+        return () => io.disconnect();
       }
 
       pin.classList.add("is-pinned");
