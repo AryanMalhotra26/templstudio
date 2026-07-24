@@ -6,7 +6,7 @@ import {
   getWorkBySlug,
   site,
 } from "@/content/site";
-import RevealText from "@/components/motion/RevealText";
+import SplitReveal from "@/components/studio/SplitReveal";
 import FadeUp, { Stagger, StaggerItem } from "@/components/motion/FadeUp";
 import ParallaxImage from "@/components/motion/Parallax";
 import Counter from "@/components/motion/Counter";
@@ -58,7 +58,7 @@ export default function CaseStudyPage({
               ← {labels.backLabel}
             </Link>
           </FadeUp>
-          <RevealText
+          <SplitReveal
             text={item.client}
             as="h1"
             className="mt-6 max-w-5xl font-display text-[clamp(2.5rem,7vw,6.5rem)] leading-[1.02] tracking-[-0.02em] text-ink"
@@ -95,12 +95,13 @@ export default function CaseStudyPage({
       {/* Challenge → Approach */}
       <section className="mx-auto max-w-site px-6 py-20 md:px-10 md:py-32">
         <div className="grid gap-14 md:grid-cols-2 md:gap-10">
-          <FadeUp>
+          <div>
             <p className="u-label text-terracotta">{labels.challengeLabel}</p>
-            <p className="mt-6 font-display text-2xl leading-snug tracking-[-0.02em] text-ink md:text-3xl">
-              {item.challenge}
-            </p>
-          </FadeUp>
+            <SplitReveal
+              text={item.challenge}
+              className="mt-6 font-display text-2xl leading-snug tracking-[-0.02em] text-ink md:text-3xl"
+            />
+          </div>
           <FadeUp delay={0.1}>
             <p className="u-label text-terracotta">{labels.approachLabel}</p>
             <p className="mt-6 text-stone md:text-lg">{item.approach}</p>
@@ -109,7 +110,7 @@ export default function CaseStudyPage({
       </section>
 
       {/* Results */}
-      <section className="bg-ink text-ivory">
+      <section data-studio-theme="ink" data-nav-theme="ink" className="bg-ink text-ivory">
         <div className="mx-auto max-w-site px-6 py-20 md:px-10 md:py-32">
           <FadeUp>
             <p className="u-label text-stone">{labels.resultsLabel}</p>
