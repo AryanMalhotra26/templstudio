@@ -17,7 +17,7 @@ export default function ShowcaseSection() {
     <section
       data-studio-theme="ink"
       data-nav-theme="ink"
-      className="relative overflow-hidden px-6 py-28 md:px-10 md:py-40"
+      className="relative overflow-hidden px-6 py-20 md:px-10 md:py-40"
     >
       <div className="mx-auto max-w-site">
         {/* Statement */}
@@ -39,11 +39,11 @@ export default function ShowcaseSection() {
         </div>
 
         {/* Client showcases */}
-        <div className="mt-28 space-y-32 md:mt-40">
+        <div className="mt-20 space-y-24 md:mt-40 md:space-y-32">
           {showcases.map((s, i) => (
             <div
               key={s.client}
-              className={`grid items-center gap-12 md:grid-cols-2 md:gap-16 ${
+              className={`grid items-center gap-10 md:grid-cols-2 md:gap-16 ${
                 i % 2 === 1 ? "md:[&>*:first-child]:order-2" : ""
               }`}
             >

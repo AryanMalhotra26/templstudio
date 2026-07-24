@@ -2,17 +2,17 @@
 
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
-import { gsap, ScrollTrigger } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 import { site, studioHome } from "@/content/site";
 import SplitReveal from "./SplitReveal";
 
 const services = site.services;
 
 /**
- * Pinned 3D service stack — ported from Hildén & Kaira's `section_services`
- * scroll. The stack is pinned; as you scroll, the front card peels up and
- * away (random tilt) while the cards behind advance forward one slot. Each
- * card carries one service. Falls back to a plain list for reduced motion.
+ * Service cards. By default (mobile, no-JS, reduced-motion) they render as a
+ * clean stacked list. On desktop with motion enabled, JS adds `is-pinned`:
+ * the stage pins and the cards become a 3D stack that peels away on scroll
+ * (ported from Hildén & Kaira's `section_services`).
  */
 export default function ServicesPinned() {
   const pinHeight = useRef<HTMLDivElement>(null);
@@ -21,10 +21,19 @@ export default function ServicesPinned() {
 
   useGSAP(
     () => {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-      const cards = gsap.utils.toArray<HTMLElement>(".services-card");
+      const pin = pinHeight.current;
+      const stageEl = stage.current;
+      if (!pin || !stageEl) return;
 
-      // Initial stacked layout (front = index 0).
+      const canPin =
+        window.matchMedia("(min-width: 768px)").matches &&
+        !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      if (!canPin) return; // stay in the stacked-list layout
+
+      pin.classList.add("is-pinned");
+      pin.style.height = `${n * 85}vh`;
+
+      const cards = gsap.utils.toArray<HTMLElement>(".services-card");
       cards.forEach((card, i) => {
         gsap.set(card, {
           y: i * 16,
@@ -38,40 +47,26 @@ export default function ServicesPinned() {
 
       const tl = gsap.timeline({
         scrollTrigger: {
-          trigger: pinHeight.current,
+          trigger: pin,
           start: "top top",
           end: "bottom bottom",
           scrub: 0.3,
-          pin: stage.current,
+          pin: stageEl,
           anticipatePin: 1,
         },
         defaults: { ease: "none", duration: 1 },
       });
 
       for (let k = 0; k < n - 1; k++) {
-        // Front card peels away.
         tl.to(
           cards[k],
-          {
-            yPercent: -125,
-            y: "-=40",
-            rotation: (Math.random() - 0.5) * 26,
-            scale: 1.12,
-            opacity: 0,
-            ease: "power3.in",
-          },
+          { yPercent: -125, y: "-=40", rotation: (Math.random() - 0.5) * 26, scale: 1.12, opacity: 0, ease: "power3.in" },
           k,
         );
-        // Cards behind advance one slot toward the viewer.
         for (let j = k + 1; j < n; j++) {
           tl.to(
             cards[j],
-            {
-              y: `-=16`,
-              z: `+=60`,
-              scale: `+=0.05`,
-              opacity: j <= k + 4 ? 1 : 0,
-            },
+            { y: `-=16`, z: `+=60`, scale: `+=0.05`, opacity: j <= k + 4 ? 1 : 0 },
             k,
           );
         }
@@ -80,19 +75,18 @@ export default function ServicesPinned() {
       return () => {
         tl.scrollTrigger?.kill();
         tl.kill();
+        gsap.set(cards, { clearProps: "all" });
+        pin.classList.remove("is-pinned");
+        pin.style.height = "";
       };
     },
     { scope: pinHeight },
   );
 
   return (
-    <section
-      data-studio-theme="ink"
-      data-nav-theme="ink"
-      className="relative"
-    >
+    <section data-studio-theme="ink" data-nav-theme="ink" className="relative">
       {/* intro */}
-      <div className="mx-auto max-w-site px-6 pt-28 md:px-10 md:pt-40">
+      <div className="mx-auto max-w-site px-6 pt-24 md:px-10 md:pt-40">
         <p className="u-label text-[color:var(--muted)]">{studioHome.services.label}</p>
         <SplitReveal
           as="h2"
@@ -101,18 +95,14 @@ export default function ServicesPinned() {
         />
       </div>
 
-      {/* pinned scroll region */}
-      <div ref={pinHeight} style={{ height: `${n * 85}vh` }} className="relative mt-16">
-        <div
-          ref={stage}
-          className="services-stage flex h-[100svh] items-center justify-center overflow-hidden px-6"
-          style={{ perspective: "1600px" }}
-        >
-          <div className="relative h-[62vh] w-full max-w-md">
-            {services.map((s) => (
+      {/* cards: stacked list by default, pinned 3D stack on desktop */}
+      <div ref={pinHeight} className="services-pin relative mt-10 px-6 pb-8 md:mt-16 md:pb-0">
+        <div ref={stage} className="services-stage" style={{ perspective: "1600px" }}>
+          <div className="services-track relative mx-auto w-full max-w-md">
+            {services.map((s, i) => (
               <article
                 key={s.slug}
-                className="services-card absolute inset-0 flex flex-col justify-between overflow-hidden rounded-3xl border p-8 [border-color:var(--hair)]"
+                className="services-card flex flex-col justify-between overflow-hidden rounded-3xl border p-7 [border-color:var(--hair)] md:p-8"
                 style={{ background: "#1c1a17" }}
               >
                 <div className="flex items-start justify-between">
@@ -125,11 +115,9 @@ export default function ServicesPinned() {
                 </div>
 
                 <div
-                  className={`my-6 grid flex-1 place-items-center rounded-2xl tone-${
-                    (services.indexOf(s) % 4) + 1
-                  }`}
+                  className={`my-6 grid min-h-[180px] flex-1 place-items-center rounded-2xl tone-${(i % 4) + 1}`}
                 >
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-ivory/60">
+                  <span className="px-4 text-center font-mono text-[10px] uppercase tracking-widest text-ivory/60">
                     {s.imageAlt}
                   </span>
                 </div>

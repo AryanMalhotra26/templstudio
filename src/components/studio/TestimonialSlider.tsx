@@ -46,7 +46,7 @@ export default function TestimonialSlider() {
     <section
       data-studio-theme="ivory"
       data-nav-theme="ivory"
-      className="px-6 py-28 md:px-10 md:py-40"
+      className="px-6 py-20 md:px-10 md:py-40"
     >
       <div className="mx-auto max-w-4xl">
         <div className="flex items-center justify-between">

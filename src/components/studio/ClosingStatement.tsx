@@ -15,7 +15,7 @@ export default function ClosingStatement() {
     <section
       data-studio-theme="accent"
       data-nav-theme="accent"
-      className="px-6 py-32 text-center md:px-10 md:py-48"
+      className="px-6 py-24 text-center md:px-10 md:py-48"
     >
       <div className="mx-auto max-w-4xl">
         <p className="u-label text-[color:var(--muted)]">{closing.label}</p>

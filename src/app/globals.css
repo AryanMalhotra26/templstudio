@@ -306,15 +306,35 @@ header[data-nav-theme="accent"] .nav-cta {
   will-change: transform, opacity;
 }
 
-/* ---- Pinned 3D services stage ----------------------------------- */
-.services-stage {
-  position: relative;
-  transform-style: preserve-3d;
+/* ---- Services stage: stacked list by default, pinned 3D when active */
+.services-track {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 .services-card {
-  will-change: transform;
+  position: relative;
   transform-style: preserve-3d;
   backface-visibility: hidden;
+}
+/* Desktop pinned mode (JS adds .is-pinned to .services-pin) */
+.is-pinned .services-stage {
+  display: flex;
+  height: 100svh;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transform-style: preserve-3d;
+}
+.is-pinned .services-track {
+  display: block;
+  height: 62vh;
+  gap: 0;
+}
+.is-pinned .services-card {
+  position: absolute;
+  inset: 0;
+  will-change: transform;
 }
 
 /* ---- Momentum-hover CTA cards ----------------------------------- */

@@ -106,7 +106,7 @@ export default function CtaMomentum() {
       ref={root}
       data-studio-theme="chrome"
       data-nav-theme="chrome"
-      className="px-6 py-28 md:px-10 md:py-40"
+      className="px-6 py-20 md:px-10 md:py-40"
     >
       <div className="mx-auto max-w-site text-center">
         <p className="u-label text-[color:var(--muted)]">{cta.label}</p>
