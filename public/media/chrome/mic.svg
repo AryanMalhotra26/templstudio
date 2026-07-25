@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+  <linearGradient id="sheen" x1="0" y1="0" x2="0.15" y2="1">
+    <stop offset="0" stop-color="#ffffff"/>
+    <stop offset="0.16" stop-color="#dfe3e8"/>
+    <stop offset="0.34" stop-color="#9aa0a8"/>
+    <stop offset="0.46" stop-color="#4e5359"/>
+    <stop offset="0.55" stop-color="#8d939b"/>
+    <stop offset="0.64" stop-color="#f4f6f8"/>
+    <stop offset="0.78" stop-color="#ffffff"/>
+    <stop offset="0.9" stop-color="#a6acb4"/>
+    <stop offset="1" stop-color="#6d727a"/>
+  </linearGradient>
+  <radialGradient id="spec" cx="0.34" cy="0.24" r="0.5">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="lift" x="-25%" y="-25%" width="150%" height="150%">
+    <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#181818" flood-opacity="0.35"/>
+  </filter>
+</defs>
+  <g filter="url(#lift)">
+    <g fill="url(#sheen)" stroke="#ffffff" stroke-opacity="0.55" stroke-width="3">
+      <path d="M256 56c-39 0-70 31-70 70v98c0 39 31 70 70 70s70-31 70-70v-98c0-39-31-70-70-70Z"/>
+      <path d="M148 206v20c0 60 48 108 108 108s108-48 108-108v-20" fill="none" stroke="url(#sheen)" stroke-width="26" stroke-linecap="round"/>
+      <path d="M256 334v80" fill="none" stroke="url(#sheen)" stroke-width="26" stroke-linecap="round"/>
+      <path d="M188 452h136" fill="none" stroke="url(#sheen)" stroke-width="26" stroke-linecap="round"/>
+    </g>
+  </g>
+</svg>

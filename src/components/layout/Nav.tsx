@@ -1,44 +1,85 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { site } from "@/content/site";
+import BtnIcon from "@/components/ui/BtnIcon";
 
-const EASE = [0.16, 1, 0.3, 1] as const;
+/**
+ * Fixed nav, ported from the reference.
+ *
+ * Links sit dead-centre with a red dot that pops in on hover; the studio mark
+ * is left, the standing CTA right. The nav has no background of its own —
+ * instead it samples whichever themed section is under it (3rem from the top
+ * of the viewport) and adopts that section's `theme-*` class, so the type and
+ * button recolour as you scroll from lime hero → dark services → chrome
+ * footer. Pages with no themed sections stay on the default theme.
+ */
+
+const THEME_PREFIX = "theme-";
+const SAMPLE_OFFSET_REM = 3;
+const DEFAULT_THEME = "theme-default";
+
+/** The studio mark: the same six-point spark that sits inside the wordmark. */
+function StudioMark() {
+  return (
+    <svg viewBox="0 0 32 32" width="100%" height="100%" aria-hidden>
+      <path
+        fill="currentColor"
+        d="M16 1.5c.63 0 1.14.5 1.16 1.13l.2 7.3 5.2-5.13a1.16 1.16 0 0 1 1.68 1.6l-4.9 5.4 7.13-.75a1.16 1.16 0 0 1 .3 2.3l-6.95 1.5 6.72 2.42a1.16 1.16 0 0 1-.7 2.2l-6.97-1.9 4.5 5.73a1.16 1.16 0 0 1-1.8 1.44l-4.4-5.86-.87 7.2a1.16 1.16 0 0 1-2.3 0l-.88-7.2-4.4 5.86a1.16 1.16 0 0 1-1.8-1.44l4.5-5.73-6.96 1.9a1.16 1.16 0 0 1-.7-2.2l6.72-2.42-6.95-1.5a1.16 1.16 0 0 1 .3-2.3l7.12.75-4.9-5.4a1.16 1.16 0 0 1 1.7-1.6l5.2 5.13.19-7.3c.02-.63.53-1.13 1.16-1.13Z"
+      />
+    </svg>
+  );
+}
 
 export default function Nav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [navTheme, setNavTheme] = useState("ivory");
+  const [theme, setTheme] = useState(DEFAULT_THEME);
   const [menuOpen, setMenuOpen] = useState(false);
   const pathname = usePathname();
 
-  // Scroll listener: track shrink state + sample the themed section under the
-  // nav and copy its theme (the Hildén & Kaira re-theming nav). Pages with no
-  // `[data-studio-theme]` sections simply stay on the default ivory theme.
+  // Sample the themed section under the nav on every scroll frame.
   useEffect(() => {
-    const onScroll = () => {
-      setScrolled(window.scrollY > 80);
-      const y = 48;
-      let theme = "ivory";
-      document.querySelectorAll<HTMLElement>("[data-studio-theme]").forEach((z) => {
-        const r = z.getBoundingClientRect();
-        if (r.top <= y && r.bottom > y) theme = z.dataset.navTheme || "ivory";
+    let queued = false;
+
+    const themeOf = (el: Element) =>
+      Array.from(el.classList).find((c) => c.startsWith(THEME_PREFIX)) ?? null;
+
+    const sample = () => {
+      const offset =
+        SAMPLE_OFFSET_REM *
+        parseFloat(getComputedStyle(document.documentElement).fontSize);
+      let found: string | null = null;
+      document.querySelectorAll("section, header, footer").forEach((el) => {
+        if (!themeOf(el)) return;
+        const r = el.getBoundingClientRect();
+        if (r.top <= offset && r.bottom > offset) found = themeOf(el);
       });
-      setNavTheme(theme);
+      setTheme(found ?? DEFAULT_THEME);
     };
-    onScroll();
+
+    const onScroll = () => {
+      if (queued) return;
+      queued = true;
+      requestAnimationFrame(() => {
+        sample();
+        queued = false;
+      });
+    };
+
+    sample();
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    window.addEventListener("resize", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      window.removeEventListener("resize", onScroll);
+    };
   }, [pathname]);
 
-  // Close the overlay whenever the route changes
-  useEffect(() => {
-    setMenuOpen(false);
-  }, [pathname]);
+  useEffect(() => setMenuOpen(false), [pathname]);
 
-  // Lock body scroll while the overlay menu is open
+  // The reference forces the default theme and locks scroll while the mobile
+  // menu is open, so the panel always reads the same way.
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
@@ -46,130 +87,88 @@ export default function Nav() {
     };
   }, [menuOpen]);
 
+  const navTheme = menuOpen ? DEFAULT_THEME : theme;
+
   return (
     <>
-      <header
-        data-nav-theme={navTheme}
-        className={`nav-shell fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-studio ${
-          scrolled ? "is-scrolled border-b" : "border-b border-transparent"
-        }`}
-      >
-        <nav
-          className={`mx-auto flex max-w-site items-center justify-between px-6 transition-all duration-500 ease-studio md:px-10 ${
-            scrolled ? "py-3.5 md:py-4" : "py-5 md:py-7"
-          }`}
-        >
-          <Link
-            href="/"
-            className="nav-word font-display text-xl font-semibold tracking-tight text-ink"
-          >
-            {site.brand.name}
-            <span className="text-terracotta">.</span>
-          </Link>
-
-          {/* Desktop links */}
-          <div className="hidden items-center gap-8 md:flex">
+      <div className={`nav ${navTheme}`} data-gsap-ignore>
+        {/* Ahead of the padding-global block on purpose: `.nav-links` is
+            absolutely positioned with no `top`, so its static position — and
+            therefore its vertical placement — comes from DOM order, exactly
+            as on the reference. */}
+        <div className="nav-links">
+          <div className="nav-links_wrapper">
             {site.nav.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className={`nav-link u-label u-underline-sweep transition-colors duration-300 ${
-                  pathname === link.href
-                    ? "text-terracotta"
-                    : "text-ink hover:text-terracotta"
-                }`}
+                className="nav-link"
+                aria-current={pathname === link.href ? "page" : undefined}
               >
-                {link.label}
+                <span className="nav-link-dot_wrap">
+                  <span className="nav-link-dot" />
+                </span>
+                <span className="nav-link-text">{link.label}</span>
               </Link>
             ))}
-            <Link
-              href={site.hero.primaryCta.href}
-              className="nav-cta group relative overflow-hidden rounded-full border border-ink px-5 py-2.5 u-label text-ink transition-colors duration-300 hover:text-ivory"
-            >
-              <span
-                aria-hidden
-                className="absolute inset-0 origin-bottom scale-y-0 bg-ink transition-transform duration-300 ease-studio group-hover:scale-y-100 motion-reduce:transition-none"
-              />
-              <span className="relative z-10">{site.hero.primaryCta.label}</span>
-            </Link>
           </div>
+        </div>
 
-          {/* Mobile toggle */}
-          <button
-            type="button"
-            onClick={() => setMenuOpen((v) => !v)}
-            aria-expanded={menuOpen}
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            className="nav-word u-label relative z-[70] text-ink md:hidden"
-          >
-            {menuOpen ? "CLOSE" : "MENU"}
-          </button>
-        </nav>
-      </header>
-
-      {/* Full-screen ink overlay menu */}
-      <AnimatePresence>
-        {menuOpen && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.4, ease: EASE }}
-            className="fixed inset-0 z-[60] flex flex-col justify-between bg-ink px-6 pb-10 pt-28"
-          >
-            <motion.nav
-              initial="hidden"
-              animate="visible"
-              transition={{ staggerChildren: 0.07, delayChildren: 0.15 }}
-              className="flex flex-col gap-2"
-            >
-              {[{ label: "Home", href: "/" }, ...site.nav].map((link) => (
-                <span key={link.href} className="u-mask">
-                  <motion.span
-                    className="block"
-                    variants={{
-                      hidden: { y: "110%" },
-                      visible: {
-                        y: "0%",
-                        transition: { duration: 0.8, ease: EASE },
-                      },
-                    }}
-                  >
-                    <Link
-                      href={link.href}
-                      onClick={() => setMenuOpen(false)}
-                      className={`font-display text-5xl tracking-tight transition-colors duration-300 ${
-                        pathname === link.href
-                          ? "italic text-terracotta"
-                          : "text-ivory"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  </motion.span>
-                </span>
-              ))}
-            </motion.nav>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.5, duration: 0.6 }}
-              className="flex items-end justify-between border-t u-hairline-inverse pt-6"
-            >
-              <div>
-                <p className="u-label text-stone">{site.brand.location}</p>
-                <a
-                  href={`mailto:${site.brand.email}`}
-                  className="u-label u-underline-sweep mt-1 inline-block text-ivory"
+        <div className="padding-global">
+          <div className="container-col-12">
+            <div className="nav-container">
+              <div className="nav-inner">
+                <Link
+                  href="/"
+                  className="nav-logo"
+                  aria-label={`${site.brand.name} — home`}
                 >
-                  {site.brand.email}
-                </a>
+                  <StudioMark />
+                </Link>
+
+                <div className="nav-button">
+                  <BtnIcon label="Work with us" href="/contact" />
+                  <button
+                    type="button"
+                    className="menu-button"
+                    aria-expanded={menuOpen}
+                    aria-label={menuOpen ? "Close menu" : "Open menu"}
+                    onClick={() => setMenuOpen((v) => !v)}
+                  >
+                    <span className="btn-icon-content is-secondary">
+                      <span className="btn-icon-content__mask">
+                        <span className="btn-icon-content__text">
+                          {menuOpen ? "Close" : "Menu"}
+                        </span>
+                      </span>
+                    </span>
+                  </button>
+                </div>
               </div>
-              <p className="u-label text-stone">EST. {site.brand.est}</p>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      {menuOpen && (
+        <div className="nav-menu-panel theme-dark" data-gsap-ignore>
+          {[{ label: "Home", href: "/" }, ...site.nav].map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              onClick={() => setMenuOpen(false)}
+              className="heading-s"
+              style={{ textDecoration: "none", color: "inherit" }}
+            >
+              {link.label}
+            </Link>
+          ))}
+          <div style={{ marginTop: "2em" }}>
+            <BtnIcon label="Work with us" href="/contact" />
+          </div>
+        </div>
+      )}
     </>
   );
 }

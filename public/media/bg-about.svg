@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0" stop-color="#a98f6f"/>
+      <stop offset="0.55" stop-color="#6b573e"/>
+      <stop offset="1" stop-color="#241c13"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
+    </linearGradient>
+    <radialGradient id="key">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.62"/>
+      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rim">
+      <stop offset="0" stop-color="#ecfdad" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#ecfdad" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="kiss">
+      <stop offset="0" stop-color="#3fae86" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#3fae86" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="subject" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="vig" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.2"/>
+      <stop offset="0.42" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.34"/>
+    </linearGradient>
+    <pattern id="grain" width="98" height="98" patternUnits="userSpaceOnUse" patternTransform="rotate(6.7)">
+      <path d="M0 0H98M0 0V98" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1920" height="1080" fill="url(#wall)"/>
+  <circle cx="1289" cy="134" r="637" fill="url(#key)"/>
+  <circle cx="1345" cy="487" r="446" fill="url(#rim)"/>
+  <circle cx="631" cy="842" r="350" fill="url(#kiss)"/>
+  <rect y="735" width="1920" height="345" fill="url(#floor)"/>
+  <path d="M0 735H1920" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
+
+  <g fill="url(#subject)" opacity="0.35">
+    <ellipse cx="1019" cy="550" rx="76" ry="93"/>
+    <path d="M714 1080
+             C714 664
+              916 664
+              1019 658
+             C1122 664
+              1324 664
+              1324 1080Z"/>
+  </g>
+
+  <rect width="1920" height="1080" fill="url(#grain)"/>
+  <rect width="1920" height="1080" fill="url(#vig)"/>
+</svg>

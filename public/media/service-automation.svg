@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280">
+  <defs>
+    <linearGradient id="wall" x1="0" y1="0" x2="0.25" y2="1">
+      <stop offset="0" stop-color="#a98f6f"/>
+      <stop offset="0.55" stop-color="#6b573e"/>
+      <stop offset="1" stop-color="#241c13"/>
+    </linearGradient>
+    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
+    </linearGradient>
+    <radialGradient id="key">
+      <stop offset="0" stop-color="#ffffff" stop-opacity="0.62"/>
+      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0.2"/>
+      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="rim">
+      <stop offset="0" stop-color="#ecfdad" stop-opacity="0.34"/>
+      <stop offset="1" stop-color="#ecfdad" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="kiss">
+      <stop offset="0" stop-color="#3fae86" stop-opacity="0.3"/>
+      <stop offset="1" stop-color="#3fae86" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="subject" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.24"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
+    </linearGradient>
+    <linearGradient id="vig" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000000" stop-opacity="0.2"/>
+      <stop offset="0.42" stop-color="#000000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0.34"/>
+    </linearGradient>
+    <pattern id="grain" width="65" height="65" patternUnits="userSpaceOnUse" patternTransform="rotate(5.6)">
+      <path d="M0 0H65M0 0V65" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="720" height="1280" fill="url(#wall)"/>
+  <circle cx="281" cy="251" r="255" fill="url(#key)"/>
+  <circle cx="456" cy="557" r="178" fill="url(#rim)"/>
+  <circle cx="439" cy="998" r="140" fill="url(#kiss)"/>
+  <rect y="916" width="720" height="364" fill="url(#floor)"/>
+  <path d="M0 916H720" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
+
+  <g fill="url(#subject)">
+    <ellipse cx="321" cy="549" rx="140" ry="170"/>
+    <path d="M-199 1280
+             C-199 759
+              132 759
+              321 747
+             C510 759
+              841 759
+              841 1280Z"/>
+  </g>
+
+  <rect width="720" height="1280" fill="url(#grain)"/>
+  <rect width="720" height="1280" fill="url(#vig)"/>
+</svg>

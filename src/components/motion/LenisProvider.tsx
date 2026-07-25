@@ -43,7 +43,8 @@ export default function LenisProvider({ children }: { children: ReactNode }) {
     }
 
     // Desktop → Lenis smooth scroll drives ScrollTrigger.
-    const lenis = new Lenis({ lerp: 0.12 });
+    // Same feel as the reference: Locomotive's Lenis defaults, lerp 0.1.
+    const lenis = new Lenis({ lerp: 0.1 });
     window.__studioLenis = lenis;
     lenis.on("scroll", ScrollTrigger.update);
 

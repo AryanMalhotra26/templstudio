@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+  <linearGradient id="sheen" x1="0" y1="0" x2="0.15" y2="1">
+    <stop offset="0" stop-color="#ffffff"/>
+    <stop offset="0.16" stop-color="#dfe3e8"/>
+    <stop offset="0.34" stop-color="#9aa0a8"/>
+    <stop offset="0.46" stop-color="#4e5359"/>
+    <stop offset="0.55" stop-color="#8d939b"/>
+    <stop offset="0.64" stop-color="#f4f6f8"/>
+    <stop offset="0.78" stop-color="#ffffff"/>
+    <stop offset="0.9" stop-color="#a6acb4"/>
+    <stop offset="1" stop-color="#6d727a"/>
+  </linearGradient>
+  <radialGradient id="spec" cx="0.34" cy="0.24" r="0.5">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="lift" x="-25%" y="-25%" width="150%" height="150%">
+    <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#181818" flood-opacity="0.35"/>
+  </filter>
+</defs>
+  <g filter="url(#lift)">
+    <g fill="url(#sheen)" stroke="#ffffff" stroke-opacity="0.55" stroke-width="3">
+      <path d="M256 44c58 68 148 128 148 232 0 82-66 148-148 148s-148-66-148-148c0-58 29-100 58-138 12 39 33 57 49 57 25 0 33-29 23-70-8-33-4-63 18-81Z"/>
+      <path d="M256 236c26 30 62 56 62 100 0 36-28 64-62 64s-62-28-62-64c0-26 14-44 26-60 6 18 15 26 23 26 12 0 16-14 11-32-4-15-2-27 2-34Z" fill="#ffffff" fill-opacity="0.35" stroke="none"/>
+    </g>
+  </g>
+</svg>

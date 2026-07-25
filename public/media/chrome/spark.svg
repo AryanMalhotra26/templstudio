@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+  <linearGradient id="sheen" x1="0" y1="0" x2="0.15" y2="1">
+    <stop offset="0" stop-color="#ffffff"/>
+    <stop offset="0.16" stop-color="#dfe3e8"/>
+    <stop offset="0.34" stop-color="#9aa0a8"/>
+    <stop offset="0.46" stop-color="#4e5359"/>
+    <stop offset="0.55" stop-color="#8d939b"/>
+    <stop offset="0.64" stop-color="#f4f6f8"/>
+    <stop offset="0.78" stop-color="#ffffff"/>
+    <stop offset="0.9" stop-color="#a6acb4"/>
+    <stop offset="1" stop-color="#6d727a"/>
+  </linearGradient>
+  <radialGradient id="spec" cx="0.34" cy="0.24" r="0.5">
+    <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
+    <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+  </radialGradient>
+  <filter id="lift" x="-25%" y="-25%" width="150%" height="150%">
+    <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#181818" flood-opacity="0.35"/>
+  </filter>
+</defs>
+  <g filter="url(#lift)">
+    <g fill="url(#sheen)" stroke="#ffffff" stroke-opacity="0.55" stroke-width="3">
+      <path d="M256.0 24.0Q270.8 181.6 281.3 195.0Q298.2 192.9 420.0 92.0Q319.1 213.8 317.0 230.7Q330.4 241.2 488.0 256.0Q330.4 270.8 317.0 281.3Q319.1 298.2 420.0 420.0Q298.2 319.1 281.3 317.0Q270.8 330.4 256.0 488.0Q241.2 330.4 230.7 317.0Q213.8 319.1 92.0 420.0Q192.9 298.2 195.0 281.3Q181.6 270.8 24.0 256.0Q181.6 241.2 195.0 230.7Q192.9 213.8 92.0 92.0Q213.8 192.9 230.7 195.0Z"/>
+    </g>
+  </g>
+</svg>
