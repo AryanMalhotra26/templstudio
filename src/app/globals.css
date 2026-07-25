@@ -247,13 +247,17 @@
 html {
   height: 100%;
   scroll-behavior: auto;
+  /* Safety net so a single over-wide element can never turn the page into a
+     horizontal scroller. On `html` rather than `body`: pairing `clip` on one
+     axis with `visible` on the other forces the other axis to `auto`, which
+     on `body` would quietly make it a scroll container. */
+  overflow-x: clip;
 }
 
 body {
   min-height: 100%;
   margin: 0;
   overscroll-behavior: none;
-  overflow-x: clip;
   background-color: var(--theme-background);
   color: var(--theme-body-text);
   font-family: var(--font-body);
@@ -1041,9 +1045,16 @@ h6 {
 /* ==================================================================
    3. CLIENT DECK — carousel of case cards, each with a flick deck
    ================================================================== */
+/* `overflow: clip` is load-bearing. The track is a flex row of every slide
+   laid end to end — four full-width cards is far wider than the screen — and
+   the viewport below is deliberately `overflow: visible` so the neighbouring
+   card peeks in. Without clipping here that width becomes the document's
+   width and the whole page scrolls sideways. `clip` rather than `hidden` so
+   this never becomes a scroll container. */
 .section_client-deck {
   position: relative;
   width: 100%;
+  overflow: clip;
 }
 .swiper-group {
   position: relative;
