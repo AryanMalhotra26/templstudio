@@ -9,17 +9,23 @@ import BtnIcon from "@/components/ui/BtnIcon";
 /**
  * Fixed nav, ported from the reference.
  *
- * Links sit dead-centre with a red dot that pops in on hover; the studio mark
- * is left, the standing CTA right. The nav has no background of its own —
- * instead it samples whichever themed section is under it (3rem from the top
- * of the viewport) and adopts that section's `theme-*` class, so the type and
- * button recolour as you scroll from lime hero → dark services → chrome
- * footer. Pages with no themed sections stay on the default theme.
+ * Desktop and tablet: links dead-centre with a red dot that pops in on hover,
+ * studio mark left, standing CTA right. Below 479 the very same `.nav-links`
+ * element becomes a full-screen lime panel that slides down from the top —
+ * links stacked and masked, the CTA pinned to the bottom — driven by
+ * `data-nav-open` on the root so it's all CSS transitions.
+ *
+ * The nav has no background of its own; it samples whichever themed section is
+ * under it (3rem from the top of the viewport) and adopts that section's
+ * `theme-*` class, so type and buttons recolour as you scroll from lime hero →
+ * dark services → chrome footer.
  */
 
 const THEME_PREFIX = "theme-";
 const SAMPLE_OFFSET_REM = 3;
 const DEFAULT_THEME = "theme-default";
+/** Matches the mobile-portrait tier in globals.css. */
+const PANEL_QUERY = "(max-width: 479px)";
 
 /** The studio mark: the same six-point spark that sits inside the wordmark. */
 function StudioMark() {
@@ -36,6 +42,7 @@ function StudioMark() {
 export default function Nav() {
   const [theme, setTheme] = useState(DEFAULT_THEME);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [isPanel, setIsPanel] = useState(false);
   const pathname = usePathname();
 
   // Sample the themed section under the nav on every scroll frame.
@@ -76,10 +83,23 @@ export default function Nav() {
     };
   }, [pathname]);
 
+  // Track whether `.nav-links` is currently the off-screen panel, so its
+  // links can be taken out of the tab order while it's closed.
+  useEffect(() => {
+    const mq = window.matchMedia(PANEL_QUERY);
+    const sync = () => {
+      setIsPanel(mq.matches);
+      if (!mq.matches) setMenuOpen(false);
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => mq.removeEventListener("change", sync);
+  }, []);
+
   useEffect(() => setMenuOpen(false), [pathname]);
 
-  // The reference forces the default theme and locks scroll while the mobile
-  // menu is open, so the panel always reads the same way.
+  // The reference forces the default theme and locks scroll while the panel is
+  // open, so it always reads the same way over any section.
   useEffect(() => {
     document.body.style.overflow = menuOpen ? "hidden" : "";
     return () => {
@@ -87,88 +107,86 @@ export default function Nav() {
     };
   }, [menuOpen]);
 
-  const navTheme = menuOpen ? DEFAULT_THEME : theme;
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  const hidden = isPanel && !menuOpen;
 
   return (
-    <>
-      <div className={`nav ${navTheme}`} data-gsap-ignore>
-        {/* Ahead of the padding-global block on purpose: `.nav-links` is
-            absolutely positioned with no `top`, so its static position — and
-            therefore its vertical placement — comes from DOM order, exactly
-            as on the reference. */}
-        <div className="nav-links">
-          <div className="nav-links_wrapper">
-            {site.nav.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="nav-link"
-                aria-current={pathname === link.href ? "page" : undefined}
-              >
-                <span className="nav-link-dot_wrap">
-                  <span className="nav-link-dot" />
-                </span>
-                <span className="nav-link-text">{link.label}</span>
-              </Link>
-            ))}
-          </div>
+    <div
+      className={`nav ${menuOpen ? DEFAULT_THEME : theme}`}
+      data-nav-open={menuOpen ? "true" : "false"}
+      data-gsap-ignore
+    >
+      {/* Lime plate behind the mobile panel; display:none above 479. */}
+      <div className="nav-menu-bg" />
+
+      {/* Ahead of the padding-global block on purpose: `.nav-links` is
+          absolutely positioned with no `top`, so its static position — and
+          therefore its vertical placement — comes from DOM order, exactly as
+          on the reference. */}
+      <div className="nav-links" aria-hidden={hidden || undefined}>
+        <div className="nav-links_wrapper">
+          {site.nav.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href}
+              className="nav-link"
+              aria-current={pathname === link.href ? "page" : undefined}
+              onClick={() => setMenuOpen(false)}
+              tabIndex={hidden ? -1 : undefined}
+            >
+              <span className="nav-link-dot_wrap">
+                <span className="nav-link-dot" />
+              </span>
+              <span className="nav-link-text">{link.label}</span>
+            </Link>
+          ))}
         </div>
+        <div className="nav-menu-button">
+          <BtnIcon label="Work with us" href="/contact" />
+        </div>
+      </div>
 
-        <div className="padding-global">
-          <div className="container-col-12">
-            <div className="nav-container">
-              <div className="nav-inner">
-                <Link
-                  href="/"
-                  className="nav-logo"
-                  aria-label={`${site.brand.name} — home`}
-                >
-                  <StudioMark />
-                </Link>
+      <div className="padding-global">
+        <div className="container-col-12">
+          <div className="nav-container">
+            <div className="nav-inner">
+              <Link
+                href="/"
+                className="nav-logo"
+                aria-label={`${site.brand.name} — home`}
+              >
+                <StudioMark />
+              </Link>
 
-                <div className="nav-button">
+              <div className="nav-button">
+                <div className="nav-button_wrap">
                   <BtnIcon label="Work with us" href="/contact" />
-                  <button
-                    type="button"
-                    className="menu-button"
-                    aria-expanded={menuOpen}
-                    aria-label={menuOpen ? "Close menu" : "Open menu"}
-                    onClick={() => setMenuOpen((v) => !v)}
-                  >
-                    <span className="btn-icon-content is-secondary">
-                      <span className="btn-icon-content__mask">
-                        <span className="btn-icon-content__text">
-                          {menuOpen ? "Close" : "Menu"}
-                        </span>
-                      </span>
-                    </span>
-                  </button>
                 </div>
+                <button
+                  type="button"
+                  className="menu-button"
+                  aria-expanded={menuOpen}
+                  aria-label={menuOpen ? "Close menu" : "Open menu"}
+                  onClick={() => setMenuOpen((v) => !v)}
+                >
+                  <span className="btn-icon-content is-menu">
+                    <span className="btn-icon_menu-div is-top" />
+                    <span className="btn-icon_menu-div is-bottom" />
+                  </span>
+                </button>
               </div>
             </div>
           </div>
         </div>
-
       </div>
-
-      {menuOpen && (
-        <div className="nav-menu-panel theme-dark" data-gsap-ignore>
-          {[{ label: "Home", href: "/" }, ...site.nav].map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              onClick={() => setMenuOpen(false)}
-              className="heading-s"
-              style={{ textDecoration: "none", color: "inherit" }}
-            >
-              {link.label}
-            </Link>
-          ))}
-          <div style={{ marginTop: "2em" }}>
-            <BtnIcon label="Work with us" href="/contact" />
-          </div>
-        </div>
-      )}
-    </>
+    </div>
   );
 }

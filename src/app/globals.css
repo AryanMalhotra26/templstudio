@@ -68,6 +68,22 @@
   --page-padding: 2em;
   --grid-gap: 2em;
   --ease-out-quint: cubic-bezier(0.19, 1, 0.22, 1);
+
+  /* Type scale as tokens, so each breakpoint only has to redefine these —
+     the same structure the reference uses. Values are its own. */
+  --h-xxl: 8em;
+  --h-xl: 6em;
+  --h-l: 5.5em;
+  --h-m: 4.5em;
+  --h-s: 4em;
+  --h-xs: 3.5em;
+  --p-xl: 2.5em;
+  --p-l: 2em;
+  --p-m: 1.5em;
+  --p-regular: 1.25em;
+  --p-s: 1.125em;
+  --p-xs: 1em;
+  --p-xxs: 0.875em;
 }
 
 /* ---- Theme engine ------------------------------------------------
@@ -273,27 +289,27 @@ img {
   text-wrap: balance;
 }
 .heading-xxl {
-  font-size: 8em;
+  font-size: var(--h-xxl);
   line-height: 0.9em;
 }
 .heading-xl {
-  font-size: 6em;
+  font-size: var(--h-xl);
   line-height: 0.9em;
 }
 .heading-l {
-  font-size: 5.5em;
+  font-size: var(--h-l);
   line-height: 0.9em;
 }
 .heading-m {
-  font-size: 4.5em;
+  font-size: var(--h-m);
   line-height: 0.9em;
 }
 .heading-s {
-  font-size: 4em;
+  font-size: var(--h-s);
   line-height: 0.9em;
 }
 .heading-xs {
-  font-size: 3.5em;
+  font-size: var(--h-xs);
   line-height: 1em;
 }
 
@@ -309,55 +325,34 @@ img {
   margin: 0;
 }
 .paragraph-xl {
-  font-size: 2.5em;
+  font-size: var(--p-xl);
   line-height: 1.2em;
   letter-spacing: -0.01em;
 }
 .paragraph-l {
-  font-size: 2em;
+  font-size: var(--p-l);
   line-height: 1.2em;
   letter-spacing: -0.01em;
 }
 .paragraph-m {
-  font-size: 1.5em;
+  font-size: var(--p-m);
   line-height: 1.3em;
 }
 .paragraph-regular {
-  font-size: 1.25em;
+  font-size: var(--p-regular);
   line-height: 1.3em;
 }
 .paragraph-s {
-  font-size: 1.125em;
+  font-size: var(--p-s);
   line-height: 1.3em;
 }
 .paragraph-xs {
-  font-size: 1em;
+  font-size: var(--p-xs);
   line-height: 1.3em;
 }
 .paragraph-xxs {
-  font-size: 0.875em;
+  font-size: var(--p-xxs);
   line-height: 1.4em;
-}
-
-@media screen and (max-width: 767px) {
-  .heading-xxl {
-    font-size: 4.5em;
-  }
-  .heading-xl {
-    font-size: 3.75em;
-  }
-  .heading-l {
-    font-size: 3.25em;
-  }
-  .heading-m {
-    font-size: 3em;
-  }
-  .heading-s {
-    font-size: 2.5em;
-  }
-  .paragraph-m {
-    font-size: 1.25em;
-  }
 }
 
 /* ---- Layout ------------------------------------------------------ */
@@ -407,13 +402,6 @@ img {
   justify-content: flex-start;
   align-items: center;
   gap: 1em;
-}
-
-@media screen and (max-width: 991px) {
-  .container-col-10,
-  .container-col-08 {
-    max-width: 100%;
-  }
 }
 
 /* ---- Split-text line masks (GSAP SplitText `mask: "lines"`) ------ */
@@ -612,32 +600,36 @@ h6 {
 .menu-button {
   display: none;
 }
-.nav-menu-panel {
-  position: fixed;
-  inset: 0;
-  z-index: 90;
-  display: flex;
-  flex-flow: column;
-  justify-content: center;
-  gap: 0.25em;
-  padding: 8em 2em 2em;
-  background-color: var(--swatch-black);
-  color: var(--swatch-off-white);
+/* Hidden above 479, where `.nav-links` is still an inline row. */
+.nav-menu-bg,
+.nav-menu-button {
+  display: none;
 }
-
-@media screen and (max-width: 991px) {
-  .nav-links {
-    display: none;
-  }
-  .menu-button {
-    display: flex;
-  }
-  .nav-container {
-    height: 7em;
-  }
-  .nav-inner {
-    height: 5em;
-  }
+.nav-button_wrap {
+  display: flex;
+}
+/* Hamburger, matching the reference's `btn-icon-content.is-menu`. */
+.btn-icon-content.is-menu {
+  width: 3em;
+  justify-content: center;
+  align-items: center;
+  flex-flow: column;
+  gap: 4px;
+  padding: 0.5em;
+  background-color: var(--theme-body-text);
+  color: var(--theme-background);
+}
+.btn-icon_menu-div {
+  width: 20px;
+  height: 2px;
+  background-color: var(--theme-background);
+  transition: transform 0.35s var(--ease-out-quint);
+}
+.nav[data-nav-open="true"] .btn-icon_menu-div.is-top {
+  transform: translateY(3px) rotate(45deg);
+}
+.nav[data-nav-open="true"] .btn-icon_menu-div.is-bottom {
+  transform: translateY(-3px) rotate(-45deg);
 }
 
 /* ==================================================================
@@ -944,26 +936,6 @@ h6 {
   }
 }
 
-@media screen and (max-width: 991px) {
-  .hero-home_logo {
-    height: 18em;
-  }
-  .hero-home_media {
-    width: 11em;
-  }
-}
-@media screen and (max-width: 767px) {
-  .hero-home_logo {
-    height: 14em;
-  }
-  .hero-home_media {
-    width: 9em;
-  }
-  .hero-home_body {
-    padding-bottom: 2em;
-  }
-}
-
 /* ==================================================================
    2. STATEMENT — full-bleed media + centred claim + star quotes
    ================================================================== */
@@ -1066,25 +1038,6 @@ h6 {
   padding-bottom: 0.125em;
 }
 
-@media screen and (max-width: 991px) {
-  .statement_testimonials {
-    padding-left: 2em;
-    padding-right: 2em;
-  }
-}
-@media screen and (max-width: 767px) {
-  .statement_testimonials {
-    position: relative;
-    flex-flow: column;
-    align-items: center;
-    gap: 1em;
-    padding: 0 1em 2em;
-  }
-  .hide-mobile {
-    display: none;
-  }
-}
-
 /* ==================================================================
    3. CLIENT DECK — carousel of case cards, each with a flick deck
    ================================================================== */
@@ -1102,6 +1055,8 @@ h6 {
 .deck-viewport {
   width: 100%;
   overflow: visible;
+  /* Let the browser keep vertical scrolling; we handle horizontal drags. */
+  touch-action: pan-y;
 }
 .deck-track {
   display: flex;
@@ -1109,6 +1064,10 @@ h6 {
   gap: 1.25em;
   will-change: transform;
   transition: transform 0.6s cubic-bezier(0.625, 0.05, 0, 1);
+}
+.deck-track.is-dragging {
+  transition: none;
+  cursor: grabbing;
 }
 .deck-slide {
   flex: none;
@@ -1170,7 +1129,7 @@ h6 {
 .client-deck_title {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: 4.5em;
+  font-size: var(--deck-title, 4.5em);
   line-height: 0.9em;
   font-weight: 400;
   letter-spacing: -0.02em;
@@ -1416,122 +1375,6 @@ h6 {
   background-color: var(--swatch-lime);
 }
 
-@media screen and (max-width: 991px) {
-  .client-deck_card {
-    flex-flow: column;
-    gap: 1em;
-    height: 90svh;
-    min-height: auto;
-    max-height: none;
-    padding: 2em 1em 1em;
-  }
-  .client-deck_card-title {
-    flex-flow: row;
-    width: 80%;
-  }
-  .client-deck_card-slider {
-    width: 100%;
-  }
-  .client-deck_card-data {
-    position: relative;
-    inset: auto;
-    width: 100%;
-    gap: 0.75em;
-    padding-top: 0.75em;
-  }
-  .client-deck_data-title {
-    border-bottom: 0;
-    padding-bottom: 0.5em;
-  }
-  .client-deck_card-data-wrap {
-    height: 12em;
-  }
-  .client-deck_views-title {
-    font-size: 3em;
-  }
-  .client-deck_likes-title {
-    font-size: 2.5em;
-  }
-  .client-deck_likes-heart {
-    width: 8em;
-    height: 8em;
-    inset: 0 0 auto auto;
-    transform: none;
-  }
-  .client-deck_title {
-    font-size: 3.5em;
-  }
-  .flick-card {
-    width: 25vw;
-  }
-  .flick-group__pagination {
-    justify-content: flex-end;
-    padding-right: 8em;
-    bottom: 4em;
-  }
-  .client-deck_button {
-    position: absolute;
-    inset: -0.25em 2em auto auto;
-  }
-  .swiper-navigation {
-    width: calc(96vw - 3em);
-  }
-}
-@media screen and (max-width: 767px) {
-  .deck-slide,
-  .deck-slide.is-active {
-    width: 92vw;
-    max-width: 92vw;
-  }
-  .client-deck_card {
-    height: auto;
-    padding: 1.5em 0.75em 0.75em;
-  }
-  .client-deck_card-title {
-    flex-flow: column;
-    width: 100%;
-    gap: 0.75em;
-  }
-  .client-deck_title {
-    font-size: 2.5em;
-  }
-  .client-deck_card-pf {
-    width: 2.5em;
-    height: 2.5em;
-  }
-  .flick-card {
-    width: 42vw;
-  }
-  .flick-group__pagination {
-    justify-content: flex-start;
-    padding-right: 0;
-    bottom: 1em;
-    left: 1em;
-  }
-  .client-deck_card-data-wrap {
-    height: 8em;
-  }
-  .client-deck_card-views {
-    width: 55%;
-  }
-  .client-deck_card-likes {
-    width: 45%;
-  }
-  .client-deck_views-title {
-    font-size: 2.5em;
-  }
-  .client-deck_likes-heart {
-    width: 4.5em;
-    height: 4.5em;
-  }
-  .client-deck_button {
-    position: static;
-  }
-  .swiper-navigation {
-    display: none;
-  }
-}
-
 /* ==================================================================
    4. SERVICES — sticky heading + pinned 3D card stack
    ================================================================== */
@@ -1645,65 +1488,6 @@ h6 {
   object-fit: cover;
 }
 
-@media screen and (max-width: 991px) {
-  .services-pin-height {
-    height: 400svh;
-    padding-top: 5svh;
-  }
-  .services-container {
-    height: 100svh;
-  }
-  .services-list {
-    width: 90vw;
-    height: 40em;
-  }
-  .service-card {
-    padding: 2em 1.5em 1.5em;
-  }
-  .services-heading {
-    padding-top: 8em;
-  }
-  .services_emojis {
-    margin-top: -13.5em;
-  }
-  .services_emoji-item {
-    width: 8em;
-    height: 8em;
-  }
-}
-@media screen and (max-width: 767px) {
-  .services-list {
-    perspective: 50vw;
-    height: 85svh;
-  }
-  .services-heading {
-    margin-bottom: -12em;
-    padding-top: 5em;
-    padding-bottom: 3em;
-  }
-  .services_emojis {
-    display: none;
-  }
-  .service-card {
-    gap: 1.5em;
-    padding: 1.75em 1.25em 1.25em;
-  }
-  .service-card_bottom {
-    flex-flow: column;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1.5em;
-    height: 100%;
-  }
-  .service-card_video {
-    order: -9999;
-    width: auto;
-    height: 100%;
-    max-height: 36em;
-    margin-block: auto;
-  }
-}
-
 /* ==================================================================
    5. TESTIMONIALS — line-reveal slider
    ================================================================== */
@@ -1784,7 +1568,7 @@ h6 {
   max-width: 100%;
   margin: 0;
   font-family: var(--font-heading);
-  font-size: 4em;
+  font-size: var(--quote-size, 4em);
   font-weight: 400;
   line-height: 1.1;
   letter-spacing: -0.02em;
@@ -1817,18 +1601,6 @@ h6 {
   right: 0;
   width: 5em;
   opacity: 0.85;
-}
-
-@media screen and (max-width: 767px) {
-  .testimonial-lines__h {
-    font-size: 2em;
-  }
-  .testimonial-lines__main {
-    gap: 2em;
-  }
-  .section_testimonials {
-    padding-top: 2em;
-  }
 }
 
 /* ==================================================================
@@ -1888,16 +1660,6 @@ h6 {
   width: 100%;
   height: 100%;
   object-fit: cover;
-}
-
-@media screen and (max-width: 767px) {
-  .about-us_img {
-    width: 9em;
-  }
-  .about-us_wrapper {
-    padding-top: 7em;
-    padding-bottom: 3em;
-  }
 }
 
 /* ==================================================================
@@ -2046,24 +1808,6 @@ textarea.form-field {
   height: 8em;
   padding-top: 0.75em;
   resize: vertical;
-}
-
-@media screen and (max-width: 767px) {
-  .cta-cards {
-    gap: 1.5em;
-  }
-  .cta-card_wrap {
-    width: 100%;
-    max-width: 22em;
-    height: 30em;
-  }
-  .cta-card_emoji {
-    width: 11em;
-    height: 11em;
-  }
-  .form-row {
-    flex-flow: column;
-  }
 }
 
 /* ==================================================================
@@ -2233,33 +1977,814 @@ textarea.form-field {
   opacity: 1;
 }
 
+/* ==================================================================
+   BREAKPOINTS — 991 / 767 / 479, matching the reference's tiers.
+
+   Because the whole page is sized in `em` off one fluid body font-size,
+   most of the work here is redefining the type tokens; the rest is the
+   handful of structural changes the reference makes at each width.
+   ================================================================== */
+
+/* ---- Tablet ------------------------------------------------------ */
 @media screen and (max-width: 991px) {
+  :root {
+    --page-padding: 1.5em;
+    --h-xxl: 7em;
+    --h-xl: 6em;
+    --h-l: 5em;
+    --h-m: 4em;
+    --h-s: 3.5em;
+    --h-xs: 3em;
+    --p-xl: 2.25em;
+    --p-l: 1.75em;
+    --p-m: 1.25em;
+    --p-regular: 1.125em;
+    --p-s: 1em;
+    --p-xs: 0.875em;
+    --p-xxs: 0.75em;
+    --deck-title: 3.5em;
+    --quote-size: 3em;
+  }
+
+  .container-col-10 {
+    max-width: 90%;
+  }
+  .container-col-08 {
+    max-width: 80%;
+  }
+
+  /* Nav stays inline here — it only becomes a panel at 479. */
+  .nav-inner {
+    height: 6em;
+  }
+  .nav-logo {
+    width: 3em;
+    height: 3em;
+  }
+  .nav-links {
+    gap: 1.25em;
+    height: 6em;
+  }
+  .nav-links_wrapper {
+    gap: 1.25em;
+    margin-left: -3em;
+  }
+  .nav-link-text {
+    font-size: 1em;
+  }
+
+  .section_hero {
+    height: 110vh;
+    overflow: clip;
+  }
+  .hero-home_body {
+    height: 100svh;
+    padding-bottom: 4em;
+  }
+  .hero-home_logo {
+    height: 10.75em;
+  }
+  .hero-home_media {
+    width: 12em;
+  }
+  .hero-home_text-wrap {
+    max-width: 24em;
+  }
+  .hero-home_pageload-bg {
+    height: 110vh;
+  }
+
+  .section_statement {
+    min-height: 110vh;
+  }
+  .statement_wrapper {
+    min-height: 100vh;
+  }
+  .statement_testimonials {
+    padding: 0 2em;
+  }
+  .statement_testimonial {
+    font-size: 1.075em;
+  }
+
+  .deck-slide,
+  .deck-slide.is-active {
+    width: 90vw;
+    max-width: 90vw;
+  }
+  .slider-button {
+    width: 1.75em;
+  }
+  .client-deck_card {
+    flex-flow: column;
+    gap: 1em;
+    height: 90svh;
+    min-height: auto;
+    max-height: none;
+    padding: 2em 1em 1em;
+  }
+  .client-deck_card-title {
+    flex-flow: row;
+    width: 80%;
+    gap: 2em;
+  }
+  .client-deck_card-pf {
+    width: 3.5em;
+    height: 3.5em;
+    margin-top: -0.5em;
+  }
+  .client-deck_card-slider {
+    width: 100%;
+  }
+  .client-deck_card-data {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    gap: 0.75em;
+    padding-top: 0.75em;
+  }
+  .client-deck_data-title {
+    gap: 0.75em;
+    border-bottom: 0;
+    padding-bottom: 0.5em;
+  }
+  .client-deck_card-views,
+  .client-deck_card-likes {
+    padding: 1em 1em 0.75em;
+  }
+  .client-deck_card-views {
+    gap: 0.25em;
+  }
+  .client-deck_card-data-wrap {
+    height: 12em;
+  }
+  .client-deck_views-title {
+    font-size: 3em;
+  }
+  .client-deck_likes-title {
+    font-size: 2.5em;
+  }
+  .client-deck_likes-heart {
+    width: 8em;
+    height: 8em;
+    margin-top: -0.5em;
+    inset: 0 0 auto auto;
+    transform: none;
+  }
+  .client-deck_button {
+    position: absolute;
+    inset: -0.25em 0 auto auto;
+  }
+  .flick-card {
+    width: 25vw;
+  }
+  .flick-group__item {
+    padding: 0.375em;
+  }
+  .flick-group__pagination,
+  .flick-group__pagination.is-client-deck {
+    justify-content: flex-end;
+    padding-right: 8em;
+    bottom: 4em;
+  }
+  .flick-card_data {
+    gap: 0.125em;
+    padding-top: 0.25em;
+    padding-bottom: 0.25em;
+  }
+
+  .services-pin-height {
+    height: 400svh;
+    padding-top: 5svh;
+  }
+  .services-container {
+    height: 100svh;
+  }
+  .services-list {
+    width: 90vw;
+    height: 40em;
+  }
+  .service-card {
+    padding: 2em 1.5em 1.5em;
+  }
+  .services-heading {
+    padding-top: 8em;
+  }
+  .services_emojis {
+    height: 110vh;
+    margin-top: -13.5em;
+  }
+  .services_emoji-item {
+    width: 8em;
+    height: 8em;
+  }
+
+  .section_testimonials {
+    padding-top: 3em;
+  }
+  .testimonial-lines {
+    width: 100%;
+    margin-bottom: -2em;
+  }
+  .testimonial-lines__main {
+    gap: 3em;
+  }
+  .testimonial-lines__item-details {
+    gap: 1em;
+  }
+  .testimonial-lines__item-visual {
+    width: 4em;
+  }
+  .testimonial-lines__p {
+    font-size: 1.125em;
+  }
+  .testimonials-img {
+    width: 8em;
+  }
+  .slider-buttons {
+    gap: 0.5em;
+  }
+
+  .section_about-us {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 110vh;
+  }
+  .about-us_wrapper {
+    height: 100svh;
+    padding-top: 7em;
+    padding-bottom: 4em;
+  }
+  .about-us_body {
+    max-width: 32em;
+  }
+  .about-us_img {
+    width: 12em;
+  }
+  .about-us_img-wrapper.is-left {
+    z-index: -1;
+    left: -11%;
+  }
+  .about-us_img-wrapper.is-right {
+    right: -11%;
+  }
+
+  .section_cta {
+    min-height: 110vh;
+  }
+  .cta_wrapper {
+    gap: 2.5em;
+  }
+  .cta-card {
+    padding-top: 3em;
+    padding-bottom: 3em;
+  }
+  .cta-card_emoji {
+    width: 15em;
+    height: 15em;
+  }
+  .cta-cards {
+    gap: 2em;
+  }
+  .cta-card_wrap {
+    width: 24em;
+    height: 32em;
+  }
+
   .footer-logo {
-    height: 18em;
+    height: 10.75em;
+  }
+  .footer-main {
+    gap: 1.5em;
+  }
+  .footer-main_top {
+    align-items: flex-start;
+  }
+  .footer-main_sitemap {
+    gap: 1.5em;
+    padding-top: 2em;
+  }
+  .footer-main_sitemap-links {
+    grid-template-rows: repeat(5, auto);
+    grid-template-columns: 1fr;
   }
   .footer-main_card {
-    width: 14em;
+    justify-content: space-between;
+    width: 16em;
+    padding-top: 2em;
+    padding-bottom: 2em;
   }
   .footer-main_card-img {
-    width: 9em;
+    width: 12em;
+    margin-bottom: -0.5em;
+  }
+  .footer-main_card-img.is-social {
+    width: 11em;
+    margin-bottom: 0.5em;
+  }
+  .footer-main_bottom {
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
   }
 }
+
+/* ---- Mobile landscape -------------------------------------------- */
 @media screen and (max-width: 767px) {
-  .footer-logo {
+  :root {
+    --page-padding: 1.25em;
+    --h-xxl: 6.5em;
+    --h-xl: 5.5em;
+    --h-l: 4.5em;
+    --h-m: 3.5em;
+    --h-s: 3em;
+    --h-xs: 2.5em;
+    --p-xl: 2em;
+    --p-l: 1.5em;
+    --p-m: 1.125em;
+    --p-regular: 1em;
+    --p-s: 0.875em;
+    --p-xs: 0.75em;
+    --p-xxs: 0.625em;
+    --deck-title: 3em;
+    --quote-size: 2em;
+  }
+
+  .nav-links {
+    gap: 1em;
+    inset: 0 auto 0 5em;
+    transform: none;
+  }
+  .nav-links_wrapper {
+    gap: 1em;
+    margin-left: 0;
+  }
+
+  .hero-home_logo {
+    height: 8.5em;
+  }
+  .hero-home_body {
+    padding-bottom: 3em;
+  }
+
+  .statement_testimonials {
+    gap: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+  }
+
+  .client-deck_card {
+    height: auto;
+  }
+  /* The deck needs room to fan out; below this it reads as clutter, so the
+     reference drops it and lets the numbers carry the card. */
+  .client-deck_card-slider {
+    display: none;
+  }
+  .client-deck_data-title {
+    padding-left: 5.5em;
+  }
+  .client-deck_card-data-wrap {
+    height: 12em;
+  }
+  .client-deck_button {
+    right: 2em;
+  }
+  .flick-card {
+    width: 40vw;
+  }
+  .flick-group__pagination,
+  .flick-group__pagination.is-client-deck {
+    justify-content: center;
+    padding-right: 0;
+    bottom: -1em;
+  }
+
+  .services-list {
+    perspective: 50vw;
+  }
+  .services-heading {
+    margin-bottom: -12em;
+    padding-top: 5em;
+    padding-bottom: 3em;
+  }
+  .services_emojis {
+    display: none;
+  }
+
+  .section_testimonials {
+    padding-top: 2em;
+  }
+  .testimonial-lines__item {
+    gap: 2em;
+  }
+  .testimonial-lines__item.is--active {
+    gap: 1.5em;
+  }
+  .testimonial-lines__item-visual {
+    width: 3.5em;
+  }
+  .testimonial-lines__p {
+    font-size: 1em;
+  }
+  .testimonials-img {
+    width: 7em;
+  }
+
+  .about-us_wrapper {
+    gap: 2em;
+    padding-top: 6em;
+    padding-bottom: 3em;
+  }
+  /* Not enough width to place them without covering the claim. */
+  .about-us_img-wrapper {
+    display: none;
+  }
+
+  .cta-card {
+    padding: 2em 1em;
+  }
+  .cta-card_emoji {
+    width: 14em;
     height: 14em;
+  }
+  .cta-card_body {
+    width: 100%;
+  }
+  .cta-card_wrap {
+    width: 20em;
+    height: 28em;
+  }
+
+  .footer-logo {
+    height: 8.5em;
+  }
+  .footer_wrapper {
+    gap: 1.5em;
+    padding-top: 1em;
+  }
+}
+
+/* ---- Mobile portrait --------------------------------------------- */
+@media screen and (max-width: 479px) {
+  /* The scaling system resets per tier, so the body font-size actually jumps
+     *up* crossing 480 → 479 (10px at 480 wide, ~13px at 390). The reference
+     inherits that and ends up with a very large mobile headline; our copy is
+     longer and the serif is narrower, so left alone it ran to eight lines.
+     These are pulled back to land display type at four or five. */
+  :root {
+    --h-xxl: 5em;
+    --h-xl: 3.5em;
+    --h-l: 3.25em;
+    --h-m: 2.75em;
+    --h-s: 2.25em;
+    --h-xs: 2em;
+  }
+
+  .container-col-10,
+  .container-col-08 {
+    max-width: none;
+  }
+  .max-width-960px,
+  .max-width-880px,
+  .max-width-640px,
+  .max-width-448px {
+    max-width: none;
+  }
+
+  /* ---- Nav becomes a full-screen lime panel ---- */
+  .nav {
+    overflow: visible;
+  }
+  .nav-inner {
+    height: 5em;
+    position: static;
+  }
+  .nav-menu-bg {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    width: 100%;
+    height: 110vh;
+    background-color: var(--swatch-lime);
+    pointer-events: none;
+    transform: translateY(-100%);
+    transition: transform 0.6s var(--ease-out-quint);
+  }
+  .nav-links {
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 0;
+    width: 100vw;
+    height: 100svh;
+    overflow: clip;
+    pointer-events: none;
+    transform: translateY(-100%);
+    transition: transform 0.6s var(--ease-out-quint);
+  }
+  .nav-links_wrapper {
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    width: 100%;
+    height: 100svh;
+    margin-left: 0;
+    position: relative;
+    overflow: clip;
+  }
+  .nav-link {
+    z-index: 1;
+    pointer-events: auto;
+    color: var(--swatch-black);
+    /* Keeps each row a comfortable thumb target rather than a 34px line. */
+    padding-block: 0.35em;
+  }
+  .nav-link-dot_wrap {
+    display: none;
+  }
+  .nav-link-text {
+    font-size: 2em;
+    transform: translateY(100%);
+    transition: transform 0.6s var(--ease-out-quint);
+  }
+  .nav-menu-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    inset: auto 0 2em;
+    transform: translateY(200%);
+    transition: transform 0.6s var(--ease-out-quint);
+  }
+  .nav-button_wrap {
+    display: none;
+  }
+  .menu-button {
+    display: flex;
+  }
+  .nav[data-nav-open="true"] .nav-menu-bg,
+  .nav[data-nav-open="true"] .nav-links {
+    transform: translateY(0);
+  }
+  .nav[data-nav-open="true"] .nav-links {
+    pointer-events: auto;
+  }
+  .nav[data-nav-open="true"] .nav-link-text,
+  .nav[data-nav-open="true"] .nav-menu-button {
+    transform: none;
+  }
+  .nav[data-nav-open="true"] .nav-link:nth-child(1) .nav-link-text {
+    transition-delay: 0.12s;
+  }
+  .nav[data-nav-open="true"] .nav-link:nth-child(2) .nav-link-text {
+    transition-delay: 0.18s;
+  }
+  .nav[data-nav-open="true"] .nav-link:nth-child(3) .nav-link-text {
+    transition-delay: 0.24s;
+  }
+  .nav[data-nav-open="true"] .nav-link:nth-child(4) .nav-link-text {
+    transition-delay: 0.3s;
+  }
+  .nav[data-nav-open="true"] .nav-menu-button {
+    transition-delay: 0.34s;
+  }
+
+  /* The reference crops its wordmark to a single giant letter here. We keep
+     the whole mark instead — it's vw-sized so it still fits, and a lone "t"
+     wouldn't read as TemplStudio to anyone. Pushed clear of the nav row. */
+  .hero-home_logo {
+    height: auto;
+    padding-top: 4.5em;
+  }
+  .hero-home_logo-item {
+    font-size: 13.6vw;
+  }
+  .hero-home_content {
+    max-width: 100%;
+  }
+  .hero-home_media {
+    width: 40vw;
+  }
+  .hero-home_text-wrap {
+    max-width: 20em;
+  }
+  .hero-home_body {
+    padding-bottom: 2em;
+  }
+  .btn-group {
+    flex-flow: column;
+    align-items: center;
+    gap: 0.75em;
+  }
+
+  .statement_testimonials {
+    flex-flow: column;
+    align-items: center;
+  }
+  .hide-mobile {
+    display: none;
+  }
+
+  .deck-slide,
+  .deck-slide.is-active {
+    width: 100%;
+    max-width: 100%;
+  }
+  .swiper-navigation {
+    width: 95vw;
+    margin-left: 0;
+  }
+  .client-deck_card {
+    gap: 0.5em;
+    height: auto;
+    padding: 1.5em 0.75em 0.75em;
+  }
+  /* The deck comes back at this width, but the card is content-height here, so
+     the slider needs a definite box — `height: 100%` has nothing to resolve
+     against and the absolutely-positioned deck would spill up over the title. */
+  .client-deck_card-slider {
+    display: flex;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    flex: none;
+  }
+  .client-deck_card-title {
+    flex-flow: column;
+    width: 100%;
+    gap: 0.75em;
+  }
+  .client-deck_card-pf {
+    width: 2.5em;
+    height: 2.5em;
+    margin-top: 0;
+  }
+  .client-deck_card-data {
+    gap: 0.5em;
+    padding-top: 0.5em;
+  }
+  .client-deck_data-title {
+    gap: 0.5em;
+    padding-bottom: 0.25em;
+    padding-left: 0;
+  }
+  .dot-l {
+    width: 0.625em;
+    height: 0.625em;
+  }
+  .client-deck_card-views {
+    width: 55%;
+    padding: 0.75em 0.75em 0.5em;
+  }
+  .client-deck_card-likes {
+    width: 45%;
+    padding: 0.75em 0.75em 0.5em;
+  }
+  .client-deck_card-data-wrap {
+    gap: 0.5em;
+    height: 6.5em;
+  }
+  .client-deck_views-title {
+    font-size: 2.5em;
+  }
+  .client-deck_likes-title {
+    font-size: 2em;
+  }
+  .client-deck_likes-heart {
+    width: 4.5em;
+    height: 4.5em;
+    inset: 0 0 auto auto;
+    transform: none;
+  }
+  .client-deck_button {
+    position: static;
+  }
+  .flick-card {
+    width: 42vw;
+  }
+  .flick-group__collection,
+  .flick-group__list {
+    padding-bottom: 2em;
+  }
+  .flick-group__pagination,
+  .flick-group__pagination.is-client-deck {
+    justify-content: flex-start;
+    bottom: 1em;
+    left: 1em;
+  }
+
+  .services-pin-height {
+    padding-top: 10svh;
+  }
+  .services-list {
+    height: 85svh;
+  }
+  .service-card {
+    gap: 1.5em;
+    padding: 1.75em 1.25em 1.25em;
+  }
+  /* Stacked card: the poster moves above the copy and is the only part
+     allowed to shrink, so the CTA can never be pushed past the card edge.
+     `min-height: 0` is what lets a flex child shrink below its content. */
+  .service-card {
+    overflow: hidden;
+  }
+  .service-card_bottom {
+    flex-flow: column;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.25em;
+    height: 100%;
+    min-height: 0;
+  }
+  .service-card_video {
+    order: -9999;
+    width: auto;
+    height: 100%;
+    max-height: 36em;
+    min-height: 0;
+    flex: 1 1 auto;
+    margin-block: auto;
+  }
+  .service-card_body {
+    flex: none;
+  }
+  .services-heading {
+    padding-top: 6em;
+    padding-bottom: 3em;
+  }
+
+  .cta-cards {
+    justify-content: center;
+    align-items: center;
+  }
+  .cta-card {
+    gap: 0;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+  }
+  .cta-card_emoji {
+    width: 12em;
+    height: 12em;
+  }
+  .cta-card_wrap {
+    width: 18em;
+    height: 26em;
+  }
+
+  .footer {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    min-height: 110svh;
+  }
+  .footer-logo {
+    height: 5.25em;
+  }
+  .footer-main {
+    gap: 1.25em;
   }
   .footer-main_top {
     flex-flow: column;
-    align-items: flex-start;
     gap: 2.5em;
   }
-  .footer-main_sitemap-links {
-    column-gap: 3em;
+  .footer-main_sitemap {
+    padding-top: 0;
+  }
+  .footer-main_title {
+    font-size: 1.75em;
+  }
+  .footer-main_cards {
+    width: 100%;
+  }
+  .footer-main_card {
+    aspect-ratio: auto;
+    width: 50%;
+    padding-top: 1.5em;
+    padding-bottom: 1.5em;
+  }
+  .footer-main_card-img {
+    width: 11em;
+  }
+  .footer-main_card-img.is-social {
+    width: 10em;
+    margin-bottom: 0;
   }
   .footer-main_bottom {
     flex-flow: column;
     align-items: flex-start;
     gap: 1em;
+    padding-top: 1.25em;
+    padding-bottom: 1.25em;
+  }
+  .footer-main_bottom-col {
+    gap: 1.5em;
   }
 }
 

@@ -75,13 +75,25 @@ export default function MaskTextReveal() {
       });
     };
 
-    // Failsafe: copy is hidden by CSS until this runs, so if fonts never
-    // settle or SplitText throws, drop the class and show everything rather
-    // than leaving the page blank.
+    // Failsafe. Copy is hidden by CSS until this runs, and once split it sits
+    // masked at yPercent 110 until a tween moves it — so there are two ways to
+    // end up with invisible text: the split never happening, or the frame loop
+    // stalling after it did (cheap phones under load). Cover both: if the
+    // reveal hasn't run, un-hide everything; if it ran but GSAP isn't ticking,
+    // throw the splits away and fall back to plain, visible text.
     let done = false;
+    const startFrame = gsap.ticker.frame;
     const failsafe = window.setTimeout(() => {
-      if (!done) document.documentElement.classList.remove("split-ready");
-    }, 3000);
+      if (!done) {
+        document.documentElement.classList.remove("split-ready");
+        return;
+      }
+      if (gsap.ticker.frame - startFrame < 2) {
+        splits.forEach((s) => s.revert());
+        splits.length = 0;
+        document.documentElement.classList.remove("split-ready");
+      }
+    }, 2500);
 
     const run = () => {
       if (cancelled) return;

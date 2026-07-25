@@ -136,21 +136,25 @@ export default function FlickDeck({
           gsap.to(item, { ...to, duration: 0.6, ease: "elastic.out(1.2, 1)" });
         else gsap.set(item, to);
 
-        // Meta chips: only the active card's are up.
+        // Meta chips: only the active card's are up. On first paint they're
+        // placed outright — a delayed tween would leave them hidden on any
+        // device where the frame loop hasn't got going yet.
         const chips = item.querySelectorAll<HTMLElement>(".flick-card_data");
         gsap.killTweensOf(chips);
-        if (i === next) {
+        if (i !== next) {
+          gsap.set(chips, { yPercent: 110 });
+        } else if (!animate) {
+          gsap.set(chips, { yPercent: 0 });
+        } else {
           chips.forEach((chip, c) => {
             gsap.set(chip, { yPercent: 110 });
             gsap.to(chip, {
               yPercent: 0,
               duration: 0.5,
-              delay: (animate ? 0.2 : 0.1) + 0.1 * c,
+              delay: 0.2 + 0.1 * c,
               ease: "power2.out",
             });
           });
-        } else {
-          gsap.set(chips, { yPercent: 110 });
         }
       });
     },

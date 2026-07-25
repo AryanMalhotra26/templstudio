@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import { home } from "@/content/home";
 import BtnIcon from "@/components/ui/BtnIcon";
 import FlickDeck from "@/components/home/FlickDeck";
@@ -42,26 +42,81 @@ export default function ClientDeckSection() {
   const [index, setIndex] = useState(0);
   const total = deck.showcases.length;
 
-  /** Centre the active slide in the viewport. */
-  const position = useCallback(() => {
+  /** Distance the track must sit at for slide `i` to be centred. */
+  const offsetFor = useCallback((i: number) => {
     const viewport = viewportRef.current;
     const track = trackRef.current;
-    if (!viewport || !track) return;
-    const slide = track.children[index] as HTMLElement | undefined;
-    if (!slide) return;
-    const offset =
-      slide.offsetLeft - (viewport.clientWidth - slide.offsetWidth) / 2;
-    track.style.transform = `translate3d(${-offset}px, 0, 0)`;
-  }, [index]);
+    if (!viewport || !track) return 0;
+    const slide = track.children[i] as HTMLElement | undefined;
+    if (!slide) return 0;
+    return slide.offsetLeft - (viewport.clientWidth - slide.offsetWidth) / 2;
+  }, []);
+
+  const position = useCallback(
+    (extra = 0) => {
+      const track = trackRef.current;
+      if (!track) return;
+      track.style.transform = `translate3d(${-offsetFor(index) + extra}px, 0, 0)`;
+    },
+    [index, offsetFor]
+  );
 
   useEffect(() => {
     position();
-    window.addEventListener("resize", position);
-    return () => window.removeEventListener("resize", position);
+    const onResize = () => position();
+    window.addEventListener("resize", onResize);
+    return () => window.removeEventListener("resize", onResize);
   }, [position]);
 
   const go = (dir: 1 | -1) =>
     setIndex((i) => Math.min(total - 1, Math.max(0, i + dir)));
+
+  /**
+   * Touch/pointer dragging — the primary way to move through the deck on a
+   * phone, where the arrows are a fallback. Only takes over once the gesture
+   * is clearly horizontal, so vertical page scrolling still works.
+   */
+  const drag = useRef({ active: false, decided: false, x: 0, y: 0, dx: 0 });
+
+  const onPointerDown = (e: ReactPointerEvent) => {
+    if (e.pointerType === "mouse" && e.button !== 0) return;
+    drag.current = { active: true, decided: false, x: e.clientX, y: e.clientY, dx: 0 };
+  };
+
+  const onPointerMove = (e: ReactPointerEvent) => {
+    const d = drag.current;
+    if (!d.active) return;
+    const dx = e.clientX - d.x;
+    const dy = e.clientY - d.y;
+
+    if (!d.decided) {
+      if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+      if (Math.abs(dy) > Math.abs(dx)) {
+        d.active = false; // vertical scroll — let the page have it
+        return;
+      }
+      d.decided = true;
+      trackRef.current?.classList.add("is-dragging");
+      trackRef.current?.setPointerCapture?.(e.pointerId);
+    }
+
+    d.dx = dx;
+    position(dx);
+  };
+
+  const endDrag = () => {
+    const d = drag.current;
+    if (!d.active) return;
+    d.active = false;
+    trackRef.current?.classList.remove("is-dragging");
+    if (!d.decided) return;
+
+    const width = (trackRef.current?.children[index] as HTMLElement)?.offsetWidth ?? 1;
+    const threshold = width * 0.15;
+    if (d.dx <= -threshold) go(1);
+    else if (d.dx >= threshold) go(-1);
+    else position();
+  };
 
   return (
     <section className="section_client-deck" data-gsap-ignore>
@@ -69,7 +124,14 @@ export default function ClientDeckSection() {
         <div className="padding-global">
           <div className="container-col-12">
             <div className="swiper-group">
-              <div className="deck-viewport" ref={viewportRef}>
+              <div
+                className="deck-viewport"
+                ref={viewportRef}
+                onPointerDown={onPointerDown}
+                onPointerMove={onPointerMove}
+                onPointerUp={endDrag}
+                onPointerCancel={endDrag}
+              >
                 <div className="deck-track" ref={trackRef}>
                   {deck.showcases.map((showcase, i) => (
                     <div
