@@ -1989,6 +1989,418 @@ textarea.form-field {
 }
 
 /* ==================================================================
+   STORY PAGE — hero → founders → chaptered timeline
+   ================================================================== */
+
+/* ---- Hero -------------------------------------------------------- */
+.section_hero-story {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  background-color: var(--theme-background);
+  color: var(--theme-body-text);
+}
+.hero-story_wrapper {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+.hero-story_body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.hero-story_content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5em;
+  width: 100%;
+  max-width: 60em;
+  margin-inline: auto;
+  text-align: center;
+}
+.hero-story_img {
+  position: relative;
+  aspect-ratio: 3 / 2;
+  width: 25em;
+  margin-top: -3em;
+  overflow: hidden;
+}
+.hero-story_img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-story_text-wrap {
+  display: flex;
+  flex-flow: column;
+  gap: 1em;
+  max-width: 45em;
+}
+/* Two photo/object clusters pushed off opposite corners behind the copy. */
+.hero-story_bg {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.hero-story_bg-item {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-left: -10em;
+}
+.hero-story_bg-item.is-left {
+  margin-bottom: -15em;
+}
+.hero-story_bg-item.is-right {
+  margin-top: -17em;
+  margin-left: 0;
+  margin-right: -10em;
+}
+/* Photo + object cluster. The object is offset from the *photo*, not from the
+   grid cell — the cell stretches to half the viewport, so the reference's
+   -5.5em offsets against it would drop the object on top of the copy. */
+.hero-story_cluster {
+  position: relative;
+  flex: none;
+}
+.hero-story_emoji {
+  position: absolute;
+  aspect-ratio: 1;
+  width: 12em;
+  top: -3.5em;
+  right: -5.5em;
+}
+.hero-story_emoji.is-02 {
+  top: auto;
+  bottom: -5em;
+  left: -5.5em;
+  right: auto;
+}
+.hero-story_emoji img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+/* Outline variant + a down-pointing arrow, for the scroll-to-story button. */
+.btn-icon-content.is-outline {
+  border: 1px solid var(--theme-button-secondary-bg);
+  background-color: transparent;
+  color: var(--theme-body-text);
+}
+.btn-icon-icon__wrap.is-down {
+  transform: rotate(90deg);
+}
+.btn-icon-content__bg.is-white {
+  background-color: var(--swatch-white);
+}
+
+/* ---- Founders ---------------------------------------------------- */
+.section_story-intro {
+  background-color: var(--theme-background);
+  color: var(--theme-body-text);
+}
+.story-intro {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 5em;
+  text-align: center;
+}
+.story-intro_cards {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 4em;
+}
+.story-intro_card {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5em;
+}
+.story-intro_card-img {
+  position: relative;
+  aspect-ratio: 2 / 3;
+  width: 20em;
+  overflow: hidden;
+}
+.story-intro_card-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* The half-opacity lives on a wrapper: the global split reveal sets
+   `autoAlpha: 1` on the heading itself, which would overwrite it. */
+.story-intro_card-name {
+  opacity: 0.5;
+}
+.story-intro-card_h {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: var(--p-l);
+  line-height: 1em;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+/* ---- Chapters ---------------------------------------------------- */
+.section_chapters {
+  position: relative;
+  background-color: var(--theme-background);
+  color: var(--theme-body-text);
+}
+.chapter-group {
+  position: relative;
+}
+/* The year sits in a sticky layer behind every chapter, pinned to the bottom
+   of the viewport. */
+/* `justify-content: flex-start` matters: this wrapper spans the whole chapter
+   group, so aligning the sticky child to the end would park it 6000-odd px
+   down and `position: sticky` would never pin — the year would only appear at
+   the very bottom. Starting it at the top lets it pin for the full run, and
+   the band is placed at the bottom of the *viewport* by the sticky box below. */
+.chapter-year_wrapper {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.chapter-year_sticky {
+  position: sticky;
+  top: 0;
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-end;
+  align-items: stretch;
+  width: 100%;
+  height: 100vh;
+}
+.text-wrapper {
+  position: relative;
+  width: 100%;
+  overflow: visible;
+}
+/* One line tall, so the year that's leaving and the one arriving swap inside
+   a fixed box. Font-size is set in JS, fitted to the container width. */
+.chapter-year_mask {
+  position: relative;
+  width: 100%;
+  height: 1.05em;
+  overflow: hidden;
+}
+.chapter-year_item {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  white-space: nowrap;
+  font-size: inherit;
+  line-height: 1;
+  transform: translateY(110%) translateY(0.08em) scale(0.985);
+  opacity: 0.6;
+  filter: blur(6px);
+  transition:
+    transform 0.7s cubic-bezier(0.7, 0, 0.2, 1),
+    opacity 0.5s ease,
+    filter 0.5s ease;
+}
+.chapter-year_item.is-active {
+  transform: translateY(0%) translateY(0.08em) scale(1);
+  opacity: 1;
+  filter: blur(0);
+}
+.chapter-year_item.is-out-up {
+  transform: translateY(-110%) translateY(0.08em) scale(0.985);
+}
+.chapter-year_item.is-out-down {
+  transform: translateY(110%) translateY(0.08em) scale(0.985);
+}
+.chapter-year_value {
+  color: var(--swatch-dark-grey);
+  font-family: var(--font-heading);
+}
+.chapter-year_value.is-future {
+  opacity: 0.1;
+  text-align: center;
+}
+
+.padding-global.is-chapter {
+  background-color: var(--theme-background);
+  color: var(--theme-body-text);
+}
+.chapter-item {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1em;
+  min-height: 100vh;
+  padding-bottom: 9.25em;
+  color: var(--theme-body-text);
+}
+/* Dashed rail down the middle of each chapter; a masked copy fills it as the
+   chapter passes the middle of the viewport. */
+.chapter-path_wrap {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  flex: 1;
+  justify-content: flex-start;
+  align-items: center;
+}
+.chapter-path {
+  position: relative;
+  display: flex;
+  flex-flow: column;
+  flex: 1;
+  justify-content: flex-start;
+  align-items: center;
+  width: 2px;
+  height: 100%;
+  margin-inline: auto;
+}
+.chapter-path_track,
+.chapter-path_fill {
+  position: absolute;
+  inset: 0;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    currentColor 0px,
+    currentColor 8px,
+    transparent 8px,
+    transparent 16px
+  );
+  background-repeat: repeat-y;
+  background-size: 100% 16px;
+}
+.chapter-path_track {
+  color: rgba(255, 255, 255, 0.18);
+}
+.chapter-path_track.is-last {
+  color: rgba(24, 24, 24, 0.3);
+}
+.chapter-path_fill-mask {
+  position: absolute;
+  inset: 0;
+  height: 0%;
+  overflow: hidden;
+}
+.chapter-path_fill {
+  color: rgba(255, 255, 255, 1);
+}
+.chapter-path_fill.is-last {
+  color: rgba(24, 24, 24, 1);
+}
+.chapter-path_trigger {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  width: 1px;
+  height: 1px;
+  transform: translateX(-50%);
+}
+.chapter-path_emoji {
+  position: relative;
+  aspect-ratio: 1;
+  width: 10em;
+  right: -50%;
+  opacity: 0;
+  transform: translateX(-50%) scale(0.6) rotate(-10deg);
+  transform-origin: center center;
+  will-change: transform, opacity;
+}
+.chapter-path_emoji img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.chapter-content {
+  display: flex;
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 1.5em;
+  max-width: 40em;
+  margin-inline: auto;
+  text-align: center;
+}
+.chapter-text {
+  display: flex;
+  flex-flow: column;
+  gap: 1em;
+}
+/* Flipbook: frames stacked, swapped every 500ms. */
+.chapter-gallery_list {
+  position: relative;
+  aspect-ratio: 3 / 4;
+  width: 14em;
+  margin-bottom: 1em;
+  transform: rotate(3deg);
+}
+.chapter-gallery_item {
+  position: absolute;
+  inset: 0;
+}
+.chapter-gallery_item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Cursor trail layer, one per chapter. */
+.trail-wrap {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.trail-list {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.trail-item {
+  position: absolute;
+  width: 15em;
+  height: 20em;
+  border-radius: 0.3125em;
+  opacity: 0;
+  overflow: hidden;
+}
+.trail-item__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* ==================================================================
    BREAKPOINTS — 991 / 767 / 479, matching the reference's tiers.
 
    Because the whole page is sized in `em` off one fluid body font-size,
@@ -2298,6 +2710,44 @@ textarea.form-field {
     padding-top: 1.5em;
     padding-bottom: 1.5em;
   }
+  .hero-story_text-wrap {
+    max-width: 24em;
+  }
+  .hero-story_img {
+    width: 20em;
+    margin-top: -2em;
+  }
+  .hero-story_bg-item.is-right {
+    margin-right: -15em;
+  }
+  .hero-story_bg-item.is-left {
+    margin-left: -15em;
+  }
+  .hero-story_emoji {
+    width: 10em;
+  }
+  .hero-story_emoji.is-02 {
+    left: -2em;
+  }
+  .section_hero-story {
+    height: 110vh;
+    overflow: clip;
+  }
+  .chapter-year_sticky {
+    padding-bottom: 2em;
+  }
+  .chapter-gallery_list {
+    width: 12em;
+  }
+  .story-intro_card-img {
+    width: 16em;
+  }
+  .story-intro {
+    gap: 3.5em;
+  }
+  .story-intro_cards {
+    gap: 2em;
+  }
 }
 
 /* ---- Mobile landscape -------------------------------------------- */
@@ -2433,6 +2883,20 @@ textarea.form-field {
   .footer_wrapper {
     gap: 1.5em;
     padding-top: 1em;
+  }
+  .chapter-item {
+    min-height: auto;
+    padding-bottom: 6em;
+    padding-top: 4em;
+  }
+  .chapter-path_emoji {
+    width: 8em;
+  }
+  .chapter-year_sticky {
+    height: 100svh;
+  }
+  .trail-wrap {
+    display: none;
   }
 }
 
@@ -2796,6 +3260,55 @@ textarea.form-field {
   }
   .footer-main_bottom-col {
     gap: 1.5em;
+  }
+  .section_hero-story {
+    height: auto;
+  }
+  .hero-story_body {
+    padding-top: 12em;
+    padding-bottom: 2em;
+  }
+  .hero-story_content {
+    max-width: 100%;
+  }
+  .hero-story_text-wrap {
+    max-width: 20em;
+  }
+  .hero-story_img {
+    width: 100%;
+    margin-top: -1em;
+  }
+  /* Stops being a background layer and becomes a row under the copy. */
+  .hero-story_bg {
+    position: relative;
+    display: flex;
+    flex-flow: row;
+    gap: 2em;
+    height: auto;
+  }
+  .hero-story_bg-item {
+    margin-left: 0;
+  }
+  .hero-story_bg-item.is-left {
+    margin-bottom: 7em;
+    margin-left: 0;
+  }
+  .hero-story_bg-item.is-right {
+    margin-top: 0;
+    margin-right: 0;
+  }
+  .hero-story_emoji {
+    bottom: -4em;
+    right: 4em;
+  }
+  .story-intro_cards {
+    gap: 1em;
+  }
+  .story-intro_card-img {
+    width: 11em;
+  }
+  .chapter-gallery_list {
+    margin-bottom: 0.5em;
   }
 }
 

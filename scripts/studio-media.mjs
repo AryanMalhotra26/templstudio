@@ -317,6 +317,22 @@ reelSlugs.forEach((slug, s) => {
 photo("about-1.svg", 640, 880, 9301, { tone: "cool" });
 photo("about-2.svg", 640, 880, 9407, { tone: "warm" });
 
+/* ---- Story page ---- */
+/* Hero inline image — 3:2 */
+photo("story-hero.svg", 960, 640, 12007, { tone: "warm" });
+/* Hero background cards — 4:5, same box as the homepage's rising media */
+photo("story-bg-1.svg", 640, 800, 12103, { tone: "cool" });
+photo("story-bg-2.svg", 640, 800, 12211, { tone: "dark" });
+/* Founder portraits — 2:3 */
+photo("founder-1.svg", 640, 960, 12301, { tone: "dark" });
+photo("founder-2.svg", 640, 960, 12409, { tone: "warm" });
+/* Chapter frames — 3:4. One pool, cycled by the flipbooks and mouse trails. */
+for (let i = 1; i <= 10; i++) {
+  photo(`story-frame-${i}.svg`, 720, 960, 12500 + i * 71, {
+    tone: ["dark", "warm", "cool"][i % 3],
+  });
+}
+
 /* Avatars */
 avatar("avatar-golden-hour.svg", 311, "PS");
 avatar("avatar-northbound.svg", 407, "MC");
