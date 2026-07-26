@@ -87,13 +87,23 @@ export default function HeroSection() {
     tl.to(rest, { autoAlpha: 1, y: 0, duration: 0.7, stagger: 0.08 }, 0.8);
 
     // Safety net for low-end devices: this timeline is what makes the wordmark
-    // and copy visible, so if the frame loop never gets going, snap it to the
-    // end rather than leaving the hero empty. Timers still fire when rAF is
-    // starved, so this runs even when GSAP can't.
-    const startFrame = gsap.ticker.frame;
+    // and copy visible, so it must not be possible to end up stuck part-way.
+    // `tl.progress(1)` isn't enough — it moves the playhead but still needs a
+    // tick to paint, which is the very thing missing when a frame loop stalls.
+    // Kill it and write the end state directly; `gsap.set` is synchronous.
     const guard = window.setTimeout(() => {
-      if (gsap.ticker.frame - startFrame < 2) tl.progress(1);
-    }, 1500);
+      if (tl.progress() < 1) {
+        tl.kill();
+        gsap.set([...letters, ...Array.from(rest)], {
+          yPercent: 0,
+          autoAlpha: 1,
+          scale: 1,
+          y: 0,
+        });
+        if (heading) gsap.set(heading, { autoAlpha: 1 });
+        if (split) gsap.set(split.lines, { yPercent: 0 });
+      }
+    }, 2200);
 
     return () => {
       window.clearTimeout(guard);

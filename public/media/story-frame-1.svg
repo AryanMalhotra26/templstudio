@@ -1,59 +1,71 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="960" viewBox="0 0 720 960">
   <defs>
-    <linearGradient id="wall" x1="0" y1="0" x2="0.25" y2="1">
-      <stop offset="0" stop-color="#a98f6f"/>
-      <stop offset="0.55" stop-color="#6b573e"/>
-      <stop offset="1" stop-color="#241c13"/>
+    <linearGradient id="a12571bg" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#0e0e0e"/>
+      <stop offset="1" stop-color="#171717"/>
     </linearGradient>
-    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#000000" stop-opacity="0.22"/>
-      <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
-    </linearGradient>
-    <radialGradient id="key">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.62"/>
-      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0.2"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="rim">
-      <stop offset="0" stop-color="#ecfdad" stop-opacity="0.34"/>
+    <radialGradient id="a12571key">
+      <stop offset="0" stop-color="#ecfdad" stop-opacity="0.85"/>
+      <stop offset="0.45" stop-color="#ecfdad" stop-opacity="0.28"/>
       <stop offset="1" stop-color="#ecfdad" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="kiss">
-      <stop offset="0" stop-color="#3fae86" stop-opacity="0.3"/>
-      <stop offset="1" stop-color="#3fae86" stop-opacity="0"/>
+    <radialGradient id="a12571wash">
+      <stop offset="0" stop-color="#eae9e6" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#eae9e6" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="subject" x1="0" y1="0" x2="0.35" y2="1">
-      <stop offset="0" stop-color="#000000" stop-opacity="0.24"/>
-      <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
-    </linearGradient>
-    <linearGradient id="vig" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#000000" stop-opacity="0.2"/>
-      <stop offset="0.42" stop-color="#000000" stop-opacity="0"/>
-      <stop offset="1" stop-color="#000000" stop-opacity="0.34"/>
-    </linearGradient>
-    <pattern id="grain" width="65" height="65" patternUnits="userSpaceOnUse" patternTransform="rotate(2.3)">
-      <path d="M0 0H65M0 0V65" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    <radialGradient id="a12571dotmask">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="a12571dm">
+      <rect width="720" height="960" fill="url(#a12571dotmask)"/>
+    </mask>
+    <pattern id="a12571dots" width="8" height="8" patternUnits="userSpaceOnUse">
+      <circle cx="4" cy="4" r="1.36" fill="#ecfdad" fill-opacity="0.5"/>
     </pattern>
+    <linearGradient id="a12571vig" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0.4"/>
+      <stop offset="0.45" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.55"/>
+    </linearGradient>
+    <filter id="a12571grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="59" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0"/>
+    </filter>
   </defs>
 
-  <rect width="720" height="960" fill="url(#wall)"/>
-  <circle cx="168" cy="244" r="314" fill="url(#key)"/>
-  <circle cx="575" cy="534" r="220" fill="url(#rim)"/>
-  <circle cx="552" cy="749" r="173" fill="url(#kiss)"/>
-  <rect y="576" width="720" height="384" fill="url(#floor)"/>
-  <path d="M0 576H720" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
+  <rect width="720" height="960" fill="url(#a12571bg)"/>
+  <circle cx="247" cy="340" r="356" fill="url(#a12571key)"/>
+  <circle cx="86" cy="732" r="309" fill="url(#a12571wash)"/>
+  <g mask="url(#a12571dm)">
+    <rect width="720" height="960" fill="url(#a12571dots)"/>
+  </g>
+  <circle cx="792" cy="298" r="543" fill="none"
+          stroke="#eae9e6" stroke-opacity="0.35" stroke-width="2.4"/>
 
-  <g fill="url(#subject)">
-    <ellipse cx="273" cy="368" rx="141" ry="172"/>
-    <path d="M-218 960
-             C-218 580
-              83 580
-              273 568
-             C463 580
-              763 580
-              763 960Z"/>
+  <g>
+    <path d="M12 960
+             C12 681
+              205 608
+              381 599
+             C558 608
+              751 681
+              751 960Z" fill="#0b0c0a" fill-opacity="0.9"/>
+    <ellipse cx="381" cy="426" rx="122" ry="141" fill="#0b0c0a" fill-opacity="0.9"/>
+    <path d="M493 338
+             A122 141 0 0 1 457 545"
+          fill="none" stroke="#ecfdad" stroke-opacity="0.8" stroke-width="6.7" stroke-linecap="round"/>
   </g>
 
-  <rect width="720" height="960" fill="url(#grain)"/>
-  <rect width="720" height="960" fill="url(#vig)"/>
+  <rect width="720" height="960" fill="url(#a12571vig)"/>
+  <g opacity="0.14" filter="url(#a12571grain)">
+    <rect width="720" height="960"/>
+  </g>
+  <g stroke="#eae9e6" stroke-opacity="0.4" stroke-width="2.1176470588235294" fill="none">
+    <path d="M16 32V16H32"/>
+    <path d="M688 16H704V32"/>
+    <path d="M16 928V944H32"/>
+    <path d="M688 944H704V928"/>
+  </g>
+  <text x="16" y="942.4" font-family="'Helvetica Neue', Arial, sans-serif" font-size="28" letter-spacing="1.8" fill="#eae9e6" fill-opacity="0.55">01</text>
 </svg>

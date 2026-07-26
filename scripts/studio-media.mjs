@@ -162,108 +162,154 @@ chromeObject(
 /* --------------------------------------------------------- photo stand-ins */
 
 /**
- * An abstract "shoot in progress" frame: a lit backdrop, a soft window of key
- * light, a floor, a seated/standing subject mass and a lens bloom, in the
- * studio palette. Deliberately non-representational — it reads as
- * "photograph goes here" without pretending to be a photo of a real person,
- * but carries enough tonal range to sit under white and lime type.
+ * Editorial art placeholders.
+ *
+ * The earlier version was a soft gradient with a faint blob in it, which read
+ * as "image failed to load". These are deliberately *designed* frames instead:
+ * a backlit silhouette against a duotone wash, a halftone dot field for
+ * photographic texture, an off-frame geometric arc, film grain and a vignette.
+ * `kind: "frame"` adds contact-sheet furniture (crop marks + an index), which
+ * makes a wall of them read as a shoot contact sheet rather than as missing
+ * assets.
+ *
+ * Swapping in real photography is still a one-line change per entry in
+ * src/content — nothing downstream cares.
  */
-function photo(file, w, h, seed, { accent = LIME, tone = "dark" } = {}) {
+
+const DUOTONES = [
+  { a: LIME, b: TURQUOISE, bg: ["#12140f", "#1e211a"] },
+  { a: TURQUOISE, b: LIME, bg: ["#0d1412", "#18211e"] },
+  { a: "#eae9e6", b: LIME, bg: ["#131313", "#242424"] },
+  { a: LIME, b: "#eae9e6", bg: ["#171717", "#0e0e0e"] },
+  { a: TURQUOISE, b: "#eae9e6", bg: ["#0f1413", "#1b2321"] },
+];
+
+function art(file, w, h, seed, { kind = "frame", pair = 0, index = null } = {}) {
   const r = rng(seed);
-  const ramp = {
-    dark: ["#8d918a", "#4c5049", "#1e201c"],
-    warm: ["#a98f6f", "#6b573e", "#241c13"],
-    cool: ["#6f8f86", "#3b544d", "#141d1a"],
-  }[tone];
-
+  const P = DUOTONES[pair % DUOTONES.length];
   const min = Math.min(w, h);
+  const id = `a${seed}`;
 
-  // Key light: a bright soft-box, offset from centre.
-  const keyX = (0.18 + r() * 0.5) * w;
-  const keyY = (0.1 + r() * 0.3) * h;
-  const keyR = (0.35 + r() * 0.3) * min;
+  /* Key light behind the subject — this is what makes it read as backlit. */
+  const keyX = (0.3 + r() * 0.4) * w;
+  const keyY = (0.22 + r() * 0.26) * h;
+  const keyR = (0.42 + r() * 0.26) * min;
 
-  // Horizon / floor line.
-  const floorY = h * (0.6 + r() * 0.16);
+  /* Second, cooler wash pushed to a corner. */
+  const washX = (r() < 0.5 ? 0.12 : 0.88) * w;
+  const washY = (0.55 + r() * 0.4) * h;
+  const washR = (0.4 + r() * 0.3) * min;
 
-  // Subject mass. Low contrast on purpose, so it reads as a body in shadow
-  // rather than an avatar icon. Portrait crops fill the frame the way a
-  // photographed subject would; landscape frames get a smaller, off-centre
-  // figure so the plate stays usable as a full-bleed background.
-  const portrait = h >= w;
-  const subW = portrait ? w * (1.15 + r() * 0.4) : w * (0.3 + r() * 0.12);
-  const subX = w * (portrait ? 0.5 + (r() - 0.5) * 0.3 : 0.22 + r() * 0.56);
-  const headR = portrait ? min * (0.15 + r() * 0.05) : min * (0.07 + r() * 0.03);
-  const headY = portrait ? h * (0.3 + r() * 0.14) : h * (0.42 + r() * 0.12);
+  /* Subject: head + shoulders, cropped by the frame bottom. */
+  const headR = min * (kind === "wide" ? 0.1 : 0.15) * (0.9 + r() * 0.25);
+  const cx = w * (0.5 + (r() - 0.5) * (kind === "wide" ? 0.5 : 0.3));
+  const cy = h * (kind === "wide" ? 0.52 : 0.44) + headR * (r() - 0.5) * 0.4;
+  const shoulder = headR * (2.5 + r() * 0.7);
+  const rim = r() < 0.5 ? -1 : 1;
 
-  // A second, smaller light for depth, plus one accent kiss.
-  const rimX = (0.6 + r() * 0.35) * w;
-  const rimY = (0.25 + r() * 0.4) * h;
-  const grainAngle = (-14 + r() * 28).toFixed(1);
-  const step = Math.round(min / 11);
+  /* Off-frame arc. */
+  const arcR = min * (0.55 + r() * 0.4);
+  const arcX = (r() < 0.5 ? -0.1 : 1.1) * w;
+  const arcY = (0.2 + r() * 0.6) * h;
+
+  const dot = Math.max(6, Math.round(min / 90));
+  const grainSeed = (seed % 97) + 1;
+
+  const marks =
+    kind !== "frame"
+      ? ""
+      : `
+  <g stroke="#eae9e6" stroke-opacity="0.4" stroke-width="${Math.max(1, min / 340)}" fill="none">
+    <path d="M${dot * 2} ${dot * 4}V${dot * 2}H${dot * 4}"/>
+    <path d="M${w - dot * 4} ${dot * 2}H${w - dot * 2}V${dot * 4}"/>
+    <path d="M${dot * 2} ${h - dot * 4}V${h - dot * 2}H${dot * 4}"/>
+    <path d="M${w - dot * 4} ${h - dot * 2}H${w - dot * 2}V${h - dot * 4}"/>
+  </g>${
+    index === null
+      ? ""
+      : `
+  <text x="${dot * 2}" y="${h - dot * 2.2}" font-family="'Helvetica Neue', Arial, sans-serif" font-size="${Math.round(min / 26)}" letter-spacing="${(min / 400).toFixed(1)}" fill="#eae9e6" fill-opacity="0.55">${String(index).padStart(2, "0")}</text>`
+  }`;
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
   <defs>
-    <linearGradient id="wall" x1="0" y1="0" x2="0.25" y2="1">
-      <stop offset="0" stop-color="${ramp[0]}"/>
-      <stop offset="0.55" stop-color="${ramp[1]}"/>
-      <stop offset="1" stop-color="${ramp[2]}"/>
+    <linearGradient id="${id}bg" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="${P.bg[1]}"/>
+      <stop offset="1" stop-color="${P.bg[0]}"/>
     </linearGradient>
-    <linearGradient id="floor" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#000000" stop-opacity="0.22"/>
-      <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
-    </linearGradient>
-    <radialGradient id="key">
-      <stop offset="0" stop-color="#ffffff" stop-opacity="0.62"/>
-      <stop offset="0.45" stop-color="#ffffff" stop-opacity="0.2"/>
-      <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
+    <radialGradient id="${id}key">
+      <stop offset="0" stop-color="${P.a}" stop-opacity="0.85"/>
+      <stop offset="0.45" stop-color="${P.a}" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="${P.a}" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="rim">
-      <stop offset="0" stop-color="${accent}" stop-opacity="0.34"/>
-      <stop offset="1" stop-color="${accent}" stop-opacity="0"/>
+    <radialGradient id="${id}wash">
+      <stop offset="0" stop-color="${P.b}" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="${P.b}" stop-opacity="0"/>
     </radialGradient>
-    <radialGradient id="kiss">
-      <stop offset="0" stop-color="${TURQUOISE}" stop-opacity="0.3"/>
-      <stop offset="1" stop-color="${TURQUOISE}" stop-opacity="0"/>
+    <radialGradient id="${id}dotmask">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
     </radialGradient>
-    <linearGradient id="subject" x1="0" y1="0" x2="0.35" y2="1">
-      <stop offset="0" stop-color="#000000" stop-opacity="0.24"/>
-      <stop offset="1" stop-color="#000000" stop-opacity="0.5"/>
-    </linearGradient>
-    <linearGradient id="vig" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#000000" stop-opacity="0.2"/>
-      <stop offset="0.42" stop-color="#000000" stop-opacity="0"/>
-      <stop offset="1" stop-color="#000000" stop-opacity="0.34"/>
-    </linearGradient>
-    <pattern id="grain" width="${step}" height="${step}" patternUnits="userSpaceOnUse" patternTransform="rotate(${grainAngle})">
-      <path d="M0 0H${step}M0 0V${step}" stroke="#ffffff" stroke-opacity="0.045" stroke-width="1"/>
+    <mask id="${id}dm">
+      <rect width="${w}" height="${h}" fill="url(#${id}dotmask)"/>
+    </mask>
+    <pattern id="${id}dots" width="${dot}" height="${dot}" patternUnits="userSpaceOnUse">
+      <circle cx="${dot / 2}" cy="${dot / 2}" r="${(dot * 0.17).toFixed(2)}" fill="${P.a}" fill-opacity="0.5"/>
     </pattern>
+    <linearGradient id="${id}vig" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0.4"/>
+      <stop offset="0.45" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.55"/>
+    </linearGradient>
+    <filter id="${id}grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="${grainSeed}" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0"/>
+    </filter>
   </defs>
 
-  <rect width="${w}" height="${h}" fill="url(#wall)"/>
-  <circle cx="${keyX.toFixed(0)}" cy="${keyY.toFixed(0)}" r="${keyR.toFixed(0)}" fill="url(#key)"/>
-  <circle cx="${rimX.toFixed(0)}" cy="${rimY.toFixed(0)}" r="${(keyR * 0.7).toFixed(0)}" fill="url(#rim)"/>
-  <circle cx="${(w - keyX).toFixed(0)}" cy="${(h * 0.78).toFixed(0)}" r="${(keyR * 0.55).toFixed(0)}" fill="url(#kiss)"/>
-  <rect y="${floorY.toFixed(0)}" width="${w}" height="${(h - floorY).toFixed(0)}" fill="url(#floor)"/>
-  <path d="M0 ${floorY.toFixed(0)}H${w}" stroke="#ffffff" stroke-opacity="0.12" stroke-width="1.5"/>
+  <rect width="${w}" height="${h}" fill="url(#${id}bg)"/>
+  <circle cx="${keyX.toFixed(0)}" cy="${keyY.toFixed(0)}" r="${keyR.toFixed(0)}" fill="url(#${id}key)"/>
+  <circle cx="${washX.toFixed(0)}" cy="${washY.toFixed(0)}" r="${washR.toFixed(0)}" fill="url(#${id}wash)"/>
+  <g mask="url(#${id}dm)">
+    <rect width="${w}" height="${h}" fill="url(#${id}dots)"/>
+  </g>
+  <circle cx="${arcX.toFixed(0)}" cy="${arcY.toFixed(0)}" r="${arcR.toFixed(0)}" fill="none"
+          stroke="${P.b}" stroke-opacity="0.35" stroke-width="${Math.max(1.5, min / 300).toFixed(1)}"/>
 
-  <g fill="url(#subject)"${portrait ? "" : ' opacity="0.35"'}>
-    <ellipse cx="${subX.toFixed(0)}" cy="${headY.toFixed(0)}" rx="${headR.toFixed(0)}" ry="${(headR * 1.22).toFixed(0)}"/>
-    <path d="M${(subX - subW / 2).toFixed(0)} ${h}
-             C${(subX - subW / 2).toFixed(0)} ${(headY + headR * 1.5).toFixed(0)}
-              ${(subX - headR * 1.35).toFixed(0)} ${(headY + headR * 1.5).toFixed(0)}
-              ${subX.toFixed(0)} ${(headY + headR * 1.42).toFixed(0)}
-             C${(subX + headR * 1.35).toFixed(0)} ${(headY + headR * 1.5).toFixed(0)}
-              ${(subX + subW / 2).toFixed(0)} ${(headY + headR * 1.5).toFixed(0)}
-              ${(subX + subW / 2).toFixed(0)} ${h}Z"/>
+  <g>
+    <path d="M${(cx - shoulder).toFixed(0)} ${h}
+             C${(cx - shoulder).toFixed(0)} ${(cy + headR * 2.1).toFixed(0)}
+              ${(cx - headR * 1.45).toFixed(0)} ${(cy + headR * 1.5).toFixed(0)}
+              ${cx.toFixed(0)} ${(cy + headR * 1.42).toFixed(0)}
+             C${(cx + headR * 1.45).toFixed(0)} ${(cy + headR * 1.5).toFixed(0)}
+              ${(cx + shoulder).toFixed(0)} ${(cy + headR * 2.1).toFixed(0)}
+              ${(cx + shoulder).toFixed(0)} ${h}Z" fill="#0b0c0a" fill-opacity="0.9"/>
+    <ellipse cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" rx="${headR.toFixed(0)}" ry="${(headR * 1.16).toFixed(0)}" fill="#0b0c0a" fill-opacity="0.9"/>
+    <path d="M${(cx + rim * headR * 0.92).toFixed(0)} ${(cy - headR * 0.72).toFixed(0)}
+             A${headR.toFixed(0)} ${(headR * 1.16).toFixed(0)} 0 0 ${rim > 0 ? 1 : 0} ${(cx + rim * headR * 0.62).toFixed(0)} ${(cy + headR * 0.98).toFixed(0)}"
+          fill="none" stroke="${P.a}" stroke-opacity="0.8" stroke-width="${Math.max(1.5, headR * 0.055).toFixed(1)}" stroke-linecap="round"/>
   </g>
 
-  <rect width="${w}" height="${h}" fill="url(#grain)"/>
-  <rect width="${w}" height="${h}" fill="url(#vig)"/>
+  <rect width="${w}" height="${h}" fill="url(#${id}vig)"/>
+  <g opacity="0.14" filter="url(#${id}grain)">
+    <rect width="${w}" height="${h}"/>
+  </g>${marks}
 </svg>
 `;
   writeFileSync(join(mediaDir, file), svg);
 }
+
+/* Kept as the entry point the rest of the script already calls. */
+function photo(file, w, h, seed, opts = {}) {
+  const { tone = "dark", kind, index } = opts;
+  const pair = { dark: 0, warm: 2, cool: 1 }[tone] ?? 0;
+  art(file, w, h, seed, {
+    kind: kind ?? (h > w * 1.15 ? "portrait" : "wide"),
+    pair: (pair + (seed % 3)) % DUOTONES.length,
+    index: index ?? null,
+  });
+}
+
 
 /** Round portrait stand-in for a named person. */
 function avatar(file, seed, initials) {
@@ -326,10 +372,14 @@ photo("story-bg-2.svg", 640, 800, 12211, { tone: "dark" });
 /* Founder portraits — 2:3 */
 photo("founder-1.svg", 640, 960, 12301, { tone: "dark" });
 photo("founder-2.svg", 640, 960, 12409, { tone: "warm" });
-/* Chapter frames — 3:4. One pool, cycled by the flipbooks and mouse trails. */
+/* Chapter frames — 3:4. One pool, cycled by the flipbooks and mouse trails.
+   Contact-sheet furniture (crop marks + index) so a wall of them reads as a
+   shoot rather than as ten identical placeholders. */
 for (let i = 1; i <= 10; i++) {
   photo(`story-frame-${i}.svg`, 720, 960, 12500 + i * 71, {
     tone: ["dark", "warm", "cool"][i % 3],
+    kind: "frame",
+    index: i,
   });
 }
 

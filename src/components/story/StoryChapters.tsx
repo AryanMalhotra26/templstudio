@@ -150,10 +150,14 @@ export default function StoryChapters() {
             </div>
           </div>
 
-          {story.chapters.map((chapter) => (
+          {story.chapters.map((chapter, i) => (
             <div className="padding-global is-chapter" key={chapter.year}>
               <div className="container-col-12">
-                <StoryChapter chapter={chapter} />
+                <StoryChapter
+                  chapter={chapter}
+                  index={i + 1}
+                  flipped={i % 2 === 1}
+                />
               </div>
             </div>
           ))}

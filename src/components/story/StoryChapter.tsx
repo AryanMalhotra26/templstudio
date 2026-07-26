@@ -21,10 +21,16 @@ export default function StoryChapter({
   chapter,
   isLast = false,
   titleClass = "heading-s",
+  index,
+  flipped = false,
 }: {
   chapter: Chapter | (Omit<Chapter, "frames" | "trail"> & Partial<Chapter>);
   isLast?: boolean;
   titleClass?: string;
+  /** 1-based; shown as the outline numeral. Omit for the closing chapter. */
+  index?: number;
+  /** Puts the copy on the right and the frames on the left. */
+  flipped?: boolean;
 }) {
   const itemRef = useRef<HTMLDivElement>(null);
   const galleryRef = useRef<HTMLDivElement>(null);
@@ -48,6 +54,8 @@ export default function StoryChapter({
     const fillMask = item.querySelector<HTMLElement>(".chapter-path_fill-mask");
     const triggerPoint = item.querySelector<HTMLElement>(".chapter-path_trigger");
     const emoji = item.querySelector<HTMLElement>(".chapter-path_emoji");
+    const head = item.querySelector<HTMLElement>(".chapter-path_head");
+    const gallery = item.querySelector<HTMLElement>(".chapter-gallery_list");
     if (!path || !fillMask || !triggerPoint || !emoji) return;
 
     const reveal = () =>
@@ -75,8 +83,34 @@ export default function StoryChapter({
           (window.innerHeight * 0.5 - rect.top) / rect.height
         );
         gsap.set(fillMask, { height: `${progress * 100}%` });
+        // The lit head rides the end of the drawn line.
+        if (head) {
+          gsap.set(head, {
+            top: `${progress * 100}%`,
+            autoAlpha: progress > 0.01 && progress < 0.995 ? 1 : 0,
+          });
+        }
       },
     });
+
+    // Frames drift against the scroll — a small amount goes a long way, and
+    // it's what stops the media column feeling pasted on.
+    const parallax = gallery
+      ? gsap.fromTo(
+          gallery,
+          { yPercent: 9 },
+          {
+            yPercent: -9,
+            ease: "none",
+            scrollTrigger: {
+              trigger: item,
+              start: "top bottom",
+              end: "bottom top",
+              scrub: true,
+            },
+          }
+        )
+      : null;
 
     const pop = ScrollTrigger.create({
       trigger: triggerPoint,
@@ -105,6 +139,8 @@ export default function StoryChapter({
       window.clearTimeout(guard);
       fill.kill();
       pop.kill();
+      parallax?.scrollTrigger?.kill();
+      parallax?.kill();
     };
   }, []);
 
@@ -146,8 +182,52 @@ export default function StoryChapter({
     };
   }, [frames.length]);
 
+  const copy = (
+    <div className="chapter-content">
+      {index !== undefined && (
+        <span className="chapter-eyebrow">
+          <span className="chapter-index">
+            {String(index).padStart(2, "0")}
+          </span>
+          <span className="chapter-years">
+            {chapter.year.replace(/\s+/g, " — ")}
+          </span>
+        </span>
+      )}
+
+      <h2 className={`${titleClass} chapter-title`}>{chapter.title}</h2>
+
+      <div className="chapter-text">
+        {chapter.body.map((p) => (
+          <p className="paragraph-regular" key={p.slice(0, 24)}>
+            {p}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+
+  const media = frames.length > 0 && (
+    <div className="chapter-media">
+      <div className="chapter-gallery_list" ref={galleryRef} aria-hidden>
+        {frames.map((src, i) => (
+          <div className="chapter-gallery_item" key={`${src}-${i}`}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={src} alt="" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   return (
-    <div className="chapter-item" ref={itemRef} data-trail="wrapper">
+    <div
+      className={`chapter-item${flipped ? " is-flipped" : ""}${
+        media ? "" : " is-solo"
+      }`}
+      ref={itemRef}
+      data-trail="wrapper"
+    >
       <div className="chapter-path_wrap">
         <div className="chapter-path">
           <div className="chapter-path_start" />
@@ -155,6 +235,7 @@ export default function StoryChapter({
           <div className="chapter-path_fill-mask">
             <div className={`chapter-path_fill${isLast ? " is-last" : ""}`} />
           </div>
+          <div className={`chapter-path_head${isLast ? " is-last" : ""}`} />
           <div className="chapter-path_trigger" />
         </div>
         <div className="chapter-path_emoji">
@@ -163,28 +244,14 @@ export default function StoryChapter({
         </div>
       </div>
 
-      <div className="chapter-content">
-        {frames.length > 0 && (
-          <div className="chapter-gallery_list" ref={galleryRef} aria-hidden>
-            {frames.map((src, i) => (
-              <div className="chapter-gallery_item" key={`${src}-${i}`}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={src} alt="" />
-              </div>
-            ))}
-          </div>
-        )}
-
-        <h2 className={`${titleClass} chapter-title`}>{chapter.title}</h2>
-
-        <div className="chapter-text">
-          {chapter.body.map((p) => (
-            <p className="paragraph-regular" key={p.slice(0, 24)}>
-              {p}
-            </p>
-          ))}
+      {media ? (
+        <div className="chapter-body">
+          {copy}
+          {media}
         </div>
-      </div>
+      ) : (
+        copy
+      )}
 
       {trail.length > 0 && (
         <div className="trail-wrap" aria-hidden>

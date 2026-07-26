@@ -2035,8 +2035,17 @@ textarea.form-field {
   position: relative;
   aspect-ratio: 3 / 2;
   width: 25em;
-  margin-top: -3em;
+  /* Tucked under the headline, but not so far that descenders land in it. */
+  margin-top: -1.25em;
   overflow: hidden;
+  will-change: clip-path, transform;
+  box-shadow: 0 2em 5em -1.5em rgba(0, 0, 0, 0.8);
+}
+.hero-story_img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(234, 233, 230, 0.16);
 }
 .hero-story_img img {
   width: 100%;
@@ -2081,6 +2090,19 @@ textarea.form-field {
 .hero-story_cluster {
   position: relative;
   flex: none;
+  will-change: transform;
+}
+.hero-story_cluster .hero-home_media {
+  box-shadow: 0 2em 4em -1em rgba(0, 0, 0, 0.6);
+}
+.hero-story_cluster .hero-home_media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(234, 233, 230, 0.14);
+}
+.hero-story_emoji {
+  will-change: transform;
 }
 .hero-story_emoji {
   position: absolute;
@@ -2139,21 +2161,60 @@ textarea.form-field {
   align-items: center;
   gap: 1.5em;
 }
+/* Portraits sit slightly out of step with each other and lift on hover, with
+   a lime rule drawing itself under the name. */
+.story-intro_card:nth-child(odd) {
+  transform: translateY(1.5em);
+}
 .story-intro_card-img {
   position: relative;
   aspect-ratio: 2 / 3;
   width: 20em;
   overflow: hidden;
+  box-shadow: 0 2em 4em -1.5em rgba(0, 0, 0, 0.7);
 }
 .story-intro_card-img img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 0.9s var(--ease-out-quint),
+    filter 0.6s var(--ease-out-quint);
 }
-/* The half-opacity lives on a wrapper: the global split reveal sets
-   `autoAlpha: 1` on the heading itself, which would overwrite it. */
+.story-intro_card-img::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  box-shadow: inset 0 0 0 1px rgba(234, 233, 230, 0.16);
+  pointer-events: none;
+}
+.story-intro_card:hover .story-intro_card-img img {
+  transform: scale(1.06);
+  filter: saturate(1.15) contrast(1.05);
+}
+/* Half-opacity lives on this wrapper rather than the heading: the global split
+   reveal sets `autoAlpha: 1` on the heading and would overwrite it. */
 .story-intro_card-name {
+  position: relative;
   opacity: 0.5;
+  transition: opacity 0.5s var(--ease-out-quint);
+}
+.story-intro_card-name::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -0.35em;
+  height: 1px;
+  background-color: var(--swatch-lime);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.6s var(--ease-out-quint);
+}
+.story-intro_card:hover .story-intro_card-name {
+  opacity: 1;
+}
+.story-intro_card:hover .story-intro_card-name::after {
+  transform: scaleX(1);
 }
 .story-intro-card_h {
   margin: 0;
@@ -2253,15 +2314,19 @@ textarea.form-field {
   background-color: var(--theme-background);
   color: var(--theme-body-text);
 }
+/* Each chapter owns a screen, but the connecting rail is capped rather than
+   flexing to fill it — left to grow it pushed all the copy to the bottom of
+   the viewport and left two thirds of the screen empty. */
 .chapter-item {
   position: relative;
   display: flex;
   flex-flow: column;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
-  gap: 1em;
+  gap: 2.5em;
   min-height: 100vh;
-  padding-bottom: 9.25em;
+  padding-top: 5em;
+  padding-bottom: 7em;
   color: var(--theme-body-text);
 }
 /* Dashed rail down the middle of each chapter; a masked copy fills it as the
@@ -2270,7 +2335,9 @@ textarea.form-field {
   position: relative;
   display: flex;
   flex-flow: column;
-  flex: 1;
+  flex: none;
+  height: 22vh;
+  min-height: 9em;
   justify-content: flex-start;
   align-items: center;
 }
@@ -2325,6 +2392,27 @@ textarea.form-field {
   height: 1px;
   transform: translateX(-50%);
 }
+/* A lit head on the drawn line, so the rail reads as actively progressing
+   rather than just being a static dashed divider. */
+.chapter-path_head {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 0.6em;
+  height: 0.6em;
+  margin-left: -0.3em;
+  margin-top: -0.3em;
+  border-radius: 50%;
+  background-color: var(--swatch-off-white);
+  box-shadow: 0 0 0 0.35em rgba(234, 233, 230, 0.12),
+    0 0 1.5em 0.2em rgba(234, 233, 230, 0.45);
+  opacity: 0;
+}
+.chapter-path_head.is-last {
+  background-color: var(--swatch-black);
+  box-shadow: 0 0 0 0.35em rgba(24, 24, 24, 0.12),
+    0 0 1.5em 0.2em rgba(24, 24, 24, 0.35);
+}
 .chapter-path_emoji {
   position: relative;
   aspect-ratio: 1;
@@ -2340,12 +2428,69 @@ textarea.form-field {
   height: 100%;
   object-fit: contain;
 }
+/* Chapters alternate side to side rather than all sitting in one centred
+   column — the single column is what made the page read as a list. The rail
+   stays dead centre, so the copy and the frames trade places across it. */
+.chapter-body {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 4em;
+  width: 100%;
+}
+.chapter-item.is-flipped .chapter-body {
+  direction: rtl;
+}
+.chapter-item.is-flipped .chapter-body > * {
+  direction: ltr;
+}
 .chapter-content {
   display: flex;
   flex-flow: column;
   justify-content: flex-start;
+  align-items: flex-start;
+  gap: 1.25em;
+  max-width: 32em;
+  text-align: left;
+}
+.chapter-item.is-flipped .chapter-content {
+  margin-left: auto;
+}
+/* Small lime index sitting on the eyebrow rule. Deliberately restrained: the
+   giant year watermark behind the chapter is already doing the loud work, and
+   an outline numeral on top of it just made noise. */
+.chapter-eyebrow {
+  display: flex;
   align-items: center;
-  gap: 1.5em;
+  gap: 0.85em;
+  width: 100%;
+  font-size: 0.875em;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+.chapter-index {
+  color: var(--swatch-lime);
+  font-variant-numeric: tabular-nums;
+}
+.chapter-eyebrow > .chapter-years {
+  opacity: 0.55;
+}
+.chapter-eyebrow::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  min-width: 2em;
+  background-color: currentColor;
+  opacity: 0.25;
+}
+.chapter-media {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* The closing chapter has no frames, so it stays centred like a statement. */
+.chapter-item.is-solo .chapter-content {
+  align-items: center;
   max-width: 40em;
   margin-inline: auto;
   text-align: center;
@@ -2355,13 +2500,34 @@ textarea.form-field {
   flex-flow: column;
   gap: 1em;
 }
-/* Flipbook: frames stacked, swapped every 500ms. */
+/* Flipbook: frames stacked, swapped every 500ms. Sits on a plate that gets a
+   scroll-driven parallax lift, and keeps two offset copies behind it so it
+   reads as a stack of prints rather than a lone thumbnail. */
 .chapter-gallery_list {
   position: relative;
   aspect-ratio: 3 / 4;
-  width: 14em;
-  margin-bottom: 1em;
+  width: 20em;
+  margin-bottom: 0;
   transform: rotate(3deg);
+  will-change: transform;
+  box-shadow: 0 2.5em 5em -1.5em rgba(0, 0, 0, 0.75);
+}
+.chapter-item.is-flipped .chapter-gallery_list {
+  transform: rotate(-3deg);
+}
+.chapter-gallery_list::before,
+.chapter-gallery_list::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(234, 233, 230, 0.18);
+  background-color: rgba(234, 233, 230, 0.04);
+  transform: rotate(-4deg) translate(-1.5em, 0.75em);
+  z-index: -1;
+}
+.chapter-gallery_list::after {
+  transform: rotate(4.5deg) translate(1.25em, 1.25em);
+  border-color: rgba(234, 233, 230, 0.1);
 }
 .chapter-gallery_item {
   position: absolute;
@@ -2748,6 +2914,31 @@ textarea.form-field {
   .story-intro_cards {
     gap: 2em;
   }
+  /* Chapters collapse to one column here; frames sit above the copy. */
+  .chapter-body {
+    grid-template-columns: 1fr;
+    gap: 2.5em;
+    justify-items: center;
+  }
+  .chapter-item.is-flipped .chapter-body {
+    direction: ltr;
+  }
+  .chapter-media {
+    order: -1;
+  }
+  .chapter-content,
+  .chapter-item.is-flipped .chapter-content {
+    align-items: center;
+    max-width: 40em;
+    margin-inline: auto;
+    text-align: center;
+  }
+  .chapter-eyebrow::after {
+    display: none;
+  }
+  .chapter-gallery_list {
+    width: 15em;
+  }
 }
 
 /* ---- Mobile landscape -------------------------------------------- */
@@ -2897,6 +3088,12 @@ textarea.form-field {
   }
   .trail-wrap {
     display: none;
+  }
+  .chapter-gallery_list {
+    width: 13em;
+  }
+  .chapter-body {
+    gap: 2em;
   }
 }
 
