@@ -19,8 +19,12 @@ const mediaDir = join(root, "public", "media");
 const chromeDir = join(mediaDir, "chrome");
 mkdirSync(chromeDir, { recursive: true });
 
-const LIME = "#ecfdad";
-const TURQUOISE = "#3fae86";
+/* Palette: Antique Gold / Sage Green, matching --swatch-lime and
+   --swatch-turquoise in globals.css. Names kept so the generator reads the
+   same as the stylesheet it has to agree with. */
+const LIME = "#ba9b5f";
+const TURQUOISE = "#5e775e";
+const ALABASTER = "#e9e0cf";
 
 /* Small deterministic PRNG so every run produces identical files. */
 function rng(seed) {
@@ -35,22 +39,22 @@ function rng(seed) {
 
 const CHROME_DEFS = `
   <linearGradient id="sheen" x1="0" y1="0" x2="0.15" y2="1">
-    <stop offset="0" stop-color="#ffffff"/>
-    <stop offset="0.16" stop-color="#dfe3e8"/>
-    <stop offset="0.34" stop-color="#9aa0a8"/>
-    <stop offset="0.46" stop-color="#4e5359"/>
-    <stop offset="0.55" stop-color="#8d939b"/>
-    <stop offset="0.64" stop-color="#f4f6f8"/>
-    <stop offset="0.78" stop-color="#ffffff"/>
-    <stop offset="0.9" stop-color="#a6acb4"/>
-    <stop offset="1" stop-color="#6d727a"/>
+    <stop offset="0" stop-color="#fdf9f0"/>
+    <stop offset="0.16" stop-color="#e2d2a6"/>
+    <stop offset="0.34" stop-color="#b39a63"/>
+    <stop offset="0.46" stop-color="#6b5730"/>
+    <stop offset="0.55" stop-color="#a98d54"/>
+    <stop offset="0.64" stop-color="#f6efdd"/>
+    <stop offset="0.78" stop-color="#fdf9f0"/>
+    <stop offset="0.9" stop-color="#c0a86f"/>
+    <stop offset="1" stop-color="#857046"/>
   </linearGradient>
   <radialGradient id="spec" cx="0.34" cy="0.24" r="0.5">
     <stop offset="0" stop-color="#ffffff" stop-opacity="0.9"/>
     <stop offset="1" stop-color="#ffffff" stop-opacity="0"/>
   </radialGradient>
   <filter id="lift" x="-25%" y="-25%" width="150%" height="150%">
-    <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#181818" flood-opacity="0.35"/>
+    <feDropShadow dx="0" dy="10" stdDeviation="14" flood-color="#132b23" flood-opacity="0.35"/>
   </filter>
 `;
 
@@ -118,8 +122,8 @@ chromeObject(
 chromeObject(
   "phone",
   `      <rect x="168" y="34" width="176" height="444" rx="28"/>
-      <rect x="196" y="74" width="120" height="104" rx="10" fill="#2b2b2b" fill-opacity="0.65" stroke="none"/>
-      <g fill="#2b2b2b" fill-opacity="0.45" stroke="none">
+      <rect x="196" y="74" width="120" height="104" rx="10" fill="#132b23" fill-opacity="0.65" stroke="none"/>
+      <g fill="#132b23" fill-opacity="0.45" stroke="none">
         <rect x="200" y="204" width="112" height="18" rx="9"/>
         <rect x="200" y="242" width="34" height="18" rx="9"/>
         <rect x="239" y="242" width="34" height="18" rx="9"/>
@@ -146,11 +150,11 @@ chromeObject(
 chromeObject(
   "smile",
   `      <circle cx="256" cy="256" r="204"/>
-      <g fill="#2b2b2b" fill-opacity="0.6" stroke="none">
+      <g fill="#132b23" fill-opacity="0.6" stroke="none">
         <ellipse cx="188" cy="212" rx="22" ry="30"/>
         <ellipse cx="324" cy="212" rx="22" ry="30"/>
       </g>
-      <path d="M158 306c26 52 56 78 98 78s72-26 98-78" fill="none" stroke="#2b2b2b" stroke-opacity="0.6" stroke-width="26" stroke-linecap="round"/>`
+      <path d="M158 306c26 52 56 78 98 78s72-26 98-78" fill="none" stroke="#132b23" stroke-opacity="0.6" stroke-width="26" stroke-linecap="round"/>`
 );
 
 chromeObject(
@@ -177,11 +181,11 @@ chromeObject(
  */
 
 const DUOTONES = [
-  { a: LIME, b: TURQUOISE, bg: ["#12140f", "#1e211a"] },
-  { a: TURQUOISE, b: LIME, bg: ["#0d1412", "#18211e"] },
-  { a: "#eae9e6", b: LIME, bg: ["#131313", "#242424"] },
-  { a: LIME, b: "#eae9e6", bg: ["#171717", "#0e0e0e"] },
-  { a: TURQUOISE, b: "#eae9e6", bg: ["#0f1413", "#1b2321"] },
+  { a: LIME, b: TURQUOISE, bg: ["#0f2019", "#1b3a2f"] },
+  { a: TURQUOISE, b: LIME, bg: ["#0d1c17", "#18332a"] },
+  { a: ALABASTER, b: LIME, bg: ["#132b23", "#1f4034"] },
+  { a: LIME, b: ALABASTER, bg: ["#112620", "#0c1a15"] },
+  { a: TURQUOISE, b: ALABASTER, bg: ["#0f231c", "#1b3a2f"] },
 ];
 
 function art(file, w, h, seed, { kind = "frame", pair = 0, index = null } = {}) {
@@ -219,7 +223,7 @@ function art(file, w, h, seed, { kind = "frame", pair = 0, index = null } = {}) 
     kind !== "frame"
       ? ""
       : `
-  <g stroke="#eae9e6" stroke-opacity="0.4" stroke-width="${Math.max(1, min / 340)}" fill="none">
+  <g stroke="#e9e0cf" stroke-opacity="0.4" stroke-width="${Math.max(1, min / 340)}" fill="none">
     <path d="M${dot * 2} ${dot * 4}V${dot * 2}H${dot * 4}"/>
     <path d="M${w - dot * 4} ${dot * 2}H${w - dot * 2}V${dot * 4}"/>
     <path d="M${dot * 2} ${h - dot * 4}V${h - dot * 2}H${dot * 4}"/>
@@ -228,7 +232,7 @@ function art(file, w, h, seed, { kind = "frame", pair = 0, index = null } = {}) 
     index === null
       ? ""
       : `
-  <text x="${dot * 2}" y="${h - dot * 2.2}" font-family="'Helvetica Neue', Arial, sans-serif" font-size="${Math.round(min / 26)}" letter-spacing="${(min / 400).toFixed(1)}" fill="#eae9e6" fill-opacity="0.55">${String(index).padStart(2, "0")}</text>`
+  <text x="${dot * 2}" y="${h - dot * 2.2}" font-family="'Helvetica Neue', Arial, sans-serif" font-size="${Math.round(min / 26)}" letter-spacing="${(min / 400).toFixed(1)}" fill="#e9e0cf" fill-opacity="0.55">${String(index).padStart(2, "0")}</text>`
   }`;
 
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}">
@@ -283,8 +287,8 @@ function art(file, w, h, seed, { kind = "frame", pair = 0, index = null } = {}) 
               ${cx.toFixed(0)} ${(cy + headR * 1.42).toFixed(0)}
              C${(cx + headR * 1.45).toFixed(0)} ${(cy + headR * 1.5).toFixed(0)}
               ${(cx + shoulder).toFixed(0)} ${(cy + headR * 2.1).toFixed(0)}
-              ${(cx + shoulder).toFixed(0)} ${h}Z" fill="#0b0c0a" fill-opacity="0.9"/>
-    <ellipse cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" rx="${headR.toFixed(0)}" ry="${(headR * 1.16).toFixed(0)}" fill="#0b0c0a" fill-opacity="0.9"/>
+              ${(cx + shoulder).toFixed(0)} ${h}Z" fill="#08130f" fill-opacity="0.9"/>
+    <ellipse cx="${cx.toFixed(0)}" cy="${cy.toFixed(0)}" rx="${headR.toFixed(0)}" ry="${(headR * 1.16).toFixed(0)}" fill="#08130f" fill-opacity="0.9"/>
     <path d="M${(cx + rim * headR * 0.92).toFixed(0)} ${(cy - headR * 0.72).toFixed(0)}
              A${headR.toFixed(0)} ${(headR * 1.16).toFixed(0)} 0 0 ${rim > 0 ? 1 : 0} ${(cx + rim * headR * 0.62).toFixed(0)} ${(cy + headR * 0.98).toFixed(0)}"
           fill="none" stroke="${P.a}" stroke-opacity="0.8" stroke-width="${Math.max(1.5, headR * 0.055).toFixed(1)}" stroke-linecap="round"/>
@@ -314,12 +318,12 @@ function photo(file, w, h, seed, opts = {}) {
 /** Round portrait stand-in for a named person. */
 function avatar(file, seed, initials) {
   const r = rng(seed);
-  const hue = Math.round(r() * 60) + 20;
+  const hue = Math.round(r() * 30) + 140; /* forest range */
   const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
   <defs>
     <linearGradient id="a" x1="0" y1="0" x2="0.5" y2="1">
-      <stop offset="0" stop-color="hsl(${hue} 12% 30%)"/>
-      <stop offset="1" stop-color="hsl(${hue} 14% 16%)"/>
+      <stop offset="0" stop-color="hsl(${hue} 14% 26%)"/>
+      <stop offset="1" stop-color="hsl(${hue} 16% 13%)"/>
     </linearGradient>
   </defs>
   <rect width="240" height="240" fill="url(#a)"/>

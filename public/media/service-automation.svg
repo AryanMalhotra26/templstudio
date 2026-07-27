@@ -1,17 +1,17 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="720" height="1280" viewBox="0 0 720 1280">
   <defs>
     <linearGradient id="a8214bg" x1="0" y1="0" x2="0.35" y2="1">
-      <stop offset="0" stop-color="#242424"/>
-      <stop offset="1" stop-color="#131313"/>
+      <stop offset="0" stop-color="#1f4034"/>
+      <stop offset="1" stop-color="#132b23"/>
     </linearGradient>
     <radialGradient id="a8214key">
-      <stop offset="0" stop-color="#eae9e6" stop-opacity="0.85"/>
-      <stop offset="0.45" stop-color="#eae9e6" stop-opacity="0.28"/>
-      <stop offset="1" stop-color="#eae9e6" stop-opacity="0"/>
+      <stop offset="0" stop-color="#e9e0cf" stop-opacity="0.85"/>
+      <stop offset="0.45" stop-color="#e9e0cf" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#e9e0cf" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="a8214wash">
-      <stop offset="0" stop-color="#ecfdad" stop-opacity="0.4"/>
-      <stop offset="1" stop-color="#ecfdad" stop-opacity="0"/>
+      <stop offset="0" stop-color="#ba9b5f" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#ba9b5f" stop-opacity="0"/>
     </radialGradient>
     <radialGradient id="a8214dotmask">
       <stop offset="0" stop-color="#fff" stop-opacity="0.9"/>
@@ -21,7 +21,7 @@
       <rect width="720" height="1280" fill="url(#a8214dotmask)"/>
     </mask>
     <pattern id="a8214dots" width="8" height="8" patternUnits="userSpaceOnUse">
-      <circle cx="4" cy="4" r="1.36" fill="#eae9e6" fill-opacity="0.5"/>
+      <circle cx="4" cy="4" r="1.36" fill="#e9e0cf" fill-opacity="0.5"/>
     </pattern>
     <linearGradient id="a8214vig" x1="0" y1="0" x2="0" y2="1">
       <stop offset="0" stop-color="#000" stop-opacity="0.4"/>
@@ -41,7 +41,7 @@
     <rect width="720" height="1280" fill="url(#a8214dots)"/>
   </g>
   <circle cx="792" cy="344" r="622" fill="none"
-          stroke="#ecfdad" stroke-opacity="0.35" stroke-width="2.4"/>
+          stroke="#ba9b5f" stroke-opacity="0.35" stroke-width="2.4"/>
 
   <g>
     <path d="M109 1280
@@ -50,11 +50,11 @@
               451 715
              C626 725
               793 798
-              793 1280Z" fill="#0b0c0a" fill-opacity="0.9"/>
-    <ellipse cx="451" cy="544" rx="121" ry="140" fill="#0b0c0a" fill-opacity="0.9"/>
+              793 1280Z" fill="#08130f" fill-opacity="0.9"/>
+    <ellipse cx="451" cy="544" rx="121" ry="140" fill="#08130f" fill-opacity="0.9"/>
     <path d="M562 456
              A121 140 0 0 1 526 662"
-          fill="none" stroke="#eae9e6" stroke-opacity="0.8" stroke-width="6.7" stroke-linecap="round"/>
+          fill="none" stroke="#e9e0cf" stroke-opacity="0.8" stroke-width="6.7" stroke-linecap="round"/>
   </g>
 
   <rect width="720" height="1280" fill="url(#a8214vig)"/>

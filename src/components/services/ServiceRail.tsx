@@ -90,7 +90,7 @@ export default function ServiceRail() {
             </div>
 
             <div className="service-rail_panels">
-              {services.map((service) => (
+              {services.map((service, i) => (
                 <article
                   key={service.slug}
                   id={service.slug}
@@ -98,6 +98,14 @@ export default function ServiceRail() {
                 >
                   <span className="service-panel_ghost" aria-hidden>
                     {service.index}
+                  </span>
+
+                  {/* Below the desktop tier the rail has nowhere to live, so
+                      each panel carries its own position instead. Without it
+                      seven full-height panels give a phone no sense of how
+                      far in you are or how much is left. */}
+                  <span className="service-panel_step" aria-hidden>
+                    {service.index} / {total}
                   </span>
 
                   <div className="service-panel_head">
@@ -109,7 +117,17 @@ export default function ServiceRail() {
 
                   <div className="service-panel_plate">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={service.image} alt={service.imageAlt} />
+                    <img
+                      src={service.image}
+                      alt={service.imageAlt}
+                      width={640}
+                      height={800}
+                      // Seven full-width plates on a phone is the page's
+                      // whole image weight; only the first is ever near
+                      // the fold.
+                      loading={i === 0 ? undefined : "lazy"}
+                      decoding="async"
+                    />
                   </div>
 
                   <div className="service-panel_body">

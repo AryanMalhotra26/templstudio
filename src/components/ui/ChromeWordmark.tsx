@@ -32,16 +32,17 @@ export default function ChromeWordmark({
             <svg viewBox="0 0 32 32" height="100%" aria-hidden>
               <defs>
                 <linearGradient id={gradientId} x1="0" y1="0" x2="0.1" y2="1">
-                  <stop offset="0" stopColor="#6f747c" />
-                  <stop offset="0.08" stopColor="#c9cdd2" />
-                  <stop offset="0.2" stopColor="#ffffff" />
-                  <stop offset="0.34" stopColor="#8f949c" />
-                  <stop offset="0.44" stopColor="#55595f" />
-                  <stop offset="0.56" stopColor="#e8ebee" />
-                  <stop offset="0.66" stopColor="#ffffff" />
-                  <stop offset="0.78" stopColor="#9aa0a8" />
-                  <stop offset="0.9" stopColor="#d7dbe0" />
-                  <stop offset="1" stopColor="#7d828a" />
+                  {/* Brushed brass, matching `.chrome-text` in globals.css. */}
+                  <stop offset="0" stopColor="#7a6636" />
+                  <stop offset="0.08" stopColor="#d9c390" />
+                  <stop offset="0.2" stopColor="#fbf6ea" />
+                  <stop offset="0.34" stopColor="#a98d54" />
+                  <stop offset="0.44" stopColor="#6b5730" />
+                  <stop offset="0.56" stopColor="#efe4c8" />
+                  <stop offset="0.66" stopColor="#fdf9f0" />
+                  <stop offset="0.78" stopColor="#b39a63" />
+                  <stop offset="0.9" stopColor="#e2d2a6" />
+                  <stop offset="1" stopColor="#857046" />
                 </linearGradient>
               </defs>
               <path d={SPARK_PATH} fill={`url(#${gradientId})`} />
