@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="800" viewBox="0 0 640 800">
+  <defs>
+    <linearGradient id="a16502bg" x1="0" y1="0" x2="0.35" y2="1">
+      <stop offset="0" stop-color="#242424"/>
+      <stop offset="1" stop-color="#131313"/>
+    </linearGradient>
+    <radialGradient id="a16502key">
+      <stop offset="0" stop-color="#eae9e6" stop-opacity="0.85"/>
+      <stop offset="0.45" stop-color="#eae9e6" stop-opacity="0.28"/>
+      <stop offset="1" stop-color="#eae9e6" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="a16502wash">
+      <stop offset="0" stop-color="#ecfdad" stop-opacity="0.4"/>
+      <stop offset="1" stop-color="#ecfdad" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="a16502dotmask">
+      <stop offset="0" stop-color="#fff" stop-opacity="0.9"/>
+      <stop offset="1" stop-color="#fff" stop-opacity="0"/>
+    </radialGradient>
+    <mask id="a16502dm">
+      <rect width="640" height="800" fill="url(#a16502dotmask)"/>
+    </mask>
+    <pattern id="a16502dots" width="7" height="7" patternUnits="userSpaceOnUse">
+      <circle cx="3.5" cy="3.5" r="1.19" fill="#eae9e6" fill-opacity="0.5"/>
+    </pattern>
+    <linearGradient id="a16502vig" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#000" stop-opacity="0.4"/>
+      <stop offset="0.45" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.55"/>
+    </linearGradient>
+    <filter id="a16502grain" x="0" y="0" width="100%" height="100%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="13" result="n"/>
+      <feColorMatrix in="n" type="saturate" values="0"/>
+    </filter>
+  </defs>
+
+  <rect width="640" height="800" fill="url(#a16502bg)"/>
+  <circle cx="354" cy="191" r="414" fill="url(#a16502key)"/>
+  <circle cx="563" cy="571" r="323" fill="url(#a16502wash)"/>
+  <g mask="url(#a16502dm)">
+    <rect width="640" height="800" fill="url(#a16502dots)"/>
+  </g>
+  <circle cx="704" cy="534" r="482" fill="none"
+          stroke="#ecfdad" stroke-opacity="0.35" stroke-width="2.1"/>
+
+  <g>
+    <path d="M141 800
+             C141 543
+              279 486
+              415 479
+             C552 486
+              690 543
+              690 800Z" fill="#0b0c0a" fill-opacity="0.9"/>
+    <ellipse cx="415" cy="345" rx="94" ry="109" fill="#0b0c0a" fill-opacity="0.9"/>
+    <path d="M329 278
+             A94 109 0 0 0 357 438"
+          fill="none" stroke="#eae9e6" stroke-opacity="0.8" stroke-width="5.2" stroke-linecap="round"/>
+  </g>
+
+  <rect width="640" height="800" fill="url(#a16502vig)"/>
+  <g opacity="0.14" filter="url(#a16502grain)">
+    <rect width="640" height="800"/>
+  </g>
+  <g stroke="#eae9e6" stroke-opacity="0.4" stroke-width="1.8823529411764706" fill="none">
+    <path d="M14 28V14H28"/>
+    <path d="M612 14H626V28"/>
+    <path d="M14 772V786H28"/>
+    <path d="M612 786H626V772"/>
+  </g>
+  <text x="14" y="784.6" font-family="'Helvetica Neue', Arial, sans-serif" font-size="25" letter-spacing="1.6" fill="#eae9e6" fill-opacity="0.55">06</text>
+</svg>

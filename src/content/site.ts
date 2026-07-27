@@ -206,17 +206,21 @@ export interface HomeSections {
 }
 
 export interface ServicesPage {
-  label: string;
   headline: string;
   subhead: string;
+  cta: Cta;
+  /** Heading over the hero's jump-to index and the sticky rail. */
+  indexLabel: string;
   deliverablesLabel: string;
   fromLabel: string;
   packages: {
-    label: string;
     headline: string;
     subhead: string;
     segments: { id: PackageSegment; label: string }[];
     featuredTag: string;
+  };
+  faq: {
+    headline: string;
   };
 }
 
@@ -353,18 +357,18 @@ export const site: SiteContent = {
       name: "Web Design & Development",
       shortDescription: "Fast, beautiful sites that sell.",
       description:
-        "Your website is your hardest-working employee — or your most expensive liability. We design and build fast, conversion-focused sites that make your business look like the obvious choice, then prove it with the numbers.",
+        "Your website is either your hardest-working employee or your most expensive liability. We design and build fast, conversion-focused sites that make your business look like the obvious choice, then prove it with the numbers.",
       deliverables: [
         "Conversion-focused design & copywriting",
-        "Custom build — no bloated page builders",
+        "Custom build, no bloated page builders",
         "Sub-2s load times, 90+ Lighthouse scores",
         "Local SEO & schema foundations",
         "Analytics, call & form tracking installed",
         "Training video so your team can edit content",
       ],
-      startingPrice: "from $2,500",
-      image: "/images/service-01.svg",
-      imageAlt: "Editorial preview of a website design project",
+      startingPrice: "$2,500",
+      image: "/media/service-plate-1.svg",
+      imageAlt: "Editorial plate for the web design and development service",
     },
     {
       slug: "paid-advertising",
@@ -372,18 +376,18 @@ export const site: SiteContent = {
       name: "Paid Advertising",
       shortDescription: "Google & Meta ads accountable to revenue, not impressions.",
       description:
-        "We run Google and Meta campaigns the way an owner would: every dollar tracked to a booked job or an order. Weekly optimization, honest reporting, and creative that stops the scroll — with zero tolerance for vanity metrics.",
+        "We run Google and Meta campaigns the way an owner would: every dollar tracked to a booked job or an order. Weekly optimization, honest reporting, and creative that stops the scroll, with zero tolerance for vanity metrics.",
       deliverables: [
         "Full-funnel campaign strategy & build",
-        "Ad creative — static, video & copy",
+        "Ad creative: static, video & copy",
         "Conversion tracking & call attribution",
         "Weekly optimization & A/B testing",
         "Landing page recommendations",
         "Plain-English monthly reporting",
       ],
-      startingPrice: "from $1,200/mo",
-      image: "/images/service-02.svg",
-      imageAlt: "Paid advertising campaign dashboard preview",
+      startingPrice: "$1,200/mo",
+      image: "/media/service-plate-2.svg",
+      imageAlt: "Editorial plate for the paid advertising service",
     },
     {
       slug: "seo-content",
@@ -391,7 +395,7 @@ export const site: SiteContent = {
       name: "SEO & Content",
       shortDescription: "Own the searches your customers actually make.",
       description:
-        "Ranking for trophy keywords is nice. Ranking for the searches that end in a purchase is better. We build topical authority around buyer intent — technical fixes, local dominance, and content people actually want to read.",
+        "Ranking for trophy keywords is nice. Ranking for the searches that end in a purchase is better. We build topical authority around buyer intent: technical fixes, local dominance, and content people actually want to read.",
       deliverables: [
         "Technical SEO audit & fixes",
         "Local SEO & Google Business Profile",
@@ -400,9 +404,9 @@ export const site: SiteContent = {
         "Authority link building",
         "Rank & traffic reporting that makes sense",
       ],
-      startingPrice: "from $1,000/mo",
-      image: "/images/service-03.svg",
-      imageAlt: "Search rankings growth chart preview",
+      startingPrice: "$1,000/mo",
+      image: "/media/service-plate-3.svg",
+      imageAlt: "Editorial plate for the SEO and content service",
     },
     {
       slug: "email-sms",
@@ -413,24 +417,24 @@ export const site: SiteContent = {
         "For most brands, email is a dusty list and a monthly newsletter nobody opens. We turn it into a revenue engine: automated flows that sell while you sleep and campaigns your customers actually look forward to.",
       deliverables: [
         "Klaviyo / platform setup & migration",
-        "Core automated flows — welcome, abandon, post-purchase",
+        "Core flows: welcome, abandon, post-purchase",
         "Campaign calendar & production",
         "List growth & segmentation strategy",
         "Deliverability monitoring",
         "Revenue-per-recipient reporting",
       ],
-      startingPrice: "from $800/mo",
-      image: "/images/service-04.svg",
-      imageAlt: "Email marketing flow diagram preview",
+      startingPrice: "$800/mo",
+      image: "/media/service-plate-4.svg",
+      imageAlt: "Editorial plate for the email and SMS service",
     },
     {
       slug: "ai-automation",
       index: "05",
       name: "AI Automation",
       shortDescription:
-        "Speed-to-lead, review engines, AI receptionists — systems that work while you sleep.",
+        "Speed-to-lead, review engines and AI receptionists that work while you sleep.",
       description:
-        "The fastest business wins the lead. We build automation systems that respond to enquiries in seconds, chase reviews automatically, and answer your phone at 2am — so no opportunity ever slips because a human was busy.",
+        "The fastest business wins the lead. We build automation systems that respond to enquiries in seconds, chase reviews automatically, and answer your phone at 2am, so no opportunity slips because a human was busy.",
       deliverables: [
         "Speed-to-lead instant response system",
         "AI receptionist & missed-call textback",
@@ -439,9 +443,9 @@ export const site: SiteContent = {
         "Appointment booking workflows",
         "Monthly monitoring & tuning",
       ],
-      startingPrice: "from $1,500 setup",
-      image: "/images/service-05.svg",
-      imageAlt: "Automation system workflow preview",
+      startingPrice: "$1,500 setup",
+      image: "/media/service-plate-5.svg",
+      imageAlt: "Editorial plate for the AI automation service",
     },
     {
       slug: "social-content",
@@ -449,18 +453,18 @@ export const site: SiteContent = {
       name: "Social Content",
       shortDescription: "A month of scroll-stopping content, produced in days.",
       description:
-        "Consistency beats virality — but nobody has time for daily content. We batch-produce a full month of on-brand posts, reels and stories in a single production cycle, so your feed looks alive while you run the business.",
+        "Consistency beats virality, but nobody has time for daily content. We batch-produce a full month of on-brand posts, reels and stories in a single production cycle, so your feed looks alive while you run the business.",
       deliverables: [
         "Monthly content strategy & calendar",
-        "Batch production — design, video, copy",
+        "Batch production: design, video, copy",
         "Platform-native formats & hooks",
         "Scheduling & publishing",
         "Community response guidelines",
         "Monthly performance recap",
       ],
-      startingPrice: "from $600/mo",
-      image: "/images/service-06.svg",
-      imageAlt: "Social media content grid preview",
+      startingPrice: "$600/mo",
+      image: "/media/service-plate-6.svg",
+      imageAlt: "Editorial plate for the social content service",
     },
     {
       slug: "landing-pages-cro",
@@ -468,7 +472,7 @@ export const site: SiteContent = {
       name: "Landing Pages & CRO",
       shortDescription: "Turn the traffic you already have into customers.",
       description:
-        "Doubling your conversion rate is the same as doubling your ad budget — except you only pay for it once. We build high-converting landing pages and run structured experiments on the pages you already have.",
+        "Doubling your conversion rate is the same as doubling your ad budget, except you only pay for it once. We build high-converting landing pages and run structured experiments on the pages you already have.",
       deliverables: [
         "Conversion audit & heatmap analysis",
         "High-converting landing page design & build",
@@ -477,29 +481,32 @@ export const site: SiteContent = {
         "Form & funnel optimization",
         "Before/after conversion reporting",
       ],
-      startingPrice: "from $750",
-      image: "/images/service-07.svg",
-      imageAlt: "Landing page conversion funnel preview",
+      startingPrice: "$750",
+      image: "/media/service-plate-7.svg",
+      imageAlt: "Editorial plate for the landing pages and CRO service",
     },
   ],
 
   servicesPage: {
-    label: "(SERVICES) ©",
     headline: "Seven ways we make you *unignorable.*",
     subhead:
-      "Pick one, or let us build the full system. Everything is priced to pay for itself — and you own every asset, account, and line of code we create.",
-    deliverablesLabel: "WHAT'S INCLUDED",
-    fromLabel: "STARTING AT",
+      "Pick one, or let us build the whole system. You own every asset, account and line of code.",
+    cta: { label: "Book a call", href: "/contact" },
+    indexLabel: "The seven",
+    deliverablesLabel: "What's included",
+    fromLabel: "From",
     packages: {
-      label: "(PACKAGES) ©",
       headline: "Simple packages, *serious* outcomes.",
       subhead:
-        "Built for the two kinds of businesses we know best. Every package is month-to-month after the initial 90 days — we keep clients with results, not contracts.",
+        "Built for the two kinds of business we know best. Month-to-month after the first 90 days, because results should keep you here, not contracts.",
       segments: [
         { id: "local", label: "Local businesses" },
         { id: "ecom", label: "Ecommerce brands" },
       ],
-      featuredTag: "MOST POPULAR",
+      featuredTag: "Most popular",
+    },
+    faq: {
+      headline: "Asked *often,* answered honestly.",
     },
   },
 
@@ -509,7 +516,7 @@ export const site: SiteContent = {
       name: "Foundation",
       price: "$2,500",
       priceNote: "one-time",
-      blurb: "The digital storefront done right — for businesses that need to look like the obvious choice.",
+      blurb: "The digital storefront done right, for businesses that need to look like the obvious choice.",
       includes: [
         "Conversion-focused website (up to 6 pages)",
         "Local SEO & Google Business Profile setup",
@@ -526,7 +533,7 @@ export const site: SiteContent = {
       name: "Growth",
       price: "$1,500",
       priceNote: "/mo",
-      blurb: "The full lead engine — ads, automation and follow-up working as one system.",
+      blurb: "The full lead engine: ads, automation and follow-up working as one system.",
       includes: [
         "Google & Meta ads management",
         "Speed-to-lead automation",
@@ -544,7 +551,7 @@ export const site: SiteContent = {
       name: "Dominate",
       price: "$3,000",
       priceNote: "/mo",
-      blurb: "Own your market. Every channel, every search, every follow-up — handled.",
+      blurb: "Own your market. Every channel, every search, every follow-up, handled.",
       includes: [
         "Everything in Growth",
         "SEO & monthly content production",
@@ -561,7 +568,7 @@ export const site: SiteContent = {
       name: "Revenue Rescue",
       price: "$1,000",
       priceNote: "/mo",
-      blurb: "For stores leaving money on the table — we fix the retention layer first.",
+      blurb: "For stores leaving money on the table. We fix the retention layer first.",
       includes: [
         "Klaviyo audit & rebuild",
         "Core automated flows (welcome, abandon, post-purchase)",
@@ -578,7 +585,7 @@ export const site: SiteContent = {
       name: "Traffic + Convert",
       price: "$2,800",
       priceNote: "/mo",
-      blurb: "Profitable acquisition and a site that converts it — the growth core for scaling stores.",
+      blurb: "Profitable acquisition and a site that converts it. The growth core for scaling stores.",
       includes: [
         "Meta & Google ads management",
         "Monthly ad creative production",
@@ -832,32 +839,32 @@ export const site: SiteContent = {
     {
       question: "What's the minimum engagement?",
       answer:
-        "90 days for ongoing services. Real results — rankings, optimized campaigns, compounding email revenue — take a full quarter to prove. After that, everything is month-to-month: we keep clients with results, not contracts. One-time projects like websites have no ongoing commitment at all.",
+        "90 days for ongoing services. Real results (rankings, optimized campaigns, compounding email revenue) take a full quarter to prove. After that, everything is month-to-month: we keep clients with results, not contracts. One-time projects like websites have no ongoing commitment at all.",
     },
     {
       question: "How fast will we see results?",
       answer:
-        "Depends on the channel. Paid ads and automation systems generate leads in the first weeks. Email flows start producing revenue as soon as they're live. SEO and content compound over months. On our first call we'll tell you honestly what to expect and when — and we report against those expectations every month.",
+        "Depends on the channel. Paid ads and automation systems generate leads in the first weeks. Email flows start producing revenue as soon as they're live. SEO and content compound over months. On our first call we'll tell you honestly what to expect and when, then report against those expectations every month.",
     },
     {
       question: "Do you replace our team or work with them?",
       answer:
-        "Whichever helps you more. For most local businesses we are the marketing department. For brands with in-house marketers, we slot in as the senior specialists — running the channels they don't have time to master, and handing over playbooks as we go.",
+        "Whichever helps you more. For most local businesses we are the marketing department. For brands with in-house marketers, we slot in as the senior specialists, running the channels they don't have time to master and handing over playbooks as we go.",
     },
     {
       question: "Who owns the accounts and the assets?",
       answer:
-        "You do, always. Ad accounts, analytics, email lists, the website, every design file — all created under your ownership from day one. If we ever part ways, everything keeps working and you keep everything. No hostage-taking, ever.",
+        "You do, always. Ad accounts, analytics, email lists, the website, every design file: all created under your ownership from day one. If we ever part ways, everything keeps working and you keep everything. No hostage-taking, ever.",
     },
     {
       question: "How does pricing work?",
       answer:
-        "Websites and one-time projects are fixed-price — you know the number before we start. Ongoing services are flat monthly retainers based on scope, not a percentage of your ad spend, so our incentive is your results rather than your budget. Every price on this site is real.",
+        "Websites and one-time projects are fixed-price, so you know the number before we start. Ongoing services are flat monthly retainers based on scope, not a percentage of your ad spend, so our incentive is your results rather than your budget. Every price on this site is real.",
     },
     {
       question: "Do you use AI?",
       answer:
-        "We use modern tools to move faster — strategy, quality control, and accountability are always human. AI helps us produce and test more, but nothing ships to your customers without a senior human deciding it's good enough to carry your name.",
+        "We use modern tools to move faster. Strategy, quality control and accountability are always human. AI helps us produce and test more, but nothing ships to your customers without a senior human deciding it's good enough to carry your name.",
     },
   ],
 
