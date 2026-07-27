@@ -383,6 +383,21 @@ for (let i = 1; i <= 10; i++) {
   });
 }
 
+/* ---- Work index ----
+   Two crops per case: the tall plate that flies in on hover, and the small
+   square that pops next to the client name. */
+["golden-hour", "northbound", "summit-air", "casa-verde"].forEach((slug, i) => {
+  photo(`work-${slug}-tall.svg`, 640, 960, 14100 + i * 83, {
+    tone: ["dark", "warm", "cool"][i % 3],
+    kind: "frame",
+    index: i + 1,
+  });
+  photo(`work-${slug}-sq.svg`, 600, 600, 14500 + i * 97, {
+    tone: ["cool", "dark", "warm"][i % 3],
+    kind: "portrait",
+  });
+});
+
 /* Avatars */
 avatar("avatar-golden-hour.svg", 311, "PS");
 avatar("avatar-northbound.svg", 407, "MC");

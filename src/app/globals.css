@@ -1989,6 +1989,264 @@ textarea.form-field {
 }
 
 /* ==================================================================
+   WORK INDEX — a full-viewport list of client names as display type.
+
+   Ported from the reference's `typo-scroll`, with one deliberate change:
+   theirs hijacks the wheel (`preventDefault`) to drive the list, which traps
+   the page — you can't scroll past it to the footer, and it does nothing for
+   keyboard or reduced-motion users. Here the list is driven by real scroll
+   against a pinned section instead, and the promoted row is derived from
+   scroll progress, so it works on touch and via the keyboard too.
+   ================================================================== */
+.typo-scroll {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  overflow: clip;
+  background-color: var(--theme-background);
+  color: var(--swatch-dark-grey);
+  touch-action: manipulation;
+}
+.typo-scroll__collection {
+  display: flex;
+  flex-flow: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.typo-scroll__list {
+  display: flex;
+  flex-flow: column;
+  width: 100%;
+  will-change: transform;
+}
+.typo-scroll__item {
+  width: 100%;
+}
+.typo-scroll__link {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  padding-top: 2.5em;
+  padding-bottom: 1em;
+  border-bottom: 1px solid var(--theme-border);
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.4;
+  transition: opacity 0.5s var(--ease-out-quint);
+}
+/* Promotion works from three directions — scroll position, pointer and
+   keyboard — so the list never depends on hover alone. */
+.typo-scroll__item[data-active="true"] .typo-scroll__link,
+.typo-scroll__link:hover,
+.typo-scroll__link:focus-visible {
+  opacity: 1;
+}
+.typo-scroll__link:focus-visible {
+  outline: 2px solid var(--swatch-lime);
+  outline-offset: -0.5em;
+}
+.typo-scroll__h {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 8em;
+  line-height: 0.9;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  white-space: nowrap;
+  text-align: center;
+  overflow-wrap: break-word;
+  color: var(--theme-body-text);
+}
+/* Small square crop that pops in beside the name. */
+.typo-scroll__img {
+  position: absolute;
+  z-index: 2;
+  right: 8%;
+  top: 50%;
+  width: 8em;
+  height: 8em;
+  margin-top: -3em;
+  overflow: hidden;
+  opacity: 0;
+  transform: scale(0) rotate(-4deg);
+}
+.typo-scroll__img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Detail strip that slides up from under the row. */
+.typo-scroll__hover-wrap {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 0;
+  height: 140%;
+  overflow: clip;
+  pointer-events: none;
+}
+.typo-scroll__hover {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  height: 100%;
+  padding: 0 2.25em 2.25em;
+  transform: translateY(100%);
+}
+.typo-scroll__hover-details {
+  display: flex;
+  gap: 2em;
+  font-size: 0.875em;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--theme-body-text);
+}
+/* Lime as a chip, not as text: #ecfdad on the off-white ground is barely
+   distinguishable, so the accent carries as a fill with black type on it. */
+.typo-scroll__hover-details .is-result {
+  padding: 0.2em 0.5em;
+  background-color: var(--swatch-lime);
+  color: var(--swatch-black);
+}
+.typo-scroll__hover-button {
+  transform: translateY(100%);
+}
+/* Tall plate that swings in from the bottom-right. */
+.typo-scroll__hover-img {
+  position: absolute;
+  inset: auto 0 0 auto;
+  z-index: 2;
+  aspect-ratio: 4 / 6;
+  width: 14em;
+  overflow: hidden;
+  transform-origin: 50% 0;
+  transform: rotate(16deg) translate(-150%, 100%);
+}
+.typo-scroll__hover-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* Fades so rows dissolve at the top and bottom of the viewport. */
+.typo-scroll_fade {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 3;
+  width: 100%;
+  height: 16em;
+  pointer-events: none;
+  background-image: linear-gradient(
+    180deg,
+    var(--theme-background),
+    transparent
+  );
+}
+.typo-scroll_fade.is-bottom {
+  inset: auto 0 0;
+  height: 12em;
+  background-image: linear-gradient(
+    0deg,
+    var(--theme-background),
+    transparent
+  );
+}
+.typo-scroll__meta {
+  position: absolute;
+  z-index: 4;
+  left: var(--page-padding);
+  bottom: 2em;
+  display: flex;
+  flex-flow: column;
+  gap: 0.5em;
+  max-width: 22em;
+  color: var(--theme-body-text);
+  pointer-events: none;
+}
+.typo-scroll__counter {
+  position: absolute;
+  z-index: 4;
+  right: var(--page-padding);
+  bottom: 2em;
+  display: flex;
+  align-items: baseline;
+  gap: 0.35em;
+  font-variant-numeric: tabular-nums;
+  color: var(--theme-body-text);
+  pointer-events: none;
+}
+.typo-scroll .is-muted {
+  opacity: 0.6;
+}
+.typo-scroll__counter .is-current {
+  color: var(--theme-body-text);
+  font-size: 1.5em;
+}
+
+/* Static mode — used below 992, for reduced motion, and as the no-JS state.
+   A pinned type-scroller is the wrong interaction on a phone: there's no
+   hover, the promoted row is ambiguous, and the absolutely-positioned crops
+   collide with wrapped names. So every row is simply complete and legible,
+   with its own metadata in flow underneath. */
+.typo-scroll.is-static {
+  /* The pinned mode centres a single child on a row axis; static mode stacks
+     the label above the list, so the container has to become a column. */
+  flex-flow: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  height: auto;
+  overflow: visible;
+  padding-block: 7em 5em;
+}
+.typo-scroll.is-static .typo-scroll__list {
+  transform: none;
+}
+.typo-scroll.is-static .typo-scroll__link {
+  flex-flow: column;
+  align-items: center;
+  gap: 0.6em;
+  opacity: 1;
+  padding-top: 1.75em;
+  padding-bottom: 1.5em;
+}
+.typo-scroll.is-static .typo-scroll_fade,
+.typo-scroll.is-static .typo-scroll__img,
+.typo-scroll.is-static .typo-scroll__hover-img,
+.typo-scroll.is-static .typo-scroll__hover-button,
+.typo-scroll.is-static .typo-scroll__counter {
+  display: none;
+}
+.typo-scroll.is-static .typo-scroll__hover-wrap {
+  position: static;
+  height: auto;
+  overflow: visible;
+}
+.typo-scroll.is-static .typo-scroll__hover {
+  height: auto;
+  padding: 0;
+  transform: none;
+}
+.typo-scroll.is-static .typo-scroll__hover-details {
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5em 1em;
+  transform: none;
+  text-align: center;
+}
+.typo-scroll.is-static .typo-scroll__meta {
+  position: static;
+  display: flex;
+  max-width: 100%;
+  margin-bottom: 3em;
+  padding-inline: var(--page-padding);
+}
+
+/* ==================================================================
    STORY PAGE — hero → founders → chaptered timeline
    ================================================================== */
 
@@ -2939,6 +3197,42 @@ textarea.form-field {
   .chapter-gallery_list {
     width: 15em;
   }
+  .typo-scroll__h {
+    font-size: 10vw;
+  }
+  .typo-scroll__hover-button,
+  .typo-scroll__hover-img {
+    display: none;
+  }
+  .typo-scroll__hover {
+    height: auto;
+    padding: 0;
+    transform: none;
+  }
+  .typo-scroll__hover-wrap {
+    position: relative;
+    height: auto;
+  }
+  .typo-scroll__hover-details {
+    justify-content: center;
+    opacity: 0.75;
+  }
+  .typo-scroll__link {
+    flex-flow: column;
+    align-items: center;
+    gap: 0.25em;
+    padding-top: 2em;
+    padding-bottom: 1.25em;
+  }
+  .typo-scroll__img {
+    width: 7em;
+    height: 7em;
+    right: 4%;
+  }
+  .typo-scroll__meta {
+    max-width: 16em;
+    font-size: 0.875em;
+  }
 }
 
 /* ---- Mobile landscape -------------------------------------------- */
@@ -3506,6 +3800,39 @@ textarea.form-field {
   }
   .chapter-gallery_list {
     margin-bottom: 0.5em;
+  }
+  /* Long client names can't fit on one line at this width — measured 492px
+     for the longest against a 390px viewport — so let them wrap here rather
+     than clipping off both edges. */
+  .typo-scroll__h {
+    font-size: 12vw;
+    white-space: normal;
+    text-wrap: balance;
+    line-height: 0.95;
+    max-width: 100%;
+  }
+  .typo-scroll__img {
+    width: 4.5em;
+    height: 4.5em;
+    right: 2%;
+    margin-top: -2em;
+  }
+  .typo-scroll__link {
+    padding-top: 1.5em;
+    padding-bottom: 1em;
+  }
+  .typo-scroll__hover-details {
+    gap: 1em;
+    font-size: 0.75em;
+  }
+  .typo-scroll__meta {
+    display: none;
+  }
+  .typo-scroll_fade {
+    height: 9em;
+  }
+  .typo-scroll_fade.is-bottom {
+    height: 7em;
   }
 }
 

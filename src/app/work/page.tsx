@@ -1,29 +1,23 @@
 import type { Metadata } from "next";
 import { site } from "@/content/site";
-import StudioPageHero from "@/components/studio/StudioPageHero";
-import WorkGrid from "@/components/work/WorkGrid";
+import WorkIndex from "@/components/work/WorkIndex";
+import CtaSection from "@/components/home/CtaSection";
 
 export const metadata: Metadata = {
   title: site.seo.work.title,
   description: site.seo.work.description,
 };
 
+/**
+ * Work — the case-study index as a full-viewport list of client names in
+ * display type, promoted one at a time as you scroll, then the shared closing
+ * CTA. No hero: the list is the hero.
+ */
 export default function WorkPage() {
-  const { workPage } = site;
-
   return (
     <>
-      <StudioPageHero
-        theme="ink"
-        label={workPage.label}
-        headline={workPage.headline}
-        subhead={workPage.subhead}
-      />
-      <section className="bg-ivory">
-        <div className="mx-auto max-w-site px-6 py-20 md:px-10 md:py-28">
-          <WorkGrid />
-        </div>
-      </section>
+      <WorkIndex />
+      <CtaSection />
     </>
   );
 }
