@@ -15,8 +15,11 @@ import { accent } from "./accent";
 export default function ServicesHero() {
   const { servicesPage, services } = site;
 
+  // Alabaster rather than a full gold field, matching the homepage hero.
+  // Gold is the loudest colour in the palette and nothing muted can sit on
+  // it — the index's numbers and prices only reach 3.1:1 there.
   return (
-    <header className="section_services-hero theme-lime">
+    <header className="section_services-hero theme-default">
       <div className="padding-global">
         <div className="container-col-12">
           <div className="services-hero">

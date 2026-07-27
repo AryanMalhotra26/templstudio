@@ -52,14 +52,32 @@
 }
 
 /* ---- Swatches + type scale -------------------------------------- */
+/* ---- Palette -----------------------------------------------------
+   Warm Alabaster / Antique Gold / Sage Green / Dark Forest Green.
+
+   The swatch names are kept as-is deliberately. Every rule downstream,
+   on every page, reaches colour through these seven tokens and the
+   theme engine below, so re-pointing them recolours the whole site
+   without touching a single layout rule, component or string. Renaming
+   them would have meant editing ~700 call sites for no visual gain.
+
+   `--swatch-dark-grey` is the one derived value: the palette has no
+   fourth step, so it sits on the forest hue between Forest and Sage,
+   for the sections that need to read as "dark, but not the darkest". */
 :root {
-  --swatch-lime: #ecfdad;
-  --swatch-turquoise: #3fae86;
-  --swatch-black: #181818;
-  --swatch-off-white: #eae9e6;
-  --swatch-dark-grey: #2b2b2b;
-  --swatch-white: #ffffff;
-  --swatch-red: #ff4545;
+  --swatch-lime: #ba9b5f; /* Antique Gold */
+  --swatch-turquoise: #5e775e; /* Sage Green */
+  --swatch-black: #132b23; /* Dark Forest Green */
+  --swatch-off-white: #e9e0cf; /* Warm Alabaster */
+  --swatch-dark-grey: #1b3a2f; /* derived: mid forest */
+  /* Derived: Sage darkened until it can carry body copy. Pure Sage sits at
+     mid luminance — forest on it is 3.06:1 and alabaster 3.75:1, so neither
+     clears 4.5 — but it is the background of a whole service card. This
+     shade is the same hue at 5.86:1 with alabaster. Pure Sage still fills
+     the live dot and the small hover states, where nothing sits on it. */
+  --swatch-sage-deep: #455845;
+  --swatch-white: #f7f3ea; /* lifted alabaster, warmer than pure white */
+  --swatch-red: #5e775e; /* the palette has no red; the live dot goes sage */
 
   --font-heading: var(--font-editorial), "Times New Roman", serif;
   --font-body: var(--font-neue), Arial, sans-serif;
@@ -89,7 +107,14 @@
 /* ---- Theme engine ------------------------------------------------
    Any element can carry a `theme-*` class; it re-declares the theme
    custom properties for its whole subtree. The nav samples whichever
-   themed <section> sits under it and copies the same class. */
+   themed <section> sits under it and copies the same class.
+
+   Every hover background resolves to gold or alabaster, never sage.
+   Sage sits at mid luminance, so nothing — not the forest, not the
+   alabaster — clears 4.5:1 against it; routing hovers around it keeps
+   every button state at 5.68:1 or better. Sage still does the work it
+   is good at: whole-section fields and the live dot. */
+
 .theme-default,
 :root {
   --theme-background: var(--swatch-off-white);
@@ -99,71 +124,14 @@
   --theme-button-bg: var(--swatch-lime);
   --theme-button-text: var(--swatch-black);
   --theme-button-icon: var(--swatch-black);
-  --theme-button-icon-svg: var(--swatch-off-white);
-  --theme-button-hover-bg: var(--swatch-turquoise);
+  --theme-button-icon-svg: var(--swatch-lime);
+  --theme-button-hover-bg: var(--swatch-off-white);
   --theme-button-hover-text: var(--swatch-black);
   --theme-button-secondary-bg: var(--swatch-black);
-  --theme-button-secondary-text: var(--swatch-white);
+  --theme-button-secondary-text: var(--swatch-off-white);
   --theme-button-secondary-icon: var(--swatch-lime);
   --theme-button-secondary-icon-svg: var(--swatch-black);
-  --theme-button-secondary-hover-bg: var(--swatch-turquoise);
-  --theme-video-border: var(--swatch-white);
-}
-
-.theme-dark {
-  --theme-background: var(--swatch-black);
-  --theme-body-text: var(--swatch-off-white);
-  --theme-heading: var(--swatch-off-white);
-  --theme-border: var(--swatch-black);
-  --theme-button-bg: var(--swatch-lime);
-  --theme-button-text: var(--swatch-black);
-  --theme-button-icon: var(--swatch-black);
-  --theme-button-icon-svg: var(--swatch-off-white);
-  --theme-button-hover-bg: var(--swatch-turquoise);
-  --theme-button-hover-text: var(--swatch-black);
-  --theme-button-secondary-bg: var(--swatch-white);
-  --theme-button-secondary-text: var(--swatch-black);
-  --theme-button-secondary-icon: var(--swatch-lime);
-  --theme-button-secondary-icon-svg: var(--swatch-black);
-  --theme-button-secondary-hover-bg: var(--swatch-turquoise);
-  --theme-video-border: var(--swatch-white);
-}
-
-.theme-media {
-  --theme-background: var(--swatch-black);
-  --theme-body-text: var(--swatch-lime);
-  --theme-heading: var(--swatch-lime);
-  --theme-border: var(--swatch-lime);
-  --theme-button-bg: var(--swatch-lime);
-  --theme-button-text: var(--swatch-black);
-  --theme-button-icon: var(--swatch-black);
-  --theme-button-icon-svg: var(--swatch-off-white);
-  --theme-button-hover-bg: var(--swatch-turquoise);
-  --theme-button-hover-text: var(--swatch-black);
-  --theme-button-secondary-bg: var(--swatch-black);
-  --theme-button-secondary-text: var(--swatch-white);
-  --theme-button-secondary-icon: var(--swatch-lime);
-  --theme-button-secondary-icon-svg: var(--swatch-black);
-  --theme-button-secondary-hover-bg: var(--swatch-turquoise);
-  --theme-video-border: var(--swatch-white);
-}
-
-.theme-lime {
-  --theme-background: var(--swatch-lime);
-  --theme-body-text: var(--swatch-black);
-  --theme-heading: var(--swatch-black);
-  --theme-border: var(--swatch-black);
-  --theme-button-bg: var(--swatch-black);
-  --theme-button-text: var(--swatch-white);
-  --theme-button-icon: var(--swatch-lime);
-  --theme-button-icon-svg: var(--swatch-black);
-  --theme-button-hover-bg: var(--swatch-turquoise);
-  --theme-button-hover-text: var(--swatch-black);
-  --theme-button-secondary-bg: var(--swatch-black);
-  --theme-button-secondary-text: var(--swatch-white);
-  --theme-button-secondary-icon: var(--swatch-lime);
-  --theme-button-secondary-icon-svg: var(--swatch-black);
-  --theme-button-secondary-hover-bg: var(--swatch-turquoise);
+  --theme-button-secondary-hover-bg: var(--swatch-lime);
   --theme-video-border: var(--swatch-white);
 }
 
@@ -175,32 +143,94 @@
   --theme-button-bg: var(--swatch-lime);
   --theme-button-text: var(--swatch-black);
   --theme-button-icon: var(--swatch-black);
-  --theme-button-icon-svg: var(--swatch-off-white);
-  --theme-button-hover-bg: var(--swatch-turquoise);
+  --theme-button-icon-svg: var(--swatch-lime);
+  --theme-button-hover-bg: var(--swatch-off-white);
   --theme-button-hover-text: var(--swatch-black);
   --theme-button-secondary-bg: var(--swatch-black);
-  --theme-button-secondary-text: var(--swatch-white);
+  --theme-button-secondary-text: var(--swatch-off-white);
   --theme-button-secondary-icon: var(--swatch-lime);
   --theme-button-secondary-icon-svg: var(--swatch-black);
-  --theme-button-secondary-hover-bg: var(--swatch-turquoise);
-  --theme-video-border: var(--swatch-off-white);
+  --theme-button-secondary-hover-bg: var(--swatch-lime);
+  --theme-video-border: var(--swatch-white);
 }
 
-.theme-turquoise {
-  --theme-background: var(--swatch-turquoise);
+/* The one gold ground, so neither button can be gold-filled without
+   dissolving into the page. Both sit forest and are told apart by their
+   label and icon block; both lift to alabaster on hover. */
+.theme-lime {
+  --theme-background: var(--swatch-lime);
   --theme-body-text: var(--swatch-black);
   --theme-heading: var(--swatch-black);
   --theme-border: var(--swatch-black);
+  --theme-button-bg: var(--swatch-black);
+  --theme-button-text: var(--swatch-lime);
+  --theme-button-icon: var(--swatch-lime);
+  --theme-button-icon-svg: var(--swatch-black);
+  --theme-button-hover-bg: var(--swatch-off-white);
+  --theme-button-hover-text: var(--swatch-black);
+  --theme-button-secondary-bg: var(--swatch-black);
+  --theme-button-secondary-text: var(--swatch-off-white);
+  --theme-button-secondary-icon: var(--swatch-off-white);
+  --theme-button-secondary-icon-svg: var(--swatch-black);
+  --theme-button-secondary-hover-bg: var(--swatch-off-white);
+  --theme-video-border: var(--swatch-white);
+}
+
+/* A deep sage field with alabaster copy: this theme backs a whole service
+   card, so it has to carry 13px body text, which pure Sage cannot. */
+.theme-turquoise {
+  --theme-background: var(--swatch-sage-deep);
+  --theme-body-text: var(--swatch-off-white);
+  --theme-heading: var(--swatch-off-white);
+  --theme-border: var(--swatch-off-white);
   --theme-button-bg: var(--swatch-lime);
   --theme-button-text: var(--swatch-black);
   --theme-button-icon: var(--swatch-black);
-  --theme-button-icon-svg: var(--swatch-off-white);
-  --theme-button-hover-bg: var(--swatch-turquoise);
+  --theme-button-icon-svg: var(--swatch-lime);
+  --theme-button-hover-bg: var(--swatch-off-white);
   --theme-button-hover-text: var(--swatch-black);
   --theme-button-secondary-bg: var(--swatch-off-white);
   --theme-button-secondary-text: var(--swatch-black);
   --theme-button-secondary-icon: var(--swatch-black);
-  --theme-button-secondary-icon-svg: var(--swatch-white);
+  --theme-button-secondary-icon-svg: var(--swatch-off-white);
+  --theme-button-secondary-hover-bg: var(--swatch-lime);
+  --theme-video-border: var(--swatch-white);
+}
+
+.theme-dark {
+  --theme-background: var(--swatch-black);
+  --theme-body-text: var(--swatch-off-white);
+  --theme-heading: var(--swatch-off-white);
+  --theme-border: var(--swatch-off-white);
+  --theme-button-bg: var(--swatch-lime);
+  --theme-button-text: var(--swatch-black);
+  --theme-button-icon: var(--swatch-black);
+  --theme-button-icon-svg: var(--swatch-lime);
+  --theme-button-hover-bg: var(--swatch-off-white);
+  --theme-button-hover-text: var(--swatch-black);
+  --theme-button-secondary-bg: var(--swatch-off-white);
+  --theme-button-secondary-text: var(--swatch-black);
+  --theme-button-secondary-icon: var(--swatch-black);
+  --theme-button-secondary-icon-svg: var(--swatch-off-white);
+  --theme-button-secondary-hover-bg: var(--swatch-lime);
+  --theme-video-border: var(--swatch-white);
+}
+
+.theme-media {
+  --theme-background: var(--swatch-black);
+  --theme-body-text: var(--swatch-lime);
+  --theme-heading: var(--swatch-lime);
+  --theme-border: var(--swatch-off-white);
+  --theme-button-bg: var(--swatch-lime);
+  --theme-button-text: var(--swatch-black);
+  --theme-button-icon: var(--swatch-black);
+  --theme-button-icon-svg: var(--swatch-lime);
+  --theme-button-hover-bg: var(--swatch-off-white);
+  --theme-button-hover-text: var(--swatch-black);
+  --theme-button-secondary-bg: var(--swatch-off-white);
+  --theme-button-secondary-text: var(--swatch-black);
+  --theme-button-secondary-icon: var(--swatch-black);
+  --theme-button-secondary-icon-svg: var(--swatch-off-white);
   --theme-button-secondary-hover-bg: var(--swatch-lime);
   --theme-video-border: var(--swatch-white);
 }
@@ -209,18 +239,18 @@
   --theme-background: var(--swatch-dark-grey);
   --theme-body-text: var(--swatch-off-white);
   --theme-heading: var(--swatch-off-white);
-  --theme-border: var(--swatch-black);
+  --theme-border: var(--swatch-off-white);
   --theme-button-bg: var(--swatch-lime);
   --theme-button-text: var(--swatch-black);
   --theme-button-icon: var(--swatch-black);
-  --theme-button-icon-svg: var(--swatch-off-white);
-  --theme-button-hover-bg: var(--swatch-turquoise);
+  --theme-button-icon-svg: var(--swatch-lime);
+  --theme-button-hover-bg: var(--swatch-off-white);
   --theme-button-hover-text: var(--swatch-black);
-  --theme-button-secondary-bg: var(--swatch-white);
+  --theme-button-secondary-bg: var(--swatch-off-white);
   --theme-button-secondary-text: var(--swatch-black);
-  --theme-button-secondary-icon: var(--swatch-lime);
-  --theme-button-secondary-icon-svg: var(--swatch-black);
-  --theme-button-secondary-hover-bg: var(--swatch-turquoise);
+  --theme-button-secondary-icon: var(--swatch-black);
+  --theme-button-secondary-icon-svg: var(--swatch-off-white);
+  --theme-button-secondary-hover-bg: var(--swatch-lime);
   --theme-video-border: var(--swatch-white);
 }
 
@@ -228,18 +258,18 @@
   --theme-background: var(--swatch-dark-grey);
   --theme-body-text: var(--swatch-white);
   --theme-heading: var(--swatch-white);
-  --theme-border: var(--swatch-white);
+  --theme-border: var(--swatch-off-white);
   --theme-button-bg: var(--swatch-lime);
   --theme-button-text: var(--swatch-black);
   --theme-button-icon: var(--swatch-black);
-  --theme-button-icon-svg: var(--swatch-off-white);
-  --theme-button-hover-bg: var(--swatch-turquoise);
+  --theme-button-icon-svg: var(--swatch-lime);
+  --theme-button-hover-bg: var(--swatch-off-white);
   --theme-button-hover-text: var(--swatch-black);
-  --theme-button-secondary-bg: var(--swatch-black);
-  --theme-button-secondary-text: var(--swatch-white);
-  --theme-button-secondary-icon: var(--swatch-lime);
-  --theme-button-secondary-icon-svg: var(--swatch-black);
-  --theme-button-secondary-hover-bg: var(--swatch-turquoise);
+  --theme-button-secondary-bg: var(--swatch-off-white);
+  --theme-button-secondary-text: var(--swatch-black);
+  --theme-button-secondary-icon: var(--swatch-black);
+  --theme-button-secondary-icon-svg: var(--swatch-off-white);
+  --theme-button-secondary-hover-bg: var(--swatch-lime);
   --theme-video-border: var(--swatch-white);
 }
 
@@ -439,26 +469,29 @@ h6 {
 /* ---- Chrome treatment --------------------------------------------
    Stand-in for Hildén & Kaira's rendered 3D metal glyphs: a
    many-stop metallic ramp clipped to the type, plus a bevel shadow. */
+/* Brushed brass rather than cold chrome: the same many-stop ramp and bevel,
+   warmed onto the Antique Gold axis so the wordmark belongs to the palette
+   instead of reading as a grey object dropped onto a cream page. */
 .chrome-text {
   background-image: linear-gradient(
     178deg,
-    #6f747c 0%,
-    #c9cdd2 8%,
-    #ffffff 20%,
-    #8f949c 34%,
-    #55595f 44%,
-    #e8ebee 56%,
-    #ffffff 66%,
-    #9aa0a8 78%,
-    #d7dbe0 90%,
-    #7d828a 100%
+    #7a6636 0%,
+    #d9c390 8%,
+    #fbf6ea 20%,
+    #a98d54 34%,
+    #6b5730 44%,
+    #efe4c8 56%,
+    #fdf9f0 66%,
+    #b39a63 78%,
+    #e2d2a6 90%,
+    #857046 100%
   );
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
-  filter: drop-shadow(0 0.02em 0.01em rgba(24, 24, 24, 0.45))
-    drop-shadow(0 0.06em 0.12em rgba(24, 24, 24, 0.2));
+  filter: drop-shadow(0 0.02em 0.01em rgba(19, 43, 35, 0.45))
+    drop-shadow(0 0.06em 0.12em rgba(19, 43, 35, 0.2));
 }
 
 /* ---- Route curtain ----------------------------------------------- */
@@ -813,11 +846,16 @@ h6 {
 /* ==================================================================
    1. HERO
    ================================================================== */
+/* Alabaster, not gold. Gold is the loudest colour in the palette, and a
+   full-bleed viewport of it reads as a poster rather than as a studio —
+   it also flattens the brass wordmark sitting on top of it, which is the
+   one thing on this screen that should carry. On alabaster the wordmark
+   reads like foil on paper and gold is left to do accent work. */
 .section_hero {
   position: relative;
   width: 100%;
   height: 100vh;
-  background-color: var(--swatch-lime);
+  background-color: var(--swatch-off-white);
   color: var(--swatch-black);
 }
 .hero-home_wrapper {
@@ -929,7 +967,8 @@ h6 {
   z-index: 20;
   width: 100%;
   height: 100%;
-  background-color: var(--swatch-lime);
+  /* Matches the hero it lifts off. */
+  background-color: var(--swatch-off-white);
   pointer-events: none;
   animation: hero-plate-out 0.6s ease-in-out 0.05s forwards;
 }
@@ -1128,7 +1167,7 @@ h6 {
   flex: none;
   width: 4em;
   height: 4em;
-  border: 1px solid rgba(24, 24, 24, 0.25);
+  border: 1px solid rgba(19, 43, 35, 0.25);
   border-radius: 100vw;
   overflow: hidden;
 }
@@ -1622,6 +1661,10 @@ h6 {
   width: 100%;
   min-height: 100svh;
   overflow: hidden;
+  /* The copy here is gold and relies on the full-bleed media behind it. If
+     that image ever fails to load, the section fell back to the page's
+     alabaster and left gold type at 2:1; the dark ground makes that safe. */
+  background-color: var(--theme-background);
   color: var(--theme-body-text);
 }
 .about-us_wrapper {
@@ -1760,7 +1803,7 @@ h6 {
   justify-content: center;
   align-items: center;
   padding: 2em;
-  background-color: rgba(24, 24, 24, 0.6);
+  background-color: rgba(19, 43, 35, 0.6);
 }
 .cta-pop-up_form {
   position: relative;
@@ -1805,7 +1848,7 @@ h6 {
   width: 100%;
   height: 3em;
   padding: 0 1em;
-  border: 1px solid rgba(24, 24, 24, 0.3);
+  border: 1px solid rgba(19, 43, 35, 0.3);
   background-color: var(--swatch-white);
   color: var(--swatch-black);
   font-family: var(--font-body);
@@ -1838,12 +1881,12 @@ textarea.form-field {
   height: 100%;
   background-image: linear-gradient(
     205deg,
-    #e3e3e3,
-    #a0a0a0 25%,
-    #d0d0d0 45%,
-    #a1a1a1 63%,
-    #888988 80%,
-    #a9aaa9 94%
+    #e6dcc4,
+    #b9a67d 25%,
+    #d8cbab 45%,
+    #b5a179 63%,
+    #97845d 80%,
+    #b3a382 94%
   );
 }
 .footer_wrapper {
@@ -1916,9 +1959,11 @@ textarea.form-field {
   color: inherit;
   transition: color 0.3s var(--ease-out-quint), opacity 0.3s var(--ease-out-quint);
 }
+/* Forest, not gold: the footer plate is a light brass gradient, and gold on
+   it lands at 2:1. */
 .footer-main_link:hover {
   opacity: 1;
-  color: var(--swatch-lime);
+  color: var(--swatch-black);
 }
 .footer-main_cards {
   display: flex;
@@ -2046,8 +2091,10 @@ textarea.form-field {
 .typo-scroll__link:focus-visible {
   opacity: 1;
 }
+/* Forest: this list sits on alabaster, where a gold ring is 2:1 and misses
+   the 3:1 a focus indicator needs. */
 .typo-scroll__link:focus-visible {
-  outline: 2px solid var(--swatch-lime);
+  outline: 2px solid var(--swatch-black);
   outline-offset: -0.5em;
 }
 .typo-scroll__h {
@@ -2107,8 +2154,8 @@ textarea.form-field {
   text-transform: uppercase;
   color: var(--theme-body-text);
 }
-/* Lime as a chip, not as text: #ecfdad on the off-white ground is barely
-   distinguishable, so the accent carries as a fill with black type on it. */
+/* The accent as a chip, not as text: gold on the alabaster ground is only
+   2:1, so it carries as a fill with forest type on it instead. */
 .typo-scroll__hover-details .is-result {
   padding: 0.2em 0.5em;
   background-color: var(--swatch-lime);
@@ -2180,8 +2227,11 @@ textarea.form-field {
   color: var(--theme-body-text);
   pointer-events: none;
 }
+/* An explicit colour, not `opacity: 0.6` — that landed at 3.76:1 on the
+   alabaster ground, and it was being overridden to 1 on every <p> anyway by
+   MaskTextReveal's `autoAlpha` set. */
 .typo-scroll .is-muted {
-  opacity: 0.6;
+  color: #4a5147;
 }
 .typo-scroll__counter .is-current {
   color: var(--theme-body-text);
@@ -2303,7 +2353,7 @@ textarea.form-field {
   content: "";
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 0 1px rgba(234, 233, 230, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(233, 224, 207, 0.16);
 }
 .hero-story_img img {
   width: 100%;
@@ -2357,7 +2407,7 @@ textarea.form-field {
   content: "";
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 0 1px rgba(234, 233, 230, 0.14);
+  box-shadow: inset 0 0 0 1px rgba(233, 224, 207, 0.14);
 }
 .hero-story_emoji {
   will-change: transform;
@@ -2442,7 +2492,7 @@ textarea.form-field {
   content: "";
   position: absolute;
   inset: 0;
-  box-shadow: inset 0 0 0 1px rgba(234, 233, 230, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(233, 224, 207, 0.16);
   pointer-events: none;
 }
 .story-intro_card:hover .story-intro_card-img img {
@@ -2628,7 +2678,7 @@ textarea.form-field {
   color: rgba(255, 255, 255, 0.18);
 }
 .chapter-path_track.is-last {
-  color: rgba(24, 24, 24, 0.3);
+  color: rgba(19, 43, 35, 0.3);
 }
 .chapter-path_fill-mask {
   position: absolute;
@@ -2640,7 +2690,7 @@ textarea.form-field {
   color: rgba(255, 255, 255, 1);
 }
 .chapter-path_fill.is-last {
-  color: rgba(24, 24, 24, 1);
+  color: rgba(19, 43, 35, 1);
 }
 .chapter-path_trigger {
   position: absolute;
@@ -2662,14 +2712,14 @@ textarea.form-field {
   margin-top: -0.3em;
   border-radius: 50%;
   background-color: var(--swatch-off-white);
-  box-shadow: 0 0 0 0.35em rgba(234, 233, 230, 0.12),
-    0 0 1.5em 0.2em rgba(234, 233, 230, 0.45);
+  box-shadow: 0 0 0 0.35em rgba(233, 224, 207, 0.12),
+    0 0 1.5em 0.2em rgba(233, 224, 207, 0.45);
   opacity: 0;
 }
 .chapter-path_head.is-last {
   background-color: var(--swatch-black);
-  box-shadow: 0 0 0 0.35em rgba(24, 24, 24, 0.12),
-    0 0 1.5em 0.2em rgba(24, 24, 24, 0.35);
+  box-shadow: 0 0 0 0.35em rgba(19, 43, 35, 0.12),
+    0 0 1.5em 0.2em rgba(19, 43, 35, 0.35);
 }
 .chapter-path_emoji {
   position: relative;
@@ -2730,8 +2780,11 @@ textarea.form-field {
   color: var(--swatch-lime);
   font-variant-numeric: tabular-nums;
 }
+/* An explicit colour, not `opacity: 0.55` — that landed at 4.49:1, a hair
+   under the minimum, and MaskTextReveal overrides opacity on this element
+   anyway. */
 .chapter-eyebrow > .chapter-years {
-  opacity: 0.55;
+  color: #a89f8c;
 }
 .chapter-eyebrow::after {
   content: "";
@@ -2778,14 +2831,14 @@ textarea.form-field {
   content: "";
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(234, 233, 230, 0.18);
-  background-color: rgba(234, 233, 230, 0.04);
+  border: 1px solid rgba(233, 224, 207, 0.18);
+  background-color: rgba(233, 224, 207, 0.04);
   transform: rotate(-4deg) translate(-1.5em, 0.75em);
   z-index: -1;
 }
 .chapter-gallery_list::after {
   transform: rotate(4.5deg) translate(1.25em, 1.25em);
-  border-color: rgba(234, 233, 230, 0.1);
+  border-color: rgba(233, 224, 207, 0.1);
 }
 .chapter-gallery_item {
   position: absolute;
@@ -2834,6 +2887,22 @@ textarea.form-field {
    their masks). Nothing here splits text: `MaskTextReveal` owns that, and
    anything that shouldn't be line-masked carries `data-gsap-ignore`.
    ================================================================== */
+
+/* Muted text is an explicit colour, never `opacity`, for two reasons.
+   `MaskTextReveal` calls `gsap.set(el, {autoAlpha: 1})` on every h1-h6 and p
+   on the page — including ones it then skips for `data-gsap-ignore` — which
+   writes an inline `opacity: 1` and silently flattens any opacity set in
+   CSS. And opacity muting on this palette lands between 2.9:1 and 3.9:1,
+   under the 4.5:1 minimum. These two values are measured at 5.5:1 or better
+   against every theme they are used on.  */
+.section_service-rail {
+  --svc-muted: #a89f8c; /* warm taupe — 5.73:1 on forest */
+}
+.section_services-hero,
+.section_packages,
+.section_services-faq {
+  --svc-muted: #4a5147; /* forest-tinted — 6.26:1 on alabaster */
+}
 
 /* Accent words are the same family in italic. `heading-*` runs at 0.9
    line-height, which clips an italic descender, so headings carrying one
@@ -2888,7 +2957,7 @@ textarea.form-field {
   font-size: var(--p-xxs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  opacity: 0.55;
+  color: var(--svc-muted);
 }
 .services-index {
   display: flex;
@@ -2902,6 +2971,10 @@ textarea.form-field {
   display: grid;
   grid-template-columns: 2.5em minmax(0, 1fr) auto;
   align-items: baseline;
+  align-content: center;
+  /* Touch minimum. The em padding alone leaves these at 37px on a tablet,
+     where the row is a single line and the em has scaled down. */
+  min-height: 44px;
   gap: 1em;
   padding: 0.8em 0;
   border-bottom: 1px solid var(--theme-border);
@@ -2932,7 +3005,6 @@ textarea.form-field {
 .services-index_row:hover > *,
 .services-index_row:focus-visible > * {
   color: var(--swatch-lime);
-  opacity: 1;
 }
 .services-index_row:focus-visible {
   outline: 2px solid var(--swatch-black);
@@ -2941,7 +3013,7 @@ textarea.form-field {
 .services-index_num {
   font-family: var(--font-heading);
   font-size: var(--p-xs);
-  opacity: 0.5;
+  color: var(--svc-muted);
 }
 .services-index_name {
   font-size: var(--p-s);
@@ -2950,7 +3022,7 @@ textarea.form-field {
 .services-index_price {
   font-size: var(--p-xxs);
   white-space: nowrap;
-  opacity: 0.6;
+  color: var(--svc-muted);
 }
 
 /* ---- 2. Sticky rail + detail panels ------------------------------- */
@@ -2987,11 +3059,10 @@ textarea.form-field {
   align-items: baseline;
   gap: 0.75em;
   padding: 0.55em 0;
-  color: inherit;
+  /* Was `opacity: 0.4`, which put these navigation links at 3.36:1. */
+  color: var(--svc-muted);
   text-decoration: none;
-  opacity: 0.4;
-  transition: opacity 0.45s var(--ease-out-quint),
-    color 0.45s var(--ease-out-quint);
+  transition: color 0.45s var(--ease-out-quint);
 }
 /* Lime tick that draws itself beside whichever service you're reading. */
 .service-rail_link::before {
@@ -3008,14 +3079,13 @@ textarea.form-field {
 }
 .service-rail_link[data-active="true"] {
   color: var(--swatch-lime);
-  opacity: 1;
 }
 .service-rail_link[data-active="true"]::before {
   transform: scaleX(1);
 }
 .service-rail_link:hover,
 .service-rail_link:focus-visible {
-  opacity: 1;
+  color: var(--theme-body-text);
 }
 .service-rail_link:focus-visible {
   outline: 2px solid var(--swatch-lime);
@@ -3034,11 +3104,10 @@ textarea.form-field {
   gap: 0.35em;
   margin: 0;
   font-size: var(--p-xs);
-  opacity: 0.45;
+  color: var(--svc-muted);
 }
 .service-rail_count .is-current {
   color: var(--swatch-lime);
-  opacity: 1;
 }
 
 .service-rail_panels {
@@ -3057,7 +3126,7 @@ textarea.form-field {
   gap: 1.5em 4em;
   padding: 5em 0;
   overflow: clip;
-  border-top: 1px solid rgba(234, 233, 230, 0.14);
+  border-top: 1px solid rgba(233, 224, 207, 0.14);
   /* Clears the fixed nav when the index or rail jumps here. */
   scroll-margin-top: 8em;
 }
@@ -3084,7 +3153,24 @@ textarea.form-field {
   right: auto;
   left: -0.06em;
 }
-.service-panel > *:not(.service-panel_ghost) {
+/* Mobile stand-in for the rail's counter. Pinned to the panel corner rather
+   than set above the heading, so it reads as a page number and not as yet
+   another eyebrow. */
+.service-panel_step {
+  display: none;
+  position: absolute;
+  top: 1.25em;
+  right: 0;
+  z-index: 1;
+  font-size: var(--p-xxs);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--svc-muted);
+}
+/* Lifts the real content above the ghost numeral. The step counter is
+   excluded as well as the ghost: it positions itself, and being forced to
+   `relative` here put it back in the flow, full-width and left-aligned. */
+.service-panel > *:not(.service-panel_ghost):not(.service-panel_step) {
   position: relative;
   z-index: 1;
 }
@@ -3096,7 +3182,7 @@ textarea.form-field {
 }
 .service-panel_lede {
   max-width: 30em;
-  opacity: 0.7;
+  color: var(--svc-muted);
 }
 .service-panel_plate {
   grid-area: plate;
@@ -3118,7 +3204,7 @@ textarea.form-field {
 }
 .service-panel_copy {
   max-width: 40em;
-  opacity: 0.75;
+  color: var(--svc-muted);
 }
 .service-panel_price {
   display: flex;
@@ -3128,13 +3214,13 @@ textarea.form-field {
   max-width: 40em;
   margin: 0;
   padding-top: 0.85em;
-  border-top: 1px solid rgba(234, 233, 230, 0.14);
+  border-top: 1px solid rgba(233, 224, 207, 0.14);
 }
 .service-panel_from {
   font-size: var(--p-xxs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  opacity: 0.5;
+  color: var(--svc-muted);
 }
 .service-panel_amount {
   font-family: var(--font-heading);
@@ -3151,7 +3237,7 @@ textarea.form-field {
   font-size: var(--p-xxs);
   text-transform: uppercase;
   letter-spacing: 0.14em;
-  opacity: 0.5;
+  color: var(--svc-muted);
 }
 /* A grid of marked lines rather than a hairline under every row: six
    deliverables × seven services would otherwise be forty-two rules. */
@@ -3190,17 +3276,24 @@ textarea.form-field {
 }
 .packages_sub {
   max-width: 34em;
-  opacity: 0.7;
+  color: var(--svc-muted);
 }
 .packages_tabs {
   display: flex;
   gap: 2.5em;
   margin-top: 3em;
-  border-bottom: 1px solid rgba(24, 24, 24, 0.18);
+  border-bottom: 1px solid rgba(19, 43, 35, 0.18);
 }
 .packages_tab {
   position: relative;
-  padding: 0 0 1em;
+  /* The label alone is 26px tall, well under the 44px touch minimum. A fixed
+     min-height rather than em padding, because the em here rescales per
+     breakpoint and 44px does not. Bottom-aligned so the growth goes upward
+     and the label stays sat on its rule. */
+  display: inline-flex;
+  align-items: flex-end;
+  min-height: 44px;
+  padding: 0.5em 0 1em;
   border: 0;
   background: none;
   color: inherit;
@@ -3209,13 +3302,14 @@ textarea.form-field {
   font-weight: 500;
   line-height: 1.3;
   cursor: pointer;
-  opacity: 0.45;
-  transition: opacity 0.35s var(--ease-out-quint);
+  /* Was `opacity: 0.45`, which put this control label at 2.92:1. */
+  color: var(--svc-muted);
+  transition: color 0.35s var(--ease-out-quint);
 }
 .packages_tab[data-active="true"],
 .packages_tab:hover,
 .packages_tab:focus-visible {
-  opacity: 1;
+  color: var(--theme-body-text);
 }
 .packages_tab-rule {
   position: absolute;
@@ -3268,7 +3362,7 @@ textarea.form-field {
   gap: 0.9em;
   width: 100%;
   padding: 2em;
-  border: 1px solid rgba(24, 24, 24, 0.2);
+  border: 1px solid rgba(19, 43, 35, 0.2);
   background-color: var(--theme-background);
   color: var(--theme-body-text);
   will-change: transform;
@@ -3279,6 +3373,17 @@ textarea.form-field {
   border-color: var(--swatch-black);
   background-color: var(--swatch-lime);
   color: var(--swatch-black);
+  /* Nothing lighter than the body colour clears 4.5:1 on gold, so on this
+     card the secondary copy is full-strength forest and the hierarchy is
+     carried by size alone. */
+  --svc-muted: var(--swatch-black);
+  /* This card is gold, and so is the theme's secondary button — which left
+     the CTA as a label floating on an invisible button. Invert it here. */
+  --theme-button-secondary-bg: var(--swatch-black);
+  --theme-button-secondary-text: var(--swatch-lime);
+  --theme-button-secondary-icon: var(--swatch-lime);
+  --theme-button-secondary-icon-svg: var(--swatch-black);
+  --theme-button-secondary-hover-bg: var(--swatch-off-white);
 }
 .package-card_tag {
   margin: 0 0 0.5em;
@@ -3297,7 +3402,7 @@ textarea.form-field {
   margin: 0;
   font-size: var(--p-xs);
   line-height: 1.45;
-  opacity: 0.7;
+  color: var(--svc-muted);
 }
 .package-card_price {
   display: flex;
@@ -3312,7 +3417,7 @@ textarea.form-field {
 }
 .package-card_note {
   font-size: var(--p-xs);
-  opacity: 0.6;
+  color: var(--svc-muted);
 }
 .package-card_list {
   display: flex;
@@ -3322,7 +3427,7 @@ textarea.form-field {
   width: 100%;
   margin: 0.75em 0 0;
   padding: 1.4em 0 0;
-  border-top: 1px solid rgba(24, 24, 24, 0.18);
+  border-top: 1px solid rgba(19, 43, 35, 0.18);
   list-style: none;
 }
 .package-card_list li {
@@ -3357,10 +3462,10 @@ textarea.form-field {
   max-width: 12em;
 }
 .services-faq_list {
-  border-top: 1px solid rgba(24, 24, 24, 0.15);
+  border-top: 1px solid rgba(19, 43, 35, 0.15);
 }
 .services-faq_row {
-  border-bottom: 1px solid rgba(24, 24, 24, 0.15);
+  border-bottom: 1px solid rgba(19, 43, 35, 0.15);
 }
 .services-faq_row h3 {
   margin: 0;
@@ -3433,7 +3538,7 @@ textarea.form-field {
 .services-faq_a p {
   max-width: 46em;
   padding-bottom: 2em;
-  opacity: 0.7;
+  color: var(--svc-muted);
 }
 
 /* ==================================================================
@@ -3846,9 +3951,10 @@ textarea.form-field {
     font-size: 0.875em;
   }
 
-  /* Services: the hero stacks, and the sticky rail goes away. Below the
-     desktop tier there is no room to park it beside the panels, and the
-     hero index already does the same job right above it. */
+  /* Services: the hero stacks and the sticky rail goes away, since there is
+     no room to park it beside the panels. Its two jobs move rather than
+     disappear: the hero index still lists and links the seven, and each
+     panel carries its own `03 / 07`. */
   .section_services-hero {
     min-height: 0;
     padding-top: 8.5em;
@@ -3870,22 +3976,22 @@ textarea.form-field {
   .service-rail_aside {
     display: none;
   }
-  .service-panel {
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-areas:
-      "head"
-      "plate"
-      "body"
-      "deliv";
-    gap: 1.5em;
-    padding: 4em 0;
+  /* The rail's counter moves into each panel. */
+  .service-panel_step {
+    display: block;
   }
-  .service-panel_plate {
-    aspect-ratio: 3 / 2;
-    width: 100%;
-  }
+  /* And the oversized numeral goes: it says the same thing less legibly,
+     from underneath the deliverables text. */
   .service-panel_ghost {
-    font-size: 11em;
+    display: none;
+  }
+  /* Panel keeps its two columns here. Stacking it this early made the plate
+     full-bleed, and seven 3:2 plates at tablet width put the page at 12.8k
+     tall — taller than the same page on a phone. It only stacks at 767. */
+  .service-panel {
+    grid-template-columns: minmax(0, 1fr) 14em;
+    gap: 1.25em 3em;
+    padding: 4em 0;
   }
   .service-panel_list {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -3896,9 +4002,12 @@ textarea.form-field {
     gap: 1em;
     margin-top: 3.5em;
   }
-  /* Stacked, there is no line to break out of. */
+  /* Stacked, there is no line to break out of, and "middle" no longer reads
+     as "recommended" — so the featured tier leads instead of sitting buried
+     between the other two. */
   .package-cell[data-featured="true"] {
     margin-block: 0;
+    order: -1;
   }
   .package-card[data-featured="true"] {
     padding-top: 2em;
@@ -4061,31 +4170,44 @@ textarea.form-field {
     gap: 2em;
   }
 
-  /* Services */
-  .service-panel_list,
-  .services-hero_index .services-index_row {
+  /* Services: now the panel stacks and the plate goes full width. */
+  .service-panel {
     grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "head"
+      "plate"
+      "body"
+      "deliv";
+    gap: 1.5em;
+  }
+  .service-panel_plate {
+    aspect-ratio: 3 / 2;
+    width: 100%;
   }
   .service-panel_list {
+    grid-template-columns: minmax(0, 1fr);
     gap: 0.8em;
   }
-  /* Number, name and price stack, so a long service name never squeezes
-     the price into a two-line column. */
+  /* Two lines, not three: the number sits with the name and only the price
+     drops below it, aligned to the name rather than to the row. Three
+     stacked lines made the seven-row index taller than the viewport on its
+     own. Still avoids putting a long service name and a price on one line,
+     which is what would actually squeeze. */
   .services-index_row {
-    gap: 0.2em;
-    padding: 0.9em 0;
+    grid-template-columns: 2.25em minmax(0, 1fr);
+    row-gap: 0.15em;
+    column-gap: 0.85em;
+    padding: 0.85em 0;
   }
   .services-index_num {
-    grid-row: 1;
+    grid-area: 1 / 1;
   }
   .services-index_name {
-    grid-row: 2;
+    grid-area: 1 / 2;
   }
   .services-index_price {
-    grid-row: 3;
-  }
-  .service-panel_ghost {
-    font-size: 8em;
+    grid-area: 2 / 2;
+    text-align: left;
   }
   .services-faq_q {
     gap: 1.25em;
@@ -4544,8 +4666,10 @@ textarea.form-field {
   .service-panel {
     padding: 3em 0;
   }
+  /* Stays 3:2. At 4:3 seven plates added roughly a viewport of scroll
+     between them for no extra information. */
   .service-panel_plate {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 3 / 2;
   }
   .package-card {
     padding: 1.5em;
@@ -4573,17 +4697,23 @@ textarea.form-field {
    /contact still render on it, so it stays until those pages are moved
    onto the studio system above. Nothing on the homepage uses it.
    ================================================================== */
+/* Re-pointed onto the same four-colour palette so /contact, /404 and the
+   case-study pages stay in step with the rest of the site. */
 :root {
-  --ivory: #f2efe9;
-  --ivory-deep: #e9e4da;
-  --ink: #111110;
-  --ink-soft: #1a1815;
-  --terracotta: #c4502c;
-  --terracotta-deep: #a63e20;
-  --stone: #8b857c;
-  --stone-light: #a8a29a;
-  --line: rgba(17, 17, 16, 0.12);
-  --line-inverse: rgba(242, 239, 233, 0.16);
+  --ivory: #e9e0cf;
+  --ivory-deep: #ded4c0;
+  --ink: #132b23;
+  --ink-soft: #1b3a2f;
+  /* The legacy accent is small label type, and it sits on the ivory ground
+     on nearly every page it survives on. Gold there is 2:1, so this is gold
+     taken down to a bronze that carries 12px at 5.05:1. `.bg-ink` below
+     lifts it back to full gold on the one dark surface that uses it. */
+  --terracotta: #6e5a33;
+  --terracotta-deep: #5c4a28;
+  --stone: #4a5147;
+  --stone-light: #a89f8c;
+  --line: rgba(19, 43, 35, 0.14);
+  --line-inverse: rgba(233, 224, 207, 0.18);
 }
 
 /* Lenis smooth scroll */
@@ -4651,6 +4781,12 @@ html.lenis body {
 .split-line {
   overflow: hidden;
   display: block;
+}
+/* On the dark legacy surface the bronze inverts to 2.27:1, so the accent
+   goes back to full gold there (5.68:1). */
+.bg-ink {
+  --terracotta: #ba9b5f;
+  --stone: #a89f8c;
 }
 .legacy-page {
   background-color: var(--ivory);
