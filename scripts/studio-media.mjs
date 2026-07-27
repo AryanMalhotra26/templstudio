@@ -398,6 +398,18 @@ for (let i = 1; i <= 10; i++) {
   });
 });
 
+/* ---- Services page ----
+   One 4:5 plate per service. Contact-sheet furniture again, for the same
+   reason as the story frames: seven stacked panels each carrying an abstract
+   plate would otherwise read as seven identical missing images. */
+for (let i = 1; i <= 7; i++) {
+  photo(`service-plate-${i}.svg`, 640, 800, 16100 + i * 67, {
+    tone: ["dark", "cool", "warm"][i % 3],
+    kind: "frame",
+    index: i,
+  });
+}
+
 /* Avatars */
 avatar("avatar-golden-hour.svg", 311, "PS");
 avatar("avatar-northbound.svg", 407, "MC");
